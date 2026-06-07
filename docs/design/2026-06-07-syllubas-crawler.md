@@ -18,7 +18,7 @@ http Clientにはhttpx、HTML解析にはBeautifulSoup4 + lxmlを採用する。
 
 ### 背景 (Background) <!-- REQUIRED -->
 
-今回のシラバス検索システムを構築するための基盤。ジョブ実行を堅牢に行うことが本システムにおいて非常に重要になる。
+今回のシラバス検索システムを構築するための基盤。ジョブ実行を堅牢に設計することが本システムにおいて非常に重要になる。
 
 ### 目的 (Purpose) <!-- REQUIRED -->
 
@@ -116,7 +116,7 @@ How: どのように実現するかの章。
 
 ### 全体設計 (High-Level Design) <!-- REQUIRED -->
 
-今回は単発のジョブでクローリング・DB Upsertを全て行わず2回のコマンドで責務(pKey全取得・各pKeyについてGETしてDB Upsert)を分割する。
+今回は単発のジョブでクローリング・DB Upsertを全て行うのではなく、2回のコマンドで責務(pKey全取得・各pKeyについてGETしてDB Upsert)を分割する。
 
 ```mermaid
 flowchart TD
@@ -310,15 +310,18 @@ Figmaなどの画面遷移図へのリンクがあれば併記してください
 ### Phase 1: DBモデルとクエリの構築
 
 sqlcクエリ及び該当テーブルのセットアップを行う
+https://github.com/tsukuneA1/hoge/issues/2
 
 ### Phase 2: Crawlerパッケージの完成
 
 httpx取得・BeautifulSoup4 + lxmlによるHTMLパース・リトライ制御・タイムアウト設計などのビジネスロジックを完成させる
 コマンドをDockerfileでエントリーポイントとして登録する
+https://github.com/tsukuneA1/hoge/issues/3
 
 ### Phase 3: Google Cloudにデプロイ
 
 DockerfileをArtifact Registryにpushし、Cloud Scheduler + Cloud Run ジョブ + Cloud SQLと合わせて実行可能にする
+https://github.com/tsukuneA1/hoge/issues/4
 
 ## リリース計画 (Rollout Plan) <!-- Optional -->
 
