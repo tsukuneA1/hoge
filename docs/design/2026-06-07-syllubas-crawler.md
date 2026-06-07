@@ -49,6 +49,7 @@ http Clientにはhttpx、HTML解析にはBeautifulSoup4 + lxmlを採用する。
     - page_size: ページネーションのLIMIT指定。最大5000程度で保守的に2000でジョブでは実行する
     - p_page: ページネーションのOFFSET指定。
 - 一覧検索ではPOSTだったが詳細取得ではGETメソッドが使用可能。pKey(シラバスの主キー)をパスパラメータとして https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=2600001002012026260000100226&pLng=jp のような形式で指定する
+- 具体的にはapps/backend/experimentsで実際のクエリとその実行結果が確認できる。
 
 ### 制約 (Constraints) <!-- Optional -->
 
