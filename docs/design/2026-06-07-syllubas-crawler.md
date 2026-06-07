@@ -180,16 +180,8 @@ erDiagram
         text status
         int attempts
         text last_error
-
-        text academic_year
-        text title
-        text course_code
-        text instructor
-        text faculty
-        text term
-        text day_period
-        text classroom
-        text summary_preview
+        int discovered_year
+        int source_page
 
         timestamptz first_discovered_at
         timestamptz last_discovered_at
@@ -199,8 +191,7 @@ erDiagram
     }
 
     COURSES {
-        bigint id PK
-        text p_key FK
+        bigint id PK(p_keyをそのまま格納する)
         text academic_year
         text faculty
         text title
@@ -281,9 +272,12 @@ Figmaなどの画面遷移図へのリンクがあれば併記してください
 
 ### 単体テスト・結合テスト (Unit & Integration Tests) <!-- Optional -->
 
-<!--
-重点的にテストする箇所や、モック/スタブの方針、主要ケースの例などを記載してください。
--->
+主要なパスとふるまいを2種類のジョブごと列挙する
+
+#### Discover Job
+1. 
+
+#### Ingest Job
 
 ### E2Eテスト (End-to-End Tests) <!-- Optional -->
 
