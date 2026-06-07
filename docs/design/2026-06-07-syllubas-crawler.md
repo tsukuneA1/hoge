@@ -116,13 +116,13 @@ How: どのように実現するかの章。
 
 ### 全体設計 (High-Level Design) <!-- REQUIRED -->
 
-今回は単発のジョブでクローリング・DB Upsertを全て行わず2回のコマンドで責務(pKey全取得・各pKeyについてGETしてDB Upsert)に分割する。
+今回は単発のジョブでクローリング・DB Upsertを全て行わず2回のコマンドで責務(pKey全取得・各pKeyについてGETしてDB Upsert)を分割する。
 
 ```mermaid
 flowchart TD
     Scheduler[Cloud Scheduler] -->|定期実行| DiscoverJob[Cloud Run Job<br/>crawler discover]
 
-    DiscoverJob -->|POST 検索<br/>JAA101.php<br/>ControllerParameters=JAA103SubCon<br/>nendo=2026<br/>p_number=2000<br/>p_page=1..N| WasedaSearch[Waseda Syllabus<br/>検索結果HTML]
+    DiscoverJob -->|POST 検索<br/>JAA101.php| WasedaSearch[Waseda Syllabus<br/>検索結果HTML]
 
     WasedaSearch -->|pKey抽出| DiscoverJob
 
@@ -307,19 +307,18 @@ Figmaなどの画面遷移図へのリンクがあれば併記してください
 章タイトル直下は空欄でOKです。以下の節に記述してください。
 -->
 
-### Phase 1: {{ フェーズ1の名称 }}
+### Phase 1: DBモデルとクエリの構築
 
-<!--
-このフェーズで実現する機能/要件、完了の受け入れ条件を記載してください。
-未定なら想定のみでOKです。
--->
+sqlcクエリ及び該当テーブルのセットアップを行う
 
-### Phase 2: {{ フェーズ2の名称 }}
+### Phase 2: Crawlerパッケージの完成
 
-<!--
-このフェーズで実現する機能/要件、完了の受け入れ条件を記載してください。
-未定なら想定のみでOKです。
--->
+httpx取得・BeautifulSoup4 + lxmlによるHTMLパース・リトライ制御・タイムアウト設計などのビジネスロジックを完成させる
+コマンドをDockerfileでエントリーポイントとして登録する
+
+### Phase 3: Google Cloudにデプロイ
+
+DockerfileをArtifact Registryにpushし、Cloud Scheduler + Cloud Run ジョブ + Cloud SQLと合わせて実行可能にする
 
 ## リリース計画 (Rollout Plan) <!-- Optional -->
 
