@@ -1,6 +1,7 @@
-def main() -> None:
-    return 1
+import sys
 
+def main() -> None:
+    sys.exit(main())
 
 if __name__ == "__main__":
     main()
