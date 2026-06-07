@@ -10,6 +10,7 @@ P_KEY = "2600001002012026260000100226"
 
 OUTPUT_DIR = Path(__file__).parent / "output"
 
+
 def fetch_detail_page(client: httpx.Client, *, p_key: str) -> str:
     response = client.get(
         f"{BASE_URL}/JAA104.php",
@@ -20,6 +21,7 @@ def fetch_detail_page(client: httpx.Client, *, p_key: str) -> str:
     )
     response.raise_for_status()
     return response.text
+
 
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

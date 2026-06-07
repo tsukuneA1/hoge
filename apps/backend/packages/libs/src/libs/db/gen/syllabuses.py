@@ -63,7 +63,9 @@ class Querier:
         self._conn = conn
 
     def get_syllabus_by_id(self, *, id: str) -> Optional[models.Syllabus]:
-        row = self._conn.execute(sqlalchemy.text(GET_SYLLABUS_BY_ID), {"p1": id}).first()
+        row = self._conn.execute(
+            sqlalchemy.text(GET_SYLLABUS_BY_ID), {"p1": id}
+        ).first()
         if row is None:
             return None
         return models.Syllabus(
@@ -106,21 +108,24 @@ class Querier:
             )
 
     def upsert_syllabuses(self, arg: UpsertSyllabusesParams) -> None:
-        self._conn.execute(sqlalchemy.text(UPSERT_SYLLABUSES), {
-            "p1": arg.id,
-            "p2": arg.title,
-            "p3": arg.title_en,
-            "p4": arg.year,
-            "p5": arg.semester,
-            "p6": arg.credits,
-            "p7": arg.department,
-            "p8": arg.instructors,
-            "p9": arg.description,
-            "p10": arg.objectives,
-            "p11": arg.schedule,
-            "p12": arg.evaluation,
-            "p13": arg.textbooks,
-        })
+        self._conn.execute(
+            sqlalchemy.text(UPSERT_SYLLABUSES),
+            {
+                "p1": arg.id,
+                "p2": arg.title,
+                "p3": arg.title_en,
+                "p4": arg.year,
+                "p5": arg.semester,
+                "p6": arg.credits,
+                "p7": arg.department,
+                "p8": arg.instructors,
+                "p9": arg.description,
+                "p10": arg.objectives,
+                "p11": arg.schedule,
+                "p12": arg.evaluation,
+                "p13": arg.textbooks,
+            },
+        )
 
 
 class AsyncQuerier:
@@ -128,7 +133,9 @@ class AsyncQuerier:
         self._conn = conn
 
     async def get_syllabus_by_id(self, *, id: str) -> Optional[models.Syllabus]:
-        row = (await self._conn.execute(sqlalchemy.text(GET_SYLLABUS_BY_ID), {"p1": id})).first()
+        row = (
+            await self._conn.execute(sqlalchemy.text(GET_SYLLABUS_BY_ID), {"p1": id})
+        ).first()
         if row is None:
             return None
         return models.Syllabus(
@@ -171,18 +178,21 @@ class AsyncQuerier:
             )
 
     async def upsert_syllabuses(self, arg: UpsertSyllabusesParams) -> None:
-        await self._conn.execute(sqlalchemy.text(UPSERT_SYLLABUSES), {
-            "p1": arg.id,
-            "p2": arg.title,
-            "p3": arg.title_en,
-            "p4": arg.year,
-            "p5": arg.semester,
-            "p6": arg.credits,
-            "p7": arg.department,
-            "p8": arg.instructors,
-            "p9": arg.description,
-            "p10": arg.objectives,
-            "p11": arg.schedule,
-            "p12": arg.evaluation,
-            "p13": arg.textbooks,
-        })
+        await self._conn.execute(
+            sqlalchemy.text(UPSERT_SYLLABUSES),
+            {
+                "p1": arg.id,
+                "p2": arg.title,
+                "p3": arg.title_en,
+                "p4": arg.year,
+                "p5": arg.semester,
+                "p6": arg.credits,
+                "p7": arg.department,
+                "p8": arg.instructors,
+                "p9": arg.description,
+                "p10": arg.objectives,
+                "p11": arg.schedule,
+                "p12": arg.evaluation,
+                "p13": arg.textbooks,
+            },
+        )

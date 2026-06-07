@@ -15,9 +15,10 @@ OUTPUT_DIR = Path(__file__).parent / "output"
 PKEY_RE = re.compile(r"post_submit\('JAA104DtlSubCon', \s*'([^']+)'\)")
 TOTAL_RE = re.compile(r"全(\d+)件中(\d+)件～(\d+)件を表示")
 
+
 def build_form_data(*, year: int, page_size: int, page: int) -> dict[str, str]:
     return {
-        "ControllerParameters" : "JAA103SubCon",
+        "ControllerParameters": "JAA103SubCon",
         "nendo": str(year),
         "pYear": str(year),
         "p_number": str(page_size),
@@ -25,20 +26,24 @@ def build_form_data(*, year: int, page_size: int, page: int) -> dict[str, str]:
         "pLng": "jp",
     }
 
+
 def as_multipart(data: dict[str, str]) -> dict[str, tuple[None, str]]:
     return {key: (None, value) for key, value in data.items()}
 
+
 def extract_pkeys(html: str) -> list[str]:
     return PKEY_RE.findall(html)
+
 
 def extract_total_line(html: str) -> str | None:
     text = re.sub(r"\s+", "", html)
     match = TOTAL_RE.search(text)
     if match is None:
         return None
-    
+
     total, start, end = match.groups()
     return f"全{total}件中{start}件~{end}件を表示"
+
 
 def fetch_search_page(
     client: httpx.Client,
@@ -59,6 +64,7 @@ def fetch_search_page(
     )
     response.raise_for_status()
     return response.text
+
 
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
