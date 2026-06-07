@@ -15,7 +15,7 @@ def fetch_detail_page(client: httpx.Client, *, p_key: str) -> str:
         f"{BASE_URL}/JAA104.php",
         params={
             "pKey": p_key,
-            "pLang": "jp",
+            "pLng": "jp",
         },
     )
     response.raise_for_status()
@@ -38,4 +38,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-    
