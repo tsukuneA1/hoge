@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<meta name="robots" content="noindex,nofollow" />
+<meta name="robots" content="noarchive" />
+<meta http-equiv="X-UA-Compatible" content="IE=emulateIE8" />
+<link rel="stylesheet" href="./css/import.css" type="text/css" media="all" />
+<link rel="stylesheet" href="./css/jquery-ui.min.css" type="text/css" media="all" />
+<link rel="stylesheet" href="./css/print.css" type="text/css" media="print" />
+<script type="text/javascript" src="./js/custom/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="./js/custom/jquery-ui.min.js"></script>
+<script type="text/javascript" src="./js/custom/json2.js"></script>
+<script type="text/javascript" src="./js/common.js"></script>
+<script type="text/javascript" src="./js/custom/JAA103/JAA103.js"></script>
+<title>シラバス検索 － シラバス検索結果</title>
+</head>
+<body id="ly1col"  style = "overflow-x:hidden; _width: 100%">
+<form name="cForm" id="cForm" enctype="multipart/form-data" method="post" action="./index.php">
+<div id="LayoutAll"  class="fixedTable">
+<div id="Header"><div id="hbImageL"><div id="hbImageR">
+<!--header-->
+<div class="h-col01">
+<p class="h-sname"><span>シラバス検索</span></p>
+
+
+  <div class="h-form">
+  <div class="h-dchBox2" style = "right:350px">
+  <div align="center">
+  </div>
+  </div>
+  </div>
+
+    <div class="h-close">
+    <table summary="table" class="t-btn">
+      <tr>
+        <td><div class="btn00">
+            <div>
+              <div class="bt">
+                <div> </div>
+              </div>
+              <!--Btn_start -->
+              <p>
+                              <input type="button" name="btnLogOut" value="閉じる" onclick="window.close();"/>
+                <!-- <input type="button" name="btnLogOut" value="閉じる" onclick="onClickWindowCloseForCommon('false');"/> -->
+                            </p>
+              <div class="bb">
+                <div> </div>
+              </div>
+            </div>
+          </div></td>
+      </tr>
+    </table>
+    <!-- Btn_end -->
+  </div>
+
+
+
+
+</div>
+<!--header end-->
+</div></div></div>
+<div id="Contents"><div id="cAll"><div id="cImage"><div id="chImage">
+<!--Contents-->
+<div id="cLayout"><div id="oLflow"><div id="cbImageL"><div id="cbImageR">
+<div id="cHeader">
+<div id="chCommon">
+<p id="cHname">cheader</p>
+<!-- ContentsHeader_start -->
+<div class="ch-pankuzu">
+シラバス検索結果
+<ul>
+<!--
+<li class="ch-help" style="padding-right: 10px;">
+<a href="#"  onclick="window.open('http://www.waseda.jp/navi/doc/syllabus_manual.pdf', '_manual', 'directories=no,location=no,menubar=no,scrollbars=yes,status=no,resizable=yes');">マニュアル</a>
+</li>
+-->
+</ul>
+</div>
+<div class="c-top-title">
+<div class="c-ttitle">
+<div class="cbd-bkt">
+<div class="cbd-bkb">
+<div class="cbd-bkl">
+<div class="cbd-bkr">
+<div class="cbd-bktop">
+<div>
+</div>
+</div>
+<h1 class="type10101un"><span>シラバス検索結果</span></h1>
+<div class="cbd-bkbottom">
+<div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="c-top-txt">
+<div id="cHoflow">
+<ul>
+<li>
+<div>
+<p>
+閲覧する科目の[選択]ボタンを押してください。
+</p>
+</div>
+</li>
+<!-- Explanation_end -->
+</ul>
+</div>
+</div>
+</div>
+<div class="c-selectall">
+<div>
+<p>
+<font color="#0000FF">
+&nbsp;&nbsp;全807165件中11件～20件を表示
+</font>
+</p>
+</div>
+</div>
+<div style="text-align: right;">
+&nbsp;&nbsp;表示件数&nbsp;
+<strong>10件</strong>&nbsp;&nbsp;
+<a href="#" onclick="func_showchg('JAA103SubCon', '20');">20件</a>&nbsp;&nbsp;
+<a href="#" onclick="func_showchg('JAA103SubCon', '50');">50件</a>&nbsp;&nbsp;
+<a href="#" onclick="func_showchg('JAA103SubCon', '100');">100件</a>&nbsp;&nbsp;
+</div>
+<!-- ContentsHeader_end --></div>
+<div id="cMain">
+<p id="sPage">
+main start 
+</p>
+<div id="cHonbun">
+<div id="cCommon">
+<!-- cMain_start -->
+<div class="c-mblock">
+<!--Block_start -->
+<div class="cbd-bkt">
+<div class="cbd-bkb">
+<div class="cbd-bkl">
+<div class="cbd-bkr">
+<div class="cbd-bktop">
+<div>
+</div>
+</div>
+<div class="ctable-main">
+<!-- block_main_start ||||| -->
+<table summary="table" class="ct-vh" border="0" cellpadding="0" cellspacing="3">
+<tbody>
+<tr class="c-vh-title">
+<th width="5%" scope="col">開講年度</th>
+<th width="10%" scope="col">コース・コード </th>
+<th width="19%" scope="col">科目名</th>
+<th width="10%" scope="col">担当教員</th>
+<th width="5%" scope="col">開講学部</th>
+<th width="5%" scope="col">学期</th>
+<th width="10%" scope="col">曜日時限</th>
+<th width="11%" scope="col">使用教室</th>
+<th width="25%" scope="col">授業概要</th>
+</tr>
+<tr>
+<td>2026</td>
+<td>BSPX101S</td>
+<td><a href="#" onclick="post_submit('JAA104DtlSubCon', '1100001010112026110000101011')">基礎演習　１１</a></td>
+<td>押谷　健</td>
+<td>政経</td>
+<td style="word-break:break-all;">春学期</td>
+<td>水４時限</td>
+
+<td>３-７１１（演習室）</td>
+
+
+<td>ようこそ、早稲田大学政治経済学部へ。新入生のみなさんは、新しい生活の始まり......</td>
+</tr>
+<tr>
+<td>2026</td>
+<td>BSPX101S</td>
+<td><a href="#" onclick="post_submit('JAA104DtlSubCon', '1100001010122026110000101011')">基礎演習　１２</a></td>
+<td>押谷　健</td>
+<td>政経</td>
+<td style="word-break:break-all;">春学期</td>
+<td>金３時限</td>
+
+<td>３-６０８（演習室）</td>
+
+
+<td>ようこそ、早稲田大学政治経済学部へ。新入生のみなさんは、新しい生活の始まり......</td>
+</tr>
+<tr>
+<td>2026</td>
+<td>BSPX101S</td>
+<td><a href="#" onclick="post_submit('JAA104DtlSubCon', '1100001010132026110000101011')">基礎演習　１３</a></td>
+<td>遠矢　浩規</td>
+<td>政経</td>
+<td style="word-break:break-all;">春学期</td>
+<td>火４時限</td>
+
+<td>３-６０９（演習室）</td>
+
+
+<td>ようこそ、早稲田大学政治経済学部へ。新入生のみなさんは、新しい生活の始まり......</td>
+</tr>
+<tr>
+<td>2026</td>
+<td>BSPX101S</td>
+<td><a href="#" onclick="post_submit('JAA104DtlSubCon', '1100001010142026110000101011')">基礎演習　１４</a></td>
+<td>稲継　裕昭</td>
+<td>政経</td>
+<td style="word-break:break-all;">春学期</td>
+<td>火１時限</td>
+
+<td>３-６０６</td>
+
+
+<td>ようこそ、早稲田大学政治経済学部へ。新入生のみなさんは、新しい生活の始まり......</td>
+</tr>
+<tr>
+<td>2026</td>
+<td>BSPX101S</td>
+<td><a href="#" onclick="post_submit('JAA104DtlSubCon', '1100001010152026110000101011')">基礎演習　１５</a></td>
+<td>中村　理</td>
+<td>政経</td>
+<td style="word-break:break-all;">春学期</td>
+<td>火５時限</td>
+
+<td>７-３０６</td>
+
+
+<td>ようこそ、早稲田大学政治経済学部へ。新入生のみなさんは、新しい生活の始まり......</td>
+</tr>
+<tr>
+<td>2026</td>
+<td>BSPX101S</td>
+<td><a href="#" onclick="post_submit('JAA104DtlSubCon', '1100001010162026110000101011')">基礎演習　１６</a></td>
+<td>都丸　潤子</td>
+<td>政経</td>
+<td style="word-break:break-all;">春学期</td>
+<td>火３時限</td>
+
+<td>３-７０３</td>
+
+
+<td>ようこそ、早稲田大学政治経済学部へ。新入生のみなさんは、新しい生活の始まり......</td>
+</tr>
+<tr>
+<td>2026</td>
+<td>BSPX101S</td>
+<td><a href="#" onclick="post_submit('JAA104DtlSubCon', '1100001010172026110000101011')">基礎演習　１７</a></td>
+<td>押谷　健</td>
+<td>政経</td>
+<td style="word-break:break-all;">春学期</td>
+<td>金４時限</td>
+
+<td>３-６０８（演習室）</td>
+
+
+<td>ようこそ、早稲田大学政治経済学部へ。新入生のみなさんは、新しい生活の始まり......</td>
+</tr>
+<tr>
+<td>2026</td>
+<td>BSPX101S</td>
+<td><a href="#" onclick="post_submit('JAA104DtlSubCon', '1100001010182026110000101011')">基礎演習　１８</a></td>
+<td>横尾　祐樹</td>
+<td>政経</td>
+<td style="word-break:break-all;">春学期</td>
+<td>月４時限</td>
+
+<td>３-１１０６大久保建男記念ジャーナリズム共同実習室</td>
+
+
+<td>ようこそ、早稲田大学政治経済学部へ。新入生のみなさんは、新しい生活の始まり......</td>
+</tr>
+<tr>
+<td>2026</td>
+<td>BSPX101S</td>
+<td><a href="#" onclick="post_submit('JAA104DtlSubCon', '1100001010192026110000101011')">基礎演習　１９</a></td>
+<td>久保　慶一</td>
+<td>政経</td>
+<td style="word-break:break-all;">春学期</td>
+<td>火４時限</td>
+
+<td>３-６０５</td>
+
+
+<td>ようこそ、早稲田大学政治経済学部へ。新入生のみなさんは、新しい生活の始まり......</td>
+</tr>
+<tr>
+<td>2026</td>
+<td>BSPX101S</td>
+<td><a href="#" onclick="post_submit('JAA104DtlSubCon', '1100001010232026110000101011')">基礎演習　２３</a></td>
+<td>齋藤　純一</td>
+<td>政経</td>
+<td style="word-break:break-all;">秋学期</td>
+<td>月２時限</td>
+
+<td>３-１１０３演習室</td>
+
+
+<td>ようこそ、早稲田大学政治経済学部へ。新入生のみなさんは、新しい生活の始まり......</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cbd-bkbottom">
+<div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="l-btn-c">
+<table summary="table" class="t-btn">
+<tr>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon','1');">&lt;前へ</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div class="l-btn-c">
+<table summary="table" class="t-btn">
+<tr>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon',1);">1</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<strong>
+2
+</strong>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon',3);">3</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon',4);">4</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon',5);">5</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon',6);">6</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon',7);">7</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon',8);">8</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon',9);">9</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon',10);">10</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+…
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon',80717);">80717</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div>
+<div>
+<div>
+<div>
+</div>
+</div>
+<p>
+<a href="javascript:;" onclick="page_turning('JAA103SubCon','3');">次へ&gt;</a>
+</p>
+<div>
+<div>
+</div>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<!-- Block_end -->
+<input type="hidden" name="p_number" value="10" />
+<input type="hidden" name="p_page" value="" />
+<input type="hidden" name="pfrontPage" value="" />
+<input type="hidden" name="keyword" value="" />
+<input type="hidden" name="kamoku" value="" />
+<input type="hidden" name="kyoin" value="" />
+<input type="hidden" name="p_gakki" value="" />
+<input type="hidden" name="p_youbi" value="" />
+<input type="hidden" name="p_jigen" value="" />
+<input type="hidden" name="p_gengo" value="" />
+<input type="hidden" name="p_jyugyohoho" value="" />
+<input type="hidden" name="p_open" value="" />
+<input type="hidden" name="p_gakubu" value="" />
+<input type="hidden" name="p_keya" value="" />
+<input type="hidden" name="p_keyb" value="" />
+<input type="hidden" name="p_keyc" value="" />
+
+<input type="hidden" name="p_searcha" value="" />
+<input type="hidden" name="p_searchb" value="" />
+<input type="hidden" name="p_searchc" value="" />
+
+<input type="hidden" name="nendo" value="" />
+<input type="hidden" name="pYear" value="" />
+<input type="hidden" name="pSchl" value="" />
+<input type="hidden" name="pClsOpnSts" value="" />
+<input type="hidden" name="pKyoincd" value="" />
+<input type="hidden" name="pKey" value="" />
+
+<input type="hidden" id="bunya1_hid" name="bunya1_hid" value="" />
+<input type="hidden" id="bunya2_hid" name="bunya2_hid" value="" />
+<input type="hidden" id="bunya3_hid" name="bunya3_hid" value="" />
+<input type="hidden" id="level_hid" name="level_hid" value="" />
+</div>
+<p class="c-ptop">
+  <a href="#cHonbun">ページの先頭へ戻る</a>
+</p>
+<!-- Footer_start//////////////////// -->
+<!-- Footer_start//////////////////// -->
+<div id="Footer2" >
+<div class="fcontents" style="margin: 0px -5px 0px 0px;">
+<p style="float: left;">
+Copyright © Waseda University 2006-2026.All rights reserved.
+</p>
+<ul style="text-align: right;">
+<li class="f-link-start"><a href="https://www.waseda.jp/wits/copyright/index.html" target="licensing">著作権・使用許諾条件</a></li>
+<li><a href="https://www.waseda.jp/top/privacy-policy" target="information">個人情報保護</a></li>
+
+</ul>
+</div>
+</div>
+<!-- ////////////////////Footer_end --><!-- ////////////////////Footer_end -->
+</div>
+<!-- Contents_end -->
+</div>
+</div>
+</div>
+<!-- /div --></div>
+<!--Contents end-->
+</div>
+</div>
+</div></div>
+</div></div></div></div>
+
+
+<div id="Footer">
+<div id="fbImageL">
+<div id="fbImageR">
+
+</div>
+</div>
+</div>
+<input type="hidden" name="ControllerParameters" value="" />
+<input type="hidden" name="pOcw" value="" />
+<input type="hidden" name="pType" value="" />
+<input type="hidden" id="pLng" name="pLng" value="jp" />
+</form>
+<div><img class="j-read" src="images/space.gif" width="1" height="1" alt="read" /></div>
+</body>
+</html>

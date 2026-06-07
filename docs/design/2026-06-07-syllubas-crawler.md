@@ -1,58 +1,53 @@
 ---
-title: Design Doc テンプレート
+title: シラバスCrawlerJob設計
 owner:
-  - "{{ オーナー名 }}"
+  - "tsukuneA1"
 category:
-  - "{{ カテゴリー }}"
+  - "Backend"
 ---
 
-# {{ Design Docのタイトル }}
+# シラバスCrawlerJob設計
 
 ## 概要 (Overview) <!-- REQUIRED -->
 
-<!--
-Why & What: なぜやるか/何を目指すかの全体像を示す章です。
-章タイトル直下は空欄でOKです。以下の節に記述してください。
--->
-
 ### 要約 (Summary) <!-- REQUIRED -->
 
-<!--
-3行以内で、誰のどんな課題を何で解決し、どう良くなるかを簡潔に記載してください。
--->
+早稲田大学のシラバスをクローリングし、結果をpostgresにUpsertで格納するシステム起点のジョブの設計を決定する。
+http Clientにはhttpx、HTML解析にはBeautifulSoup4 + lxmlを採用する。
+実際のジョブ実行ではcrawlerパッケージを実行するDockerfileを作成し、Cloud Run Jobでそのエントリーポイントを叩く。
 
 ### 背景 (Background) <!-- REQUIRED -->
 
-<!--
-現状の課題/ビジネス要求/ジョブ（JTBD; Jobs-to-be-Done）/依頼のきっかけを記載してください。
--->
+今回のシラバス検索システムを構築するための基盤。ジョブ実行を堅牢に行うことが本システムにおいて非常に重要になる。
 
 ### 目的 (Purpose) <!-- REQUIRED -->
 
-<!--
-この設計で何を達成し、何をやらないかを明確にする節です。
-節タイトル直下は空欄でもOKです。
--->
+シラバスシステムに必要なデータをデータ元から完全に抽出し、postgresに格納できることを目的とする。
+ジョブの詳細な非機能要件(実行速度など)を厳密に定めて達成することは目的の対象外。
 
 #### ゴール (Goals) <!-- REQUIRED -->
 
-<!--
-この設計で達成したいことを箇条書きで記載してください。
-定量的な指標（例: SLA/SLI, MTTR, 運用負荷など）があれば併記してください。
--->
+- 生成したJobが正しくデータを格納できる
+- 異常系が発生した場合、正しくログをはいて異常終了できる
+- 適切なリトライ設計がされている
 
 #### スコープ外 (Out of Scope) <!-- Optional -->
 
-<!--
-今回はやらないこと、後続フェーズに送るものを箇条書きで明示してください。
--->
+- Jobパフォーマンスの向上。今回は速度は律速ではないのでスコープ対象外
 
 ### 前提 (Assumptions) <!-- Optional -->
 
-<!--
-依存サービスやライブラリの前提条件、使うバージョン/SLO/利用形態などを記載します。
-確定していないものは「未決事項」に記載してください。
--->
+- 早稲田大学のシラバス検索サイトのトップページURLは https://www.wsl.waseda.jp/syllabus/JAA101.php
+- formでキーワード・分野コード・レベル・科目名。教員名・学期・曜日・時限・授業で使用する言語・授業方法区分・オープン科目か否か・学部の条件で検索を行える
+- formで指定した条件はクエリパラメータとして付与されない
+- 検索結果の件数が膨大な場合ページネーションが行われる
+- ページネーションのページ指定番号はクエリパラメータとして付与されない
+- APIはかなりレガシー且つ現在のweb・REST APIの原則には則っておらず、formをPOST送信して検索パラメータをbodyに載せて送信している。
+- 主に使用するのは以下のパラメータ
+    - nendo: シラバスの開講年度を絞り込む
+    - page_size: ページネーションのLIMIT指定。最大5000程度で保守的に2000でジョブでは実行する
+    - p_page: ページネーションのOFFSET指定。
+- 一覧検索ではPOSTだったが詳細取得ではGETメソッドが使用可能。pKey(シラバスの主キー)をパスパラメータとして https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=2600001002012026260000100226&pLng=jp のような形式で指定する
 
 ### 制約 (Constraints) <!-- Optional -->
 
@@ -121,11 +116,35 @@ How: どのように実現するかの章。
 
 ### 全体設計 (High-Level Design) <!-- REQUIRED -->
 
-<!--
-システム全体の1枚絵（データ/リクエストフロー、主要コンポーネントなど）。
-既存システムとの関係性がわかるとベターです。
-Mermaid/Draw.io/画像など、形式は自由です。
--->
+今回は単発のジョブでクローリング・DB Upsertを全て行わず2回のコマンドで責務(pKey全取得・各pKeyについてGETしてDB Upsert)に分割する。
+
+```mermaid
+flowchart TD
+    Scheduler[Cloud Scheduler] -->|定期実行| DiscoverJob[Cloud Run Job<br/>crawler discover]
+
+    DiscoverJob -->|POST 検索<br/>JAA101.php<br/>ControllerParameters=JAA103SubCon<br/>nendo=2026<br/>p_number=2000<br/>p_page=1..N| WasedaSearch[Waseda Syllabus<br/>検索結果HTML]
+
+    WasedaSearch -->|pKey抽出| DiscoverJob
+
+    DiscoverJob -->|upsert pKey<br/>target inventory更新| Targets[(Cloud SQL PostgreSQL<br/>crawl_targets)]
+
+    Scheduler -->|別スケジュール<br/>またはdiscover後に実行| IngestJob[Cloud Run Job<br/>crawler ingest]
+
+    IngestJob -->|pending / failed pKey取得| Targets
+
+    IngestJob -->|GET 詳細<br/>JAA104.php?pKey=...&pLng=jp| WasedaDetail[Waseda Syllabus<br/>詳細HTML]
+
+    WasedaDetail -->|HTML| IngestJob
+
+    IngestJob -->|parse + validate| CourseModel[Pydantic Course Model]
+
+    CourseModel -->|upsert| Courses[(Cloud SQL PostgreSQL<br/>courses)]
+
+    IngestJob -->|status更新<br/>succeeded / failed<br/>attempts / last_error| Targets
+
+    DiscoverJob -->|実行履歴| Runs[(Cloud SQL PostgreSQL<br/>crawl_runs)]
+    IngestJob -->|実行履歴| Runs
+```
 
 ### 影響範囲 (Impact) <!-- Optional -->
 
@@ -136,10 +155,86 @@ Mermaid/Draw.io/画像など、形式は自由です。
 
 ### データモデル・データベース設計 (Data Models & Database Design) <!-- Optional -->
 
-<!--
-データモデルやDBスキーマの変更がある場合、その設計を記載してください。
-DDLやER図があればそれも併記してください。
--->
+```mermaid
+erDiagram
+    CRAWL_RUNS ||--o{ CRAWL_TARGETS : "last_seen_run_id"
+    CRAWL_TARGETS ||--o| COURSES : "p_key"
+
+    CRAWL_RUNS {
+        bigint id PK
+        text job_type
+        text status
+        timestamptz started_at
+        timestamptz finished_at
+        int discovered_count
+        int ingested_count
+        int failed_count
+        text error_message
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    CRAWL_TARGETS {
+        text p_key PK
+        bigint last_seen_run_id FK
+        text status
+        int attempts
+        text last_error
+
+        text academic_year
+        text title
+        text course_code
+        text instructor
+        text faculty
+        text term
+        text day_period
+        text classroom
+        text summary_preview
+
+        timestamptz first_discovered_at
+        timestamptz last_discovered_at
+        timestamptz last_ingested_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    COURSES {
+        bigint id PK
+        text p_key FK
+        text academic_year
+        text faculty
+        text title
+        text instructor
+        text term_day_period
+        text category
+        text eligible_year
+        int credits
+        text classroom
+        text campus
+        text course_key
+        text class_code
+        text language
+        text delivery_mode
+        text course_code
+
+        text subtitle
+        text overview
+        text objectives
+        text before_after_study
+        text lesson_plan
+        text textbook
+        text reference_text
+        text notes
+
+        text raw_html
+        text source_url
+        text syllabus_updated_at
+        timestamptz fetched_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+```
+
 
 ### API設計 (API Design) <!-- Optional -->
 
