@@ -168,8 +168,8 @@ erDiagram
 
     CRAWL_RUNS {
         bigint id PK
-        text job_type
-        text status
+        ENUM job_type
+        ENUM status
         timestamptz started_at
         timestamptz finished_at
         int discovered_count
@@ -181,7 +181,7 @@ erDiagram
     CRAWL_TARGETS {
         text p_key PK
         bigint last_seen_run_id FK
-        text status
+        ENUM status
         int attempts
         text last_error
         int discovered_year
