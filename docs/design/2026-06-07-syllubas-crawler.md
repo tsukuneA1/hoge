@@ -191,7 +191,7 @@ erDiagram
     }
 
     COURSES {
-        bigint id PK(p_keyをそのまま格納する)
+        bigint id PK
         text academic_year
         text faculty
         text title
