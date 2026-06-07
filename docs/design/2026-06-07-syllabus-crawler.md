@@ -175,8 +175,6 @@ erDiagram
         int ingested_count
         int failed_count
         text error_message
-        timestamptz created_at
-        timestamptz updated_at
     }
 
     CRAWL_TARGETS {
@@ -196,7 +194,7 @@ erDiagram
     }
 
     COURSES {
-        bigint id PK
+        text p_key PK
         text academic_year
         text faculty
         text title
@@ -302,9 +300,9 @@ Figmaなどの画面遷移図へのリンクがあれば併記してください
 
 1. pending targetをrunning→succeededにしてcoursesへupsert出来る
 2. succeeded targetは処理しない
-3. failed attempts<3は再処理する
-4. failed attempts>=3はskipする
-5. stale runningは再処理できる
+3. failed attempts < max_attemptsは再処理する
+4. failed attempts >= max_attemptsはskipする
+5. stale running(statusがrunnningかつupdated_at + ジョブのタイムアウト時間が現在時間より大きいとき)は再処理できる
 6. 詳細GET失敗時はtarget failedになる
 7. parse/validation失敗時はtarget failedになる
 8. course upsertとtarget succeeded更新は同一transaction
