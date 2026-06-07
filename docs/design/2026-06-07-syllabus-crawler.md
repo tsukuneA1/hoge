@@ -46,7 +46,7 @@ http Clientにはhttpx、HTML解析にはBeautifulSoup4 + lxmlを採用する。
 - APIはかなりレガシー且つ現在のweb・REST APIの原則には則っておらず、formをPOST送信して検索パラメータをbodyに載せて送信している。
 - 主に使用するのは以下のパラメータ
     - nendo: シラバスの開講年度を絞り込む
-    - page_size: ページネーションのLIMIT指定。最大5000程度で保守的に2000でジョブでは実行する
+    - p_number: ページネーションのLIMIT指定。最大5000程度で保守的に2000でジョブでは実行する
     - p_page: ページネーションのOFFSET指定。
 - 一覧検索ではPOSTだったが詳細取得ではGETメソッドが使用可能。pKey(シラバスの主キー)をパスパラメータとして https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=2600001002012026260000100226&pLng=jp のような形式で指定する
 - 具体的にはapps/backend/experimentsで実際のクエリとその実行結果が確認できる。
@@ -261,13 +261,6 @@ Figmaなどの画面遷移図へのリンクがあれば併記してください
 - Cloud Run JobのmaxRetries
 
     Cloud Run JobのmaxRetriesによる制御はDB状態を考慮できず粗いので、基本的に採用しない。主にdiscover job, ingest job共に0~1にすることを想定している。
-
-### {{ トピック名 }} ({{ TopicName }}) <!-- Optional -->
-
-<!--
-上記以外で特記したいトピックがあれば追加してください。
-「設計」の章の中であれば位置は任意です。
--->
 
 ## 検討した代替案 (Alternatives Considered) <!-- Optional -->
 
