@@ -130,7 +130,7 @@ flowchart TD
 
     DiscoverJob -->|upsert pKey<br/>target inventory更新| Targets[(Cloud SQL PostgreSQL<br/>crawl_targets)]
 
-    Scheduler -->|別スケジュール<br/>またはdiscover後に実行| IngestJob[Cloud Run Job<br/>crawler ingest]
+    Scheduler -->|discover後に実行| IngestJob[Cloud Run Job<br/>crawler ingest]
 
     IngestJob -->|pending / failed pKey取得| Targets
 
