@@ -1,7 +1,5 @@
-import sys
-
 def main() -> None:
-    sys.exit(main())
+    raise NotImplementedError
 
 if __name__ == "__main__":
     main()
