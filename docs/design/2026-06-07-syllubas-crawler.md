@@ -275,9 +275,21 @@ Figmaなどの画面遷移図へのリンクがあれば併記してください
 主要なパスとふるまいを2種類のジョブごと列挙する
 
 #### Discover Job
-1. 
+1. 正常にpKeyを抽出してcrawl_targetsへupsert出来る
+2. 既存succeeded targetを発見してもpendingに戻さない
+3. 1ページだけtimeoutしたら部分成功になる
+4. 全ページ失敗したらstatusをfailedにしてexit 1
+5. total_countまたはpKey抽出が全滅したらstatusをfailedにしてexit 1
 
 #### Ingest Job
+1. pending targetをrunning→succeededにしてcoursesへupsert出来る
+2. succeeded targetは処理しない
+3. failed attempts<3は再処理する
+4. failed attempts>=3はskipする
+5. stale runningは再処理できる
+6. 詳細GET失敗時はtarget failedになる
+7. parse/validation失敗時はtarget failedになる
+8. course upsertとtarget succeeded更新は同一transaction
 
 ### E2Eテスト (End-to-End Tests) <!-- Optional -->
 
