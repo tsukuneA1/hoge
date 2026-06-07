@@ -34,6 +34,7 @@ http Clientにはhttpx、HTML解析にはBeautifulSoup4 + lxmlを採用する。
 #### スコープ外 (Out of Scope) <!-- Optional -->
 
 - Jobパフォーマンスの向上。今回は速度は律速ではないのでスコープ対象外
+- インフラ(GCP)の構成の細部。別途design docで扱うものとし、今回はcrawlerのhigh levelな設計議論に留めてどのリソースを使えば正しくジョブが動作するかという抽象度で議論する
 
 ### 前提 (Assumptions) <!-- Optional -->
 
