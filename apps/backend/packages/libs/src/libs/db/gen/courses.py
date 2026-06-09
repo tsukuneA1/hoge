@@ -54,9 +54,10 @@ INSERT INTO courses
     reference_text,
     grading_policy,
     remarks,
+    syllabus_updated_at,
     source_url
 )
-VALUES (:p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10, :p11, :p12, :p13, :p14, :p15, :p16, :p17, :p18, :p19, :p20, :p21, :p22, :p23, :p24, :p25, :p26, :p27, :p28, :p29, :p30, :p31)
+VALUES (:p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10, :p11, :p12, :p13, :p14, :p15, :p16, :p17, :p18, :p19, :p20, :p21, :p22, :p23, :p24, :p25, :p26, :p27, :p28, :p29, :p30, :p31, :p32)
 ON CONFLICT (pkey) DO UPDATE SET
 academic_year = excluded.academic_year,
 faculty = excluded.faculty,
@@ -87,6 +88,7 @@ textbook = excluded.textbook,
 reference_text = excluded.reference_text,
 grading_policy = excluded.grading_policy,
 remarks = excluded.remarks,
+syllabus_updated_at = excluded.syllabus_updated_at,
 source_url = excluded.source_url,
 updated_at = NOW()
 """
@@ -123,6 +125,7 @@ class UpsertCoursesParams(pydantic.BaseModel):
     reference_text: Optional[str]
     grading_policy: Optional[str]
     remarks: Optional[str]
+    syllabus_updated_at: Optional[str]
     source_url: str
 
 
@@ -243,7 +246,8 @@ class Querier:
             "p28": arg.reference_text,
             "p29": arg.grading_policy,
             "p30": arg.remarks,
-            "p31": arg.source_url,
+            "p31": arg.syllabus_updated_at,
+            "p32": arg.source_url,
         })
 
 
@@ -364,5 +368,6 @@ class AsyncQuerier:
             "p28": arg.reference_text,
             "p29": arg.grading_policy,
             "p30": arg.remarks,
-            "p31": arg.source_url,
+            "p31": arg.syllabus_updated_at,
+            "p32": arg.source_url,
         })
