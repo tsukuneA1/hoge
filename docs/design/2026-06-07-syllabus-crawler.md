@@ -195,7 +195,8 @@ erDiagram
     }
 
     COURSES {
-        text p_key PK
+        text pkey PK
+
         text academic_year
         text faculty
         text title
@@ -212,6 +213,12 @@ erDiagram
         text delivery_mode
         text course_code
 
+        text field_large
+        text field_middle
+        text field_small
+        text level
+        text class_format
+
         text subtitle
         text overview
         text objectives
@@ -219,12 +226,11 @@ erDiagram
         text lesson_plan
         text textbook
         text reference_text
-        text notes
-
-        text raw_html
-        text source_url
+        text grading_policy
+        text remarks
         text syllabus_updated_at
-        timestamptz fetched_at
+
+        text source_url
         timestamptz created_at
         timestamptz updated_at
     }
