@@ -38,9 +38,10 @@ INSERT INTO courses
     grading_policy,
     remarks,
     syllabus_updated_at,
-    source_url
+    source_url,
+    raw_html
 )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33)
 ON CONFLICT (pkey) DO UPDATE SET
 academic_year = excluded.academic_year,
 faculty = excluded.faculty,
@@ -73,4 +74,5 @@ grading_policy = excluded.grading_policy,
 remarks = excluded.remarks,
 syllabus_updated_at = excluded.syllabus_updated_at,
 source_url = excluded.source_url,
+raw_html = excluded.raw_html,
 updated_at = NOW();

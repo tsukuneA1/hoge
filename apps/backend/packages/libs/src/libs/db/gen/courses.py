@@ -3,7 +3,7 @@
 #   sqlc v1.30.0
 # source: courses.sql
 import pydantic
-from typing import AsyncIterator, Iterator, Optional
+from typing import Any, AsyncIterator, Iterator, Optional
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
@@ -12,13 +12,13 @@ from libs.infrastructure.db.gen import models
 
 
 GET_COURSE_BY_PKEY = """-- name: get_course_by_pkey \\:one
-SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, grading_policy, remarks, syllabus_updated_at, source_url, created_at, updated_at FROM courses
+SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, grading_policy, remarks, syllabus_updated_at, source_url, raw_html, created_at, updated_at FROM courses
 WHERE pkey = :p1
 """
 
 
 LIST_COURSES = """-- name: list_courses \\:many
-SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, grading_policy, remarks, syllabus_updated_at, source_url, created_at, updated_at FROM courses
+SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, grading_policy, remarks, syllabus_updated_at, source_url, raw_html, created_at, updated_at FROM courses
 """
 
 
@@ -55,9 +55,10 @@ INSERT INTO courses
     grading_policy,
     remarks,
     syllabus_updated_at,
-    source_url
+    source_url,
+    raw_html
 )
-VALUES (:p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10, :p11, :p12, :p13, :p14, :p15, :p16, :p17, :p18, :p19, :p20, :p21, :p22, :p23, :p24, :p25, :p26, :p27, :p28, :p29, :p30, :p31, :p32)
+VALUES (:p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10, :p11, :p12, :p13, :p14, :p15, :p16, :p17, :p18, :p19, :p20, :p21, :p22, :p23, :p24, :p25, :p26, :p27, :p28, :p29, :p30, :p31, :p32, :p33)
 ON CONFLICT (pkey) DO UPDATE SET
 academic_year = excluded.academic_year,
 faculty = excluded.faculty,
@@ -90,6 +91,7 @@ grading_policy = excluded.grading_policy,
 remarks = excluded.remarks,
 syllabus_updated_at = excluded.syllabus_updated_at,
 source_url = excluded.source_url,
+raw_html = excluded.raw_html,
 updated_at = NOW()
 """
 
@@ -101,16 +103,16 @@ class UpsertCoursesParams(pydantic.BaseModel):
     title: str
     instructor: str
     term_day_period: str
-    category: str
-    eligible_year: str
+    category: Optional[str]
+    eligible_year: Optional[str]
     credits: int
-    classroom: str
-    campus: str
-    course_key: str
-    class_code: str
-    language: str
-    delivery_mode: str
-    course_code: str
+    classroom: Optional[str]
+    campus: Optional[str]
+    course_key: Optional[str]
+    class_code: Optional[Any]
+    language: Optional[str]
+    delivery_mode: Optional[str]
+    course_code: Optional[str]
     field_large: Optional[str]
     field_middle: Optional[str]
     field_small: Optional[str]
@@ -127,6 +129,7 @@ class UpsertCoursesParams(pydantic.BaseModel):
     remarks: Optional[str]
     syllabus_updated_at: Optional[str]
     source_url: str
+    raw_html: Optional[str]
 
 
 class Querier:
@@ -170,8 +173,9 @@ class Querier:
             remarks=row[29],
             syllabus_updated_at=row[30],
             source_url=row[31],
-            created_at=row[32],
-            updated_at=row[33],
+            raw_html=row[32],
+            created_at=row[33],
+            updated_at=row[34],
         )
 
     def list_courses(self) -> Iterator[models.Course]:
@@ -210,8 +214,9 @@ class Querier:
                 remarks=row[29],
                 syllabus_updated_at=row[30],
                 source_url=row[31],
-                created_at=row[32],
-                updated_at=row[33],
+                raw_html=row[32],
+                created_at=row[33],
+                updated_at=row[34],
             )
 
     def upsert_courses(self, arg: UpsertCoursesParams) -> None:
@@ -248,6 +253,7 @@ class Querier:
             "p30": arg.remarks,
             "p31": arg.syllabus_updated_at,
             "p32": arg.source_url,
+            "p33": arg.raw_html,
         })
 
 
@@ -292,8 +298,9 @@ class AsyncQuerier:
             remarks=row[29],
             syllabus_updated_at=row[30],
             source_url=row[31],
-            created_at=row[32],
-            updated_at=row[33],
+            raw_html=row[32],
+            created_at=row[33],
+            updated_at=row[34],
         )
 
     async def list_courses(self) -> AsyncIterator[models.Course]:
@@ -332,8 +339,9 @@ class AsyncQuerier:
                 remarks=row[29],
                 syllabus_updated_at=row[30],
                 source_url=row[31],
-                created_at=row[32],
-                updated_at=row[33],
+                raw_html=row[32],
+                created_at=row[33],
+                updated_at=row[34],
             )
 
     async def upsert_courses(self, arg: UpsertCoursesParams) -> None:
@@ -370,4 +378,5 @@ class AsyncQuerier:
             "p30": arg.remarks,
             "p31": arg.syllabus_updated_at,
             "p32": arg.source_url,
+            "p33": arg.raw_html,
         })

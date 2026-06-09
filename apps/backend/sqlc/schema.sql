@@ -68,25 +68,25 @@ CREATE TABLE courses (
     term_day_period TEXT NOT NULL,
     -- 科目区分 
     -- NOTE: ENUMに出来るかも
-    category TEXT NOT NULL,
+    category TEXT,
     -- 配当年次 「1年以上」みたいな感じで来る。intにするかD1みたいな区別を避けるためにTEXTにするか
-    eligible_year TEXT NOT NULL,
+    eligible_year TEXT,
     -- 単位数
     credits INT NOT NULL,
     -- 使用教室
-    classroom TEXT NOT NULL,
+    classroom TEXT,
     -- キャンパス
-    campus TEXT NOT NULL,
+    campus TEXT,
     -- 科目キー
-    course_key TEXT NOT NULL,
+    course_key TEXT,
     -- 科目クラスコード
-    class_code TEXT NOT NULL,
+    class_code TEXTL,
     -- 授業で使用する言語
-    language TEXT NOT NULL,
+    language TEXT,
     -- 授業形式 ENUMでいいかも。
-    delivery_mode TEXT NOT NULL,
+    delivery_mode TEXT,
     -- コース・コード
-    course_code TEXT NOT NULL,
+    course_code TEXT,
     -- 大分野名称
     field_large TEXT,
     -- 中分野名称
@@ -120,6 +120,8 @@ CREATE TABLE courses (
     syllabus_updated_at TEXT,
 
     source_url TEXT NOT NULL,
+    -- 一旦カラムだけ置く。データ量がボトルネックになるならNULLで入れる
+    raw_html TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
