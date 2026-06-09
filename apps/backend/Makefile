@@ -1,4 +1,4 @@
-.PHONY: format lint typecheck test check
+.PHONY: format lint typecheck test check sqlc
 
 fmt:
 	uv run ruff format .
@@ -17,3 +17,6 @@ check: lint typecheck test
 
 sqlc:
 	cd sqlc && sqlc generate
+
+sqlc-fmt:
+	cd sqlc && sqlfluff fix query/backend && sqlfluff fix schema.sql

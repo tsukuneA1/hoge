@@ -20,8 +20,8 @@ CREATE TYPE crawl_target_status AS ENUM (
 CREATE TABLE crawl_runs (
     id BIGSERIAL PRIMARY KEY,
 
-    job_type crawl_job_type NOT NULL,
-    status crawl_run_status NOT NULL,
+    job_type CRAWL_JOB_TYPE NOT NULL,
+    status CRAWL_RUN_STATUS NOT NULL,
 
     started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     finished_at TIMESTAMPTZ,
@@ -36,9 +36,9 @@ CREATE TABLE crawl_runs (
 CREATE TABLE crawl_targets (
     pkey TEXT PRIMARY KEY,
 
-    last_seen_run_id BIGSERIAL REFERENCES crawl_runs(id),
+    last_seen_run_id BIGSERIAL REFERENCES crawl_runs (id),
 
-    status crawl_target_status NOT NULL,
+    status CRAWL_TARGET_STATUS NOT NULL,
     attempts INTEGER NOT NULL DEFAULT 0,
     last_error TEXT,
 
