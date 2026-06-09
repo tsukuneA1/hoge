@@ -4,7 +4,7 @@
 import datetime
 import enum
 import pydantic
-from typing import Any, Optional
+from typing import Optional
 
 
 class CrawlJobType(str, enum.Enum):
@@ -39,7 +39,7 @@ class Course(pydantic.BaseModel):
     classroom: Optional[str]
     campus: Optional[str]
     course_key: Optional[str]
-    class_code: Optional[Any]
+    class_code: Optional[str]
     language: Optional[str]
     delivery_mode: Optional[str]
     course_code: Optional[str]

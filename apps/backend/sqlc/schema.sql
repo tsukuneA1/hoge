@@ -80,7 +80,7 @@ CREATE TABLE courses (
     -- 科目キー
     course_key TEXT,
     -- 科目クラスコード
-    class_code TEXTL,
+    class_code TEXT,
     -- 授業で使用する言語
     language TEXT,
     -- 授業形式 ENUMでいいかも。

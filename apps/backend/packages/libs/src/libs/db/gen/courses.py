@@ -3,7 +3,7 @@
 #   sqlc v1.30.0
 # source: courses.sql
 import pydantic
-from typing import Any, AsyncIterator, Iterator, Optional
+from typing import AsyncIterator, Iterator, Optional
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
@@ -109,7 +109,7 @@ class UpsertCoursesParams(pydantic.BaseModel):
     classroom: Optional[str]
     campus: Optional[str]
     course_key: Optional[str]
-    class_code: Optional[Any]
+    class_code: Optional[str]
     language: Optional[str]
     delivery_mode: Optional[str]
     course_code: Optional[str]
