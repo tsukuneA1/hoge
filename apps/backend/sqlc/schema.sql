@@ -38,7 +38,7 @@ CREATE TABLE crawl_targets (
 
     last_seen_run_id BIGSERIAL REFERENCES crawl_runs (id),
 
-    status CRAWL_TARGET_STATUS NOT NULL,
+    status CRAWL_TARGET_STATUS NOT NULL DEFAULT 'pending',
     attempts INTEGER NOT NULL DEFAULT 0,
     last_error TEXT,
 
