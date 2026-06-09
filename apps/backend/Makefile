@@ -14,3 +14,6 @@ test:
 	uv run pytest
 
 check: lint typecheck test
+
+sqlc:
+	cd sqlc && sqlc generate
