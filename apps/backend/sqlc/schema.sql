@@ -36,7 +36,7 @@ CREATE TABLE crawl_runs (
 CREATE TABLE crawl_targets (
     pkey TEXT PRIMARY KEY,
 
-    last_seen_run_id BIGSERIAL REFERENCES crawl_runs (id),
+    last_seen_run_id BIGINT REFERENCES crawl_runs (id),
 
     status CRAWL_TARGET_STATUS NOT NULL DEFAULT 'pending',
     attempts INTEGER NOT NULL DEFAULT 0,
