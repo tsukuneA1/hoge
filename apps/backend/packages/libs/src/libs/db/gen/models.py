@@ -48,14 +48,14 @@ class Course(pydantic.BaseModel):
     field_small: Optional[str]
     level: Optional[str]
     class_format: Optional[str]
-    subtitle: str
-    overview: str
-    objectives: str
-    before_after_study: str
-    lesson_plan: str
-    textbook: str
-    reference_text: str
-    grading_policy: str
+    subtitle: Optional[str]
+    overview: Optional[str]
+    objectives: Optional[str]
+    before_after_study: Optional[str]
+    lesson_plan: Optional[str]
+    textbook: Optional[str]
+    reference_text: Optional[str]
+    grading_policy: Optional[str]
     remarks: Optional[str]
     syllabus_updated_at: Optional[str]
     source_url: str

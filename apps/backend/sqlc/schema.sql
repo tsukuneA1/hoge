@@ -99,21 +99,21 @@ CREATE TABLE courses (
     class_format TEXT,
 
     -- 副題
-    subtitle TEXT NOT NULL,
+    subtitle TEXT,
     -- 授業概要
-    overview TEXT NOT NULL,
+    overview TEXT,
     -- 授業の到達目標
-    objectives TEXT NOT NULL,
+    objectives TEXT,
     -- 事前・事後学習の内容
-    before_after_study TEXT NOT NULL,
+    before_after_study TEXT,
     -- 授業計画
-    lesson_plan TEXT NOT NULL,
+    lesson_plan TEXT,
     -- 教科書
-    textbook TEXT NOT NULL,
+    textbook TEXT,
     -- 参考文献
-    reference_text TEXT NOT NULL,
+    reference_text TEXT,
     -- 成績評価方法
-    grading_policy TEXT NOT NULL,
+    grading_policy TEXT,
     -- 備考・関連URL
     remarks TEXT,
     -- シラバス最終更新日
