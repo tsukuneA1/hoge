@@ -36,7 +36,7 @@ CREATE TABLE crawl_runs (
 CREATE TABLE crawl_targets (
     pkey TEXT PRIMARY KEY,
 
-    last_seen_run_id BIGSERIAL PREFERENCES crawl_runs(id),
+    last_seen_run_id BIGSERIAL REFERENCES crawl_runs(id),
 
     status crawl_target_status NOT NULL,
     attempts INTEGER NOT NULL DEFAULT 0,
@@ -115,7 +115,7 @@ CREATE TABLE courses (
     -- 成績評価方法
     granding_policy TEXT NOT NULL,
     -- 備考・関連URL
-    remarks TEXT
+    remarks TEXT,
     -- シラバス最終更新日
     syllabus_updated_at TEXT,
 

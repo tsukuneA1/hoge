@@ -2,23 +2,89 @@
 # versions:
 #   sqlc v1.30.0
 import datetime
+import enum
 import pydantic
-from typing import Any, List, Optional
+from typing import Optional
 
 
-class Syllabus(pydantic.BaseModel):
-    id: str
+class CrawlJobType(str, enum.Enum):
+    DISCOVER = "discover"
+    INGEST = "ingest"
+
+
+class CrawlRunStatus(str, enum.Enum):
+    RUNNING = "running"
+    SUCCEEDED = "succeeded"
+    PARTIAL_SUCCEEDED = "partial_succeeded"
+    FAILED = "failed"
+
+
+class CrawlTargetStatus(str, enum.Enum):
+    PENDING = "pending"
+    RUNNING = "running"
+    SUCCEEDED = "succeeded"
+    FAILED = "failed"
+
+
+class Course(pydantic.BaseModel):
+    pkey: str
+    academic_year: str
+    faculty: str
     title: str
-    title_en: Optional[str]
-    year: int
-    semester: str
-    credits: Optional[int]
-    department: Optional[str]
-    instructors: List[str]
-    description: Optional[str]
-    objectives: Optional[str]
-    schedule: Optional[Any]
-    evaluation: Optional[str]
-    textbooks: Optional[str]
-    crawled_at: datetime.datetime
-    updated_at: Optional[datetime.datetime]
+    instructor: str
+    term_day_period: str
+    category: str
+    eligible_year: str
+    credits: int
+    classroom: str
+    campus: str
+    course_key: str
+    class_code: str
+    language: str
+    delivery_mode: str
+    course_code: str
+    field_large: Optional[str]
+    field_middle: Optional[str]
+    field_small: Optional[str]
+    level: Optional[str]
+    class_format: Optional[str]
+    subtitle: str
+    overview: str
+    objectives: str
+    before_after_study: str
+    lesson_plan: str
+    textbook: str
+    reference_text: str
+    granding_policy: str
+    remarks: Optional[str]
+    syllabus_updated_at: Optional[str]
+    source_url: str
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
+
+class CrawlRun(pydantic.BaseModel):
+    id: int
+    job_type: CrawlJobType
+    status: CrawlRunStatus
+    started_at: datetime.datetime
+    finished_at: Optional[datetime.datetime]
+    discovered_count: int
+    ingested_count: int
+    failed_count: int
+    error_message: Optional[str]
+
+
+class CrawlTarget(pydantic.BaseModel):
+    pkey: str
+    last_seen_run_id: Optional[int]
+    status: CrawlTargetStatus
+    attempts: int
+    last_error: Optional[str]
+    discovered_year: int
+    source_page: int
+    first_discovered_at: datetime.datetime
+    last_discovered_at: datetime.datetime
+    last_ingested_at: Optional[datetime.datetime]
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
