@@ -1,16 +1,16 @@
-CREATE TYPE crawl_job_type AS ENUM (
+CREATE TYPE CRAWL_JOB_TYPE AS ENUM (
     'discover',
     'ingest'
 );
 
-CREATE TYPE crawl_run_status AS ENUM (
+CREATE TYPE CRAWL_RUN_STATUS AS ENUM (
     'running',
     'succeeded',
     'partially_succeeded',
     'failed'
 );
 
-CREATE TYPE crawl_target_status AS ENUM (
+CREATE TYPE CRAWL_TARGET_STATUS AS ENUM (
     'pending',
     'running',
     'succeeded',
