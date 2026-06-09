@@ -55,7 +55,7 @@ class Course(pydantic.BaseModel):
     lesson_plan: str
     textbook: str
     reference_text: str
-    granding_policy: str
+    grading_policy: str
     remarks: Optional[str]
     syllabus_updated_at: Optional[str]
     source_url: str

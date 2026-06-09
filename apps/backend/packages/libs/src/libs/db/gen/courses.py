@@ -12,13 +12,13 @@ from libs.infrastructure.db.gen import models
 
 
 GET_SYLLABUS_BY_PKEY = """-- name: get_syllabus_by_pkey \\:one
-SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, granding_policy, remarks, syllabus_updated_at, source_url, created_at, updated_at from courses
+SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, grading_policy, remarks, syllabus_updated_at, source_url, created_at, updated_at FROM courses
 WHERE pkey = :p1
 """
 
 
 LIST_COURSES = """-- name: list_courses \\:many
-SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, granding_policy, remarks, syllabus_updated_at, source_url, created_at, updated_at from courses
+SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, grading_policy, remarks, syllabus_updated_at, source_url, created_at, updated_at FROM courses
 """
 
 
@@ -26,20 +26,20 @@ UPSERT_COURSES = """-- name: upsert_courses \\:exec
 INSERT INTO courses (pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language)
 VALUES (:p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10, :p11, :p12, :p13, NOW())
 ON CONFLICT (id) DO UPDATE SET
-    academic_year        = EXCLUDED.academic_year,
-    faculty    = EXCLUDED.faculty,
-    title = EXCLUDED.title,
-    instructor = EXCLUDED.instructor,
-    term_day_period = EXCLUDED.term_day_period,
-    category = EXCLUDED.category,
-    eligible_year = EXCLUDED.eligible_year,
-    credits = EXCLUDED.credits,
-    classroom = EXCLUDED.classroom,
-    campus = EXCLUDED.campus,
-    course_key = EXCLUDED.course_key,
-    class_code = EXCLUDED.class_code,
-    language = EXCLUDED.language,
-    updated_at   = NOW()
+academic_year = excluded.academic_year,
+faculty = excluded.faculty,
+title = excluded.title,
+instructor = excluded.instructor,
+term_day_period = excluded.term_day_period,
+category = excluded.category,
+eligible_year = excluded.eligible_year,
+credits = excluded.credits,
+classroom = excluded.classroom,
+campus = excluded.campus,
+course_key = excluded.course_key,
+class_code = excluded.class_code,
+language = excluded.language,
+updated_at = NOW()
 """
 
 
@@ -96,7 +96,7 @@ class Querier:
             lesson_plan=row[25],
             textbook=row[26],
             reference_text=row[27],
-            granding_policy=row[28],
+            grading_policy=row[28],
             remarks=row[29],
             syllabus_updated_at=row[30],
             source_url=row[31],
@@ -136,7 +136,7 @@ class Querier:
                 lesson_plan=row[25],
                 textbook=row[26],
                 reference_text=row[27],
-                granding_policy=row[28],
+                grading_policy=row[28],
                 remarks=row[29],
                 syllabus_updated_at=row[30],
                 source_url=row[31],
@@ -199,7 +199,7 @@ class AsyncQuerier:
             lesson_plan=row[25],
             textbook=row[26],
             reference_text=row[27],
-            granding_policy=row[28],
+            grading_policy=row[28],
             remarks=row[29],
             syllabus_updated_at=row[30],
             source_url=row[31],
@@ -239,7 +239,7 @@ class AsyncQuerier:
                 lesson_plan=row[25],
                 textbook=row[26],
                 reference_text=row[27],
-                granding_policy=row[28],
+                grading_policy=row[28],
                 remarks=row[29],
                 syllabus_updated_at=row[30],
                 source_url=row[31],

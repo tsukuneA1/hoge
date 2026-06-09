@@ -113,7 +113,7 @@ CREATE TABLE courses (
     -- 参考文献
     reference_text TEXT NOT NULL,
     -- 成績評価方法
-    granding_policy TEXT NOT NULL,
+    grading_policy TEXT NOT NULL,
     -- 備考・関連URL
     remarks TEXT,
     -- シラバス最終更新日

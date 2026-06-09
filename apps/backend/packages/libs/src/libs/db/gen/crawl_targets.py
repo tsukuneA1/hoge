@@ -11,7 +11,7 @@ from libs.infrastructure.db.gen import models
 
 
 LIST_CRAWL_TARGETS = """-- name: list_crawl_targets \\:many
-SELECT pkey, last_seen_run_id, status, attempts, last_error, discovered_year, source_page, first_discovered_at, last_discovered_at, last_ingested_at, created_at, updated_at from crawl_targets
+SELECT pkey, last_seen_run_id, status, attempts, last_error, discovered_year, source_page, first_discovered_at, last_discovered_at, last_ingested_at, created_at, updated_at FROM crawl_targets
 """
 
 

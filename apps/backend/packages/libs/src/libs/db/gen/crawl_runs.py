@@ -11,7 +11,7 @@ from libs.infrastructure.db.gen import models
 
 
 LIST_CRAWL_RUNS = """-- name: list_crawl_runs \\:many
-SELECT id, job_type, status, started_at, finished_at, discovered_count, ingested_count, failed_count, error_message from crawl_runs
+SELECT id, job_type, status, started_at, finished_at, discovered_count, ingested_count, failed_count, error_message FROM crawl_runs
 """
 
 
