@@ -15,7 +15,7 @@ class CrawlJobType(str, enum.Enum):
 class CrawlRunStatus(str, enum.Enum):
     RUNNING = "running"
     SUCCEEDED = "succeeded"
-    PARTIAL_SUCCEEDED = "partial_succeeded"
+    PARTIALLY_SUCCEEDED = "partially_succeeded"
     FAILED = "failed"
 
 

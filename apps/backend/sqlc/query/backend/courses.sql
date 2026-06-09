@@ -1,7 +1,7 @@
 -- name: ListCourses :many
 SELECT * FROM courses;
 
--- name: GetSyllabusByPkey :one
+-- name: GetCourseByPkey :one
 SELECT * FROM courses
 WHERE pkey = $1;
 

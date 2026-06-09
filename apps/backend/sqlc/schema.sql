@@ -6,7 +6,7 @@ CREATE TYPE crawl_job_type AS ENUM (
 CREATE TYPE crawl_run_status AS ENUM (
     'running',
     'succeeded',
-    'partial_succeeded',
+    'partially_succeeded',
     'failed'
 );
 
@@ -122,4 +122,4 @@ CREATE TABLE courses (
     source_url TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-)
+);

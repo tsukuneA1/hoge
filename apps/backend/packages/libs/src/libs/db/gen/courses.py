@@ -11,7 +11,7 @@ import sqlalchemy.ext.asyncio
 from libs.infrastructure.db.gen import models
 
 
-GET_SYLLABUS_BY_PKEY = """-- name: get_syllabus_by_pkey \\:one
+GET_COURSE_BY_PKEY = """-- name: get_course_by_pkey \\:one
 SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, grading_policy, remarks, syllabus_updated_at, source_url, created_at, updated_at FROM courses
 WHERE pkey = :p1
 """
@@ -63,8 +63,8 @@ class Querier:
     def __init__(self, conn: sqlalchemy.engine.Connection):
         self._conn = conn
 
-    def get_syllabus_by_pkey(self, *, pkey: str) -> Optional[models.Course]:
-        row = self._conn.execute(sqlalchemy.text(GET_SYLLABUS_BY_PKEY), {"p1": pkey}).first()
+    def get_course_by_pkey(self, *, pkey: str) -> Optional[models.Course]:
+        row = self._conn.execute(sqlalchemy.text(GET_COURSE_BY_PKEY), {"p1": pkey}).first()
         if row is None:
             return None
         return models.Course(
@@ -166,8 +166,8 @@ class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
-    async def get_syllabus_by_pkey(self, *, pkey: str) -> Optional[models.Course]:
-        row = (await self._conn.execute(sqlalchemy.text(GET_SYLLABUS_BY_PKEY), {"p1": pkey})).first()
+    async def get_course_by_pkey(self, *, pkey: str) -> Optional[models.Course]:
+        row = (await self._conn.execute(sqlalchemy.text(GET_COURSE_BY_PKEY), {"p1": pkey})).first()
         if row is None:
             return None
         return models.Course(
