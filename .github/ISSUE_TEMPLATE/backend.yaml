@@ -29,6 +29,7 @@ body:
   - type: textarea
     id: estimation
     attributes:
-      label: 見積もり      description: このissueの見積もりを記載してください
+      label: 見積もり      
+      description: このissueの見積もりを記載してください
     validations:
       required: false
