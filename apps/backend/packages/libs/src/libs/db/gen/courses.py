@@ -23,9 +23,41 @@ SELECT pkey, academic_year, faculty, title, instructor, term_day_period, categor
 
 
 UPSERT_COURSES = """-- name: upsert_courses \\:exec
-INSERT INTO courses (pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language)
-VALUES (:p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10, :p11, :p12, :p13, NOW())
-ON CONFLICT (id) DO UPDATE SET
+INSERT INTO courses
+(
+    pkey,
+    academic_year,
+    faculty, title,
+    instructor,
+    term_day_period,
+    category,
+    eligible_year,
+    credits,
+    classroom,
+    campus,
+    course_key,
+    class_code,
+    language,
+    delivery_mode,
+    course_code,
+    field_large,
+    field_middle,
+    field_small,
+    level,
+    class_format,
+    subtitle,
+    overview,
+    objectives,
+    before_after_study,
+    lesson_plan,
+    textbook,
+    reference_text,
+    grading_policy,
+    remarks,
+    source_url
+)
+VALUES (:p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10, :p11, :p12, :p13, :p14, :p15, :p16, :p17, :p18, :p19, :p20, :p21, :p22, :p23, :p24, :p25, :p26, :p27, :p28, :p29, :p30, :p31)
+ON CONFLICT (pkey) DO UPDATE SET
 academic_year = excluded.academic_year,
 faculty = excluded.faculty,
 title = excluded.title,
@@ -39,6 +71,23 @@ campus = excluded.campus,
 course_key = excluded.course_key,
 class_code = excluded.class_code,
 language = excluded.language,
+delivery_mode = excluded.delivery_mode,
+course_code = excluded.course_code,
+field_large = excluded.field_large,
+field_middle = excluded.field_middle,
+field_small = excluded.field_small,
+level = excluded.level,
+class_format = excluded.class_format,
+subtitle = excluded.subtitle,
+overview = excluded.overview,
+objectives = excluded.objectives,
+before_after_study = excluded.before_after_study,
+lesson_plan = excluded.lesson_plan,
+textbook = excluded.textbook,
+reference_text = excluded.reference_text,
+grading_policy = excluded.grading_policy,
+remarks = excluded.remarks,
+source_url = excluded.source_url,
 updated_at = NOW()
 """
 
@@ -57,6 +106,24 @@ class UpsertCoursesParams(pydantic.BaseModel):
     campus: str
     course_key: str
     class_code: str
+    language: str
+    delivery_mode: str
+    course_code: str
+    field_large: Optional[str]
+    field_middle: Optional[str]
+    field_small: Optional[str]
+    level: Optional[str]
+    class_format: Optional[str]
+    subtitle: Optional[str]
+    overview: Optional[str]
+    objectives: Optional[str]
+    before_after_study: Optional[str]
+    lesson_plan: Optional[str]
+    textbook: Optional[str]
+    reference_text: Optional[str]
+    grading_policy: Optional[str]
+    remarks: Optional[str]
+    source_url: str
 
 
 class Querier:
@@ -159,6 +226,24 @@ class Querier:
             "p11": arg.campus,
             "p12": arg.course_key,
             "p13": arg.class_code,
+            "p14": arg.language,
+            "p15": arg.delivery_mode,
+            "p16": arg.course_code,
+            "p17": arg.field_large,
+            "p18": arg.field_middle,
+            "p19": arg.field_small,
+            "p20": arg.level,
+            "p21": arg.class_format,
+            "p22": arg.subtitle,
+            "p23": arg.overview,
+            "p24": arg.objectives,
+            "p25": arg.before_after_study,
+            "p26": arg.lesson_plan,
+            "p27": arg.textbook,
+            "p28": arg.reference_text,
+            "p29": arg.grading_policy,
+            "p30": arg.remarks,
+            "p31": arg.source_url,
         })
 
 
@@ -262,4 +347,22 @@ class AsyncQuerier:
             "p11": arg.campus,
             "p12": arg.course_key,
             "p13": arg.class_code,
+            "p14": arg.language,
+            "p15": arg.delivery_mode,
+            "p16": arg.course_code,
+            "p17": arg.field_large,
+            "p18": arg.field_middle,
+            "p19": arg.field_small,
+            "p20": arg.level,
+            "p21": arg.class_format,
+            "p22": arg.subtitle,
+            "p23": arg.overview,
+            "p24": arg.objectives,
+            "p25": arg.before_after_study,
+            "p26": arg.lesson_plan,
+            "p27": arg.textbook,
+            "p28": arg.reference_text,
+            "p29": arg.grading_policy,
+            "p30": arg.remarks,
+            "p31": arg.source_url,
         })

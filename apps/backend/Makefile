@@ -1,4 +1,4 @@
-.PHONY: format lint typecheck test check sqlc
+.PHONY: format lint typecheck test check sqlc sqlc-fmt
 
 fmt:
 	uv run ruff format .
