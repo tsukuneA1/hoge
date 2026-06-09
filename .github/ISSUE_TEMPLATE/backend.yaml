@@ -1,7 +1,7 @@
 name: バックエンド
-description: バックエンド(API/サーバー)に関するissue
-title: "[backend] "
-labels: ["backend"]
+description: バックエンドに関するIssue
+title: "[Backend] "
+labels: ["Backend"]
 body:
   - type: markdown
     attributes:
@@ -11,7 +11,7 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: 説明
+      label: 詳細
       description: issueの詳細を記載してください
       placeholder: |
         何が起きているのか、何を実装したいのかを具体的に記述してください。
@@ -23,5 +23,12 @@ body:
     attributes:
       label: 完了条件
       description: このissueが完了したと判断する条件を記載してください
+    validations:
+      required: false
+  
+  - type: textarea
+    id: estimation
+    attributes:
+      label: 見積もり      description: このissueの見積もりを記載してください
     validations:
       required: false
