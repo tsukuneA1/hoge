@@ -53,6 +53,9 @@ CREATE TABLE crawl_targets (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- 現時点で明確に検索条件に含まれるものだけインデックスを作成
+CREATE INDEX idx_crawl_targets_status ON crawl_targets (status);
+
 CREATE TABLE courses (
     pkey TEXT PRIMARY KEY,
     -- 開講年度
@@ -72,6 +75,7 @@ CREATE TABLE courses (
     -- 配当年次 「1年以上」みたいな感じで来る。intにするかD1みたいな区別を避けるためにTEXTにするか
     eligible_year TEXT,
     -- 単位数
+    -- これが取れないことは流石にないはず。整数を正規表現でとればよいだけ
     credits INT NOT NULL,
     -- 使用教室
     classroom TEXT,

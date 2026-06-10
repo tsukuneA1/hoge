@@ -231,6 +231,7 @@ erDiagram
         text syllabus_updated_at
 
         text source_url
+        text raw_html
         timestamptz created_at
         timestamptz updated_at
     }
