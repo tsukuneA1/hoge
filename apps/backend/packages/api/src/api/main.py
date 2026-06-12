@@ -1,10 +1,9 @@
 from fastapi import FastAPI
 from libs.logging import configure_logging
 
-configure_logging()
-
 
 def create_app() -> FastAPI:
+    configure_logging()
     app = FastAPI(
         title="Backend API",
         version="0.1.0",
