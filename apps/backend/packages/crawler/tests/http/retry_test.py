@@ -55,5 +55,7 @@ class TestRetryHttpCall:
                 return retryable_response3
         
         result = retry_http_call(fake_call, base_delay_seconds=0)
+
+        assert call_count == 3
         assert result is retryable_response3
 
