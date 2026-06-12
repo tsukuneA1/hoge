@@ -36,4 +36,24 @@ class TestRetryHttpCall:
         result = retry_http_call(fake_call, base_delay_seconds=0)
         assert result is succeeded_response
         assert call_count == 2
+    
+    def test_returns_last_response_when_response_status_never_recovers(self) -> None:
+        retryable_response1 = httpx.Response(429)
+        retryable_response2 = httpx.Response(500)
+        retryable_response3 = httpx.Response(502)
+
+        call_count = 0
+
+        def fake_call() -> httpx.Response:
+            nonlocal call_count
+            call_count += 1
+            if call_count == 1:
+                return retryable_response1
+            elif call_count == 2:
+                return retryable_response2
+            else:
+                return retryable_response3
+        
+        result = retry_http_call(fake_call, base_delay_seconds=0)
+        assert result is retryable_response3
 
