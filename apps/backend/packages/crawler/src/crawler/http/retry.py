@@ -31,11 +31,7 @@ def retry_http_call(
             if attempt == max_attempts:
                 return response
 
-        except (
-            httpx.TimeoutException,
-            httpx.NetworkError,
-            httpx.TransportError,
-        ) as exc:
+        except httpx.TransportError as exc:
             last_exc = exc
 
             if attempt == max_attempts:
