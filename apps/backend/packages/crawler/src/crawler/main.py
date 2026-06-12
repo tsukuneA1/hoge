@@ -1,8 +1,6 @@
 from crawler.http.client import WasedaSyllabusClient
 from libs.logging import configure_logging
-from logging import getLogger
 
-logger = getLogger(__name__)
 
 def main() -> None:
     configure_logging()
