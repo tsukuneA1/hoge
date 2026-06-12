@@ -3,7 +3,7 @@ from __future__ import annotations
 import httpx
 from crawler.http.retry import retry_http_call
 
-BASE_URL = "https://www.wsl.waseda.jp/syllabus/JAA101.php"
+BASE_URL = "https://www.wsl.waseda.jp/syllabus"
 
 
 def as_multipart_fields(data: dict[str, str]) -> dict[str, tuple[None, str]]:
@@ -11,7 +11,7 @@ def as_multipart_fields(data: dict[str, str]) -> dict[str, tuple[None, str]]:
 
 
 class WasedaSyllabusClient:
-    def __init__(self, timeout: float=60.0) -> None:
+    def __init__(self, timeout: float = 60.0) -> None:
         self._client = httpx.Client(
             base_url=BASE_URL, follow_redirects=True, timeout=timeout
         )
@@ -26,7 +26,7 @@ class WasedaSyllabusClient:
         }
 
         def request() -> httpx.Response:
-            return self._client.post(files=as_multipart_fields(form))
+            return self._client.post("/JAA101.php", files=as_multipart_fields(form))
 
         response = retry_http_call(request)
         response.raise_for_status()
@@ -35,6 +35,7 @@ class WasedaSyllabusClient:
     def fetch_detail_page(self, *, pKey: str) -> str:
         def request() -> httpx.Response:
             return self._client.get(
+                "/JAA101.php",
                 params={"pKey": pKey, "pLng": "jp"},
             )
 
