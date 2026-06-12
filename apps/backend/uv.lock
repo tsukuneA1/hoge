@@ -50,6 +50,7 @@ version = "0.1.0"
 source = { editable = "packages/api" }
 dependencies = [
     { name = "fastapi" },
+    { name = "libs" },
     { name = "pydantic" },
     { name = "uvicorn" },
 ]
@@ -57,6 +58,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.136.1" },
+    { name = "libs", editable = "packages/libs" },
     { name = "pydantic", specifier = ">=2.13.4" },
     { name = "uvicorn", specifier = ">=0.47.0" },
 ]
@@ -156,10 +158,14 @@ version = "0.1.0"
 source = { editable = "packages/crawler" }
 dependencies = [
     { name = "httpx" },
+    { name = "libs" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "httpx", specifier = ">=0.28.1" }]
+requires-dist = [
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "libs", editable = "packages/libs" },
+]
 
 [[package]]
 name = "fastapi"
