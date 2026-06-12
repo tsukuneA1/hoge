@@ -7,6 +7,12 @@ BASE_URL = "https://www.wsl.waseda.jp/syllabus"
 
 
 def as_multipart_fields(data: dict[str, str]) -> dict[str, tuple[None, str]]:
+    """
+        大学のAPIは一覧検索をPOST methodのbodyに入っているパラメータで判定している。
+        その内検索条件はquery paramater(params)やbody生データ(data)では受け取られずfileアップロードのみ対応している。
+        この関数ではdictを受け取ってそれ用のdictに変換している。
+    """
+
     return {key: (None, value) for key, value in data.items()}
 
 
