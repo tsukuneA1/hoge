@@ -19,7 +19,7 @@ def retry_http_call(
     base_delay_seconds=1.0,
     max_delay_seconds=8.0,
 ) -> httpx.Response:
-    last_exec: Exception | None = None
+    last_exc: Exception | None = None
 
     for attempt in range(1, max_attempts + 1):
         try:
@@ -31,8 +31,8 @@ def retry_http_call(
             if attempt == max_attempts:
                 return response
 
-        except (httpx.TimeoutException, httpx.NetworkError) as exec:
-            last_exec = exec
+        except (httpx.TimeoutException, httpx.NetworkError) as exc:
+            last_exc = exc
 
             if attempt == max_attempts:
                 raise
@@ -40,7 +40,7 @@ def retry_http_call(
         delay = min(max_delay_seconds, 2 ** (attempt - 1) * base_delay_seconds)
         time.sleep(delay)
 
-    if last_exec:
-        raise last_exec
+    if last_exc:
+        raise last_exc
 
     raise RuntimeError("unreachable retry state")

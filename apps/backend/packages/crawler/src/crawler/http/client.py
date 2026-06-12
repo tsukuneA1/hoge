@@ -10,7 +10,7 @@ def as_multipart_fields(data: dict[str, str]) -> dict[str, tuple[None, str]]:
     return {key: (None, value) for key, value in data.items()}
 
 
-class WasedaSyllubasClient:
+class WasedaSyllabusClient:
     def __init__(self, timeout=60.0) -> None:
         self._client = httpx.Client(
             base_url=BASE_URL, follow_redirects=True, timeout=timeout
@@ -26,7 +26,7 @@ class WasedaSyllubasClient:
         }
 
         def request() -> httpx.Response:
-            return self._client(files=as_multipart_fields(form))
+            return self._client.post(files=as_multipart_fields(form))
 
         response = retry_http_call(request)
         response.raise_for_status()
@@ -34,8 +34,8 @@ class WasedaSyllubasClient:
 
     def fetch_detail_page(self, *, pKey: str) -> str:
         def request() -> httpx.Response:
-            return self._client(
-                params={"pKey": pKey, "pLang": "jp"},
+            return self._client.get(
+                params={"pKey": pKey, "pLng": "jp"},
             )
 
         response = retry_http_call(request)
