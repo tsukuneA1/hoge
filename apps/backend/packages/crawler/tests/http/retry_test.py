@@ -72,4 +72,3 @@ class TestRetryHttpCall:
             retry_http_call(fake_call, base_delay_seconds=0, max_attempts=3)
 
         assert call_count == 3
-        
