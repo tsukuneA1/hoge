@@ -11,7 +11,7 @@ def as_multipart_fields(data: dict[str, str]) -> dict[str, tuple[None, str]]:
 
 
 class WasedaSyllabusClient:
-    def __init__(self, timeout=60.0) -> None:
+    def __init__(self, timeout: float=60.0) -> None:
         self._client = httpx.Client(
             base_url=BASE_URL, follow_redirects=True, timeout=timeout
         )
