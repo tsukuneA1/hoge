@@ -15,9 +15,9 @@ def is_retryable(response: httpx.Response) -> bool:
 def retry_http_call(
     call: Callable[[], httpx.Response],
     *,
-    max_attempts=3,
-    base_delay_seconds=1.0,
-    max_delay_seconds=8.0,
+    max_attempts: int = 3,
+    base_delay_seconds: float = 1.0,
+    max_delay_seconds: float = 8.0,
 ) -> httpx.Response:
     last_exc: Exception | None = None
 

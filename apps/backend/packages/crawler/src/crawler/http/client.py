@@ -44,3 +44,9 @@ class WasedaSyllabusClient:
 
     def close(self) -> None:
         self._client.close()
+
+    def __enter__(self) -> WasedaSyllabusClient:
+        return self
+
+    def __exit__(self, *args: object) -> None:
+        self.close()
