@@ -41,7 +41,7 @@ class WasedaSyllabusClient:
     def fetch_detail_page(self, *, pKey: str) -> str:
         def request() -> httpx.Response:
             return self._client.get(
-                "/JAA101.php",
+                "/JAA104.php",
                 params={"pKey": pKey, "pLng": "jp"},
             )
 
