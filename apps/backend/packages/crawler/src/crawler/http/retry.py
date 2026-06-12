@@ -36,7 +36,8 @@ def retry_http_call(
 
             if attempt == max_attempts:
                 raise
-
+        
+        # NOTE: discover jobは単一のbatch jobで動く想定の為jitterはなし。ingest jobは分散するとして2,3個なのでこちらもjitterを付ける必要なしと判断した
         delay = min(max_delay_seconds, 2 ** (attempt - 1) * base_delay_seconds)
         time.sleep(delay)
 
