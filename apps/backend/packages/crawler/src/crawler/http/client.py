@@ -8,9 +8,9 @@ BASE_URL = "https://www.wsl.waseda.jp/syllabus"
 
 def as_multipart_fields(data: dict[str, str]) -> dict[str, tuple[None, str]]:
     """
-        大学のAPIは一覧検索をPOST methodのbodyに入っているパラメータで判定している。
-        その内検索条件はquery paramater(params)やbody生データ(data)では受け取られずfileアップロードのみ対応している。
-        この関数ではmultipart/form-dataのContent Typeで送信できるようdictを受け取ってそれ用のdictに変換している。
+    大学のAPIは一覧検索をPOST methodのbodyに入っているパラメータで判定している。
+    その内検索条件はquery paramater(params)やbody生データ(data)では受け取られずfileアップロードのみ対応している。
+    この関数ではmultipart/form-dataのContent Typeで送信できるようdictを受け取ってそれ用のdictに変換している。
     """
 
     return {key: (None, value) for key, value in data.items()}
@@ -19,9 +19,10 @@ def as_multipart_fields(data: dict[str, str]) -> dict[str, tuple[None, str]]:
 class WasedaSyllabusClient:
     def __init__(self, timeout: float = 60.0) -> None:
         self._client = httpx.Client(
-            base_url=BASE_URL, follow_redirects=True, timeout=timeout, headers={
-                "User-Agent": "syllabus-crawler/0.1"
-            }
+            base_url=BASE_URL,
+            follow_redirects=True,
+            timeout=timeout,
+            headers={"User-Agent": "syllabus-crawler/0.1"},
         )
 
     def fetch_search_page(self, *, year: int, page: int, page_size: int) -> str:
