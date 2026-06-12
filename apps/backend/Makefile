@@ -13,7 +13,7 @@ typecheck:
 
 .PHONY: test
 test:
-	uv run pytest
+	uv run --all-packages pytest
 
 .PHONY: check
 check: lint typecheck test
