@@ -17,7 +17,6 @@ def main() -> None:
         logger.info(pkeys)
         for key in pkeys:
             r = client.fetch_detail_page(pKey=key)
-            # logger.info(r[:500])
             course = parse_course_detail(r)
             logger.info(course)
 

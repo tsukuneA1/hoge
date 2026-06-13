@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 
 from bs4 import BeautifulSoup
+from datetime import datetime
+
+from crawler.ingest.normalize import clean_text
 
 from logging import getLogger
 
@@ -9,7 +12,7 @@ logger = getLogger(__name__)
 
 @dataclass(frozen=True)
 class ParsedCourse:
-    academic_year: str
+    academic_year: int
     faculty: str
     title: str
     instructor: str
@@ -41,13 +44,13 @@ class ParsedCourse:
     reference_text: str | None
     grading_policy: str
     remarks: str
-    syllabus_updated_at: str
+    syllabus_updated_at: datetime
 
 
 def parse_course_detail(html: str) -> ParsedCourse:
     soup = BeautifulSoup(html, "lxml")
 
-    academic_year = get_required_value_by_label(soup, "開講年度")
+    academic_year = int(get_required_value_by_label(soup, "開講年度").replace("年度", ""))
     faculty = get_required_value_by_label(soup, "開講箇所")
     title = get_required_value_by_label(soup, "科目名")
     instructor = get_required_value_by_label(soup, "担当教員")
@@ -129,13 +132,13 @@ def get_optional_value_by_label(soup: BeautifulSoup, label: str) -> str | None:
     if value_cell is None:
         return None
 
-    return value_cell.get_text(" ", strip=True)
+    return clean_text(value_cell.get_text(" ", strip=True))
 
-def get_last_updated_at(soup: BeautifulSoup) -> str:
+def get_last_updated_at(soup: BeautifulSoup) -> datetime:
     h2 = soup.find(
         "h2",
         string=lambda s: s is not None and "最終更新日時" in s
     )
 
-    text = h2.get_text(strip = True)
-    return text.replace("最終更新日時：", "").strip()
+    text = h2.get_text(strip = True).replace("最終更新日時：", "").strip()
+    return datetime.strptime(text, "%Y/%m/%d %H:%M:%S")
