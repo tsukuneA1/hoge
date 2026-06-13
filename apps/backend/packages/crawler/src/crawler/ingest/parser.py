@@ -2,6 +2,10 @@ from dataclasses import dataclass
 
 from bs4 import BeautifulSoup
 
+from logging import getLogger
+
+logger = getLogger(__name__)
+
 
 @dataclass(frozen=True)
 class ParsedCourse:
@@ -12,29 +16,32 @@ class ParsedCourse:
     term_day_period: str
     category: str
     eligible_year: str
-    # credits: int
-    # classroom: str
-    # campus: str
-    # course_key: str
-    # class_code: str
-    # language: str
-    # delivery_mode: str
-    # course_code: str
-    # field_large: str
-    # field_middle: str
-    # field_small: str
-    # level: str
-    # class_format: str
-    # subtitle: str
-    # overview: str
-    # objectives: str
-    # before_after_study: str
-    # lesson_plan: str
-    # textbook: str
-    # reference_text: str
-    # grading_policy: str
-    # remarks: str
-    # syllabus_updated_at: str
+    credits: int
+    classroom: str
+    campus: str
+    course_key: str
+    class_code: str
+    language: str
+    delivery_mode: str
+    course_code: str
+    field_large: str
+    field_middle: str
+    field_small: str
+    level: str
+    class_format: str
+    # Note: 副題はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=2600001002012026260000100226&pLng=jp)
+    subtitle: str | None
+    overview: str
+    objectives: str
+    before_after_study: str
+    lesson_plan: str
+    # Note: 教科書はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=1100001250012026110000125011&pLng=jp)
+    textbook: str | None
+    # Note: 参考文献はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=1100001270012026110000127011&pLng=jp)
+    reference_text: str | None
+    grading_policy: str
+    remarks: str
+    syllabus_updated_at: str
 
 
 def parse_course_detail(html: str) -> ParsedCourse:
@@ -47,6 +54,29 @@ def parse_course_detail(html: str) -> ParsedCourse:
     term_day_period = get_required_value_by_label(soup, "学期曜日時限")
     category = get_required_value_by_label(soup, "科目区分")
     eligible_year = get_required_value_by_label(soup, "配当年次")
+    credits = int(get_required_value_by_label(soup, "単位数"))
+    classroom = get_required_value_by_label(soup, "使用教室")
+    campus = get_required_value_by_label(soup, "キャンパス")
+    course_key = get_required_value_by_label(soup, "科目キー")
+    class_code = get_required_value_by_label(soup, "科目クラスコード")
+    language = get_required_value_by_label(soup, "授業で使用する言語")
+    delivery_mode = get_required_value_by_label(soup, "授業方法区分")
+    course_code = get_required_value_by_label(soup, "コース・コード")
+    field_large = get_required_value_by_label(soup, "大分野名称")
+    field_middle = get_required_value_by_label(soup, "中分野名称")
+    field_small = get_required_value_by_label(soup, "小分野名称")
+    level = get_required_value_by_label(soup, "レベル")
+    class_format = get_required_value_by_label(soup, "授業形態")
+    subtitle = get_optional_value_by_label(soup, "副題")
+    overview = get_required_value_by_label(soup, "授業概要")
+    objectives = get_required_value_by_label(soup, "授業の到達目標")
+    before_after_study = get_required_value_by_label(soup, "事前・事後学習の内容")
+    lesson_plan = get_required_value_by_label(soup, "授業計画")
+    textbook = get_optional_value_by_label(soup, "教科書")
+    reference_text = get_optional_value_by_label(soup, "参考文献")
+    grading_policy = get_required_value_by_label(soup, "成績評価方法")
+    remarks = get_required_value_by_label(soup, "備考・関連URL")
+    syllabus_updated_at = get_last_updated_at(soup)
 
     return ParsedCourse(
         academic_year=academic_year,
@@ -56,6 +86,29 @@ def parse_course_detail(html: str) -> ParsedCourse:
         term_day_period=term_day_period,
         category=category,
         eligible_year=eligible_year,
+        credits=credits,
+        classroom=classroom,
+        campus=campus,
+        course_key=course_key,
+        class_code=class_code,
+        language=language,
+        delivery_mode=delivery_mode,
+        course_code=course_code,
+        field_large=field_large,
+        field_middle=field_middle,
+        field_small=field_small,
+        level=level,
+        class_format=class_format,
+        subtitle=subtitle,
+        overview=overview,
+        objectives=objectives,
+        before_after_study=before_after_study,
+        lesson_plan=lesson_plan,
+        textbook=textbook,
+        reference_text=reference_text,
+        grading_policy=grading_policy,
+        remarks=remarks,
+        syllabus_updated_at=syllabus_updated_at
     )
 
 
@@ -68,7 +121,7 @@ def get_required_value_by_label(soup: BeautifulSoup, label: str) -> str:
 
 
 def get_optional_value_by_label(soup: BeautifulSoup, label: str) -> str | None:
-    label_cell = soup.find(["th", "td"], string=label)
+    label_cell = soup.find(["th", "td"], string=lambda s: s is not None and s.strip() == label,)
     if label_cell is None:
         return None
 
@@ -77,3 +130,12 @@ def get_optional_value_by_label(soup: BeautifulSoup, label: str) -> str | None:
         return None
 
     return value_cell.get_text(" ", strip=True)
+
+def get_last_updated_at(soup: BeautifulSoup) -> str:
+    h2 = soup.find(
+        "h2",
+        string=lambda s: s is not None and "最終更新日時" in s
+    )
+
+    text = h2.get_text(strip = True)
+    return text.replace("最終更新日時：", "").strip()

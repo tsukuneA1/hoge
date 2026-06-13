@@ -12,7 +12,7 @@ def main() -> None:
     configure_logging()
 
     with WasedaSyllabusClient() as client:
-        r = client.fetch_search_page(year=2026, page=1, page_size=10)
+        r = client.fetch_search_page(year=2026, page=1, page_size=100)
         pkeys = extract_pkeys(r)
         logger.info(pkeys)
         for key in pkeys:
