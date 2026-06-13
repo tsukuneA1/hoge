@@ -1,9 +1,6 @@
 services:
   postgres:
-    image: postgres:15
-    command:
-      - postgres
-      - -c
+    image: postgres:16
     environment:
       POSTGRES_DB: hoge_db
       POSTGRES_USER: postgres
@@ -21,3 +18,4 @@ services:
 
 volumes:
   postgres_data:
+  
