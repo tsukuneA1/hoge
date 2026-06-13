@@ -50,7 +50,9 @@ class ParsedCourse:
 def parse_course_detail(html: str) -> ParsedCourse:
     soup = BeautifulSoup(html, "lxml")
 
-    academic_year = int(get_required_value_by_label(soup, "開講年度").replace("年度", ""))
+    academic_year = int(
+        get_required_value_by_label(soup, "開講年度").replace("年度", "")
+    )
     faculty = get_required_value_by_label(soup, "開講箇所")
     title = get_required_value_by_label(soup, "科目名")
     instructor = get_required_value_by_label(soup, "担当教員")
@@ -111,7 +113,7 @@ def parse_course_detail(html: str) -> ParsedCourse:
         reference_text=reference_text,
         grading_policy=grading_policy,
         remarks=remarks,
-        syllabus_updated_at=syllabus_updated_at
+        syllabus_updated_at=syllabus_updated_at,
     )
 
 
@@ -124,7 +126,10 @@ def get_required_value_by_label(soup: BeautifulSoup, label: str) -> str:
 
 
 def get_optional_value_by_label(soup: BeautifulSoup, label: str) -> str | None:
-    label_cell = soup.find(["th", "td"], string=lambda s: s is not None and s.strip() == label,)
+    label_cell = soup.find(
+        ["th", "td"],
+        string=lambda s: s is not None and s.strip() == label,
+    )
     if label_cell is None:
         return None
 
@@ -134,11 +139,9 @@ def get_optional_value_by_label(soup: BeautifulSoup, label: str) -> str | None:
 
     return clean_text(value_cell.get_text(" ", strip=True))
 
-def get_last_updated_at(soup: BeautifulSoup) -> datetime:
-    h2 = soup.find(
-        "h2",
-        string=lambda s: s is not None and "最終更新日時" in s
-    )
 
-    text = h2.get_text(strip = True).replace("最終更新日時：", "").strip()
+def get_last_updated_at(soup: BeautifulSoup) -> datetime:
+    h2 = soup.find("h2", string=lambda s: s is not None and "最終更新日時" in s)
+
+    text = h2.get_text(strip=True).replace("最終更新日時：", "").strip()
     return datetime.strptime(text, "%Y/%m/%d %H:%M:%S")
