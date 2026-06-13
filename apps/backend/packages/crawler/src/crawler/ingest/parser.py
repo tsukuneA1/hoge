@@ -120,7 +120,7 @@ def parse_course_detail(html: str) -> ParsedCourse:
 def get_required_value_by_label(soup: BeautifulSoup, label: str) -> str:
     value = get_optional_value_by_label(soup, label)
     if value is None or value == "":
-        raise ValueError()
+        raise ValueError(f"required field not found: {label}")
 
     return value
 
