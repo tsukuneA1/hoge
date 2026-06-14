@@ -11,7 +11,7 @@ import sqlalchemy.ext.asyncio
 from libs.infrastructure.db.gen import models
 
 
-CREATE_CRAWL_RUN = """-- name: create_crawl_run \\:exec
+CREATE_CRAWL_RUN = """-- name: create_crawl_run \\:one
 INSERT INTO crawl_runs (
     job_type,
     status,
@@ -26,7 +26,7 @@ RETURNING id, job_type, status, started_at, finished_at, discovered_count, inges
 """
 
 
-FINISH_CRAWL_RUN = """-- name: finish_crawl_run \\:exec
+FINISH_CRAWL_RUN = """-- name: finish_crawl_run \\:one
 UPDATE crawl_runs
 SET
     status = :p1,
@@ -67,18 +67,44 @@ class Querier:
     def __init__(self, conn: sqlalchemy.engine.Connection):
         self._conn = conn
 
-    def create_crawl_run(self, *, job_type: models.CrawlJobType) -> None:
-        self._conn.execute(sqlalchemy.text(CREATE_CRAWL_RUN), {"p1": job_type})
+    def create_crawl_run(self, *, job_type: models.CrawlJobType) -> Optional[models.CrawlRun]:
+        row = self._conn.execute(sqlalchemy.text(CREATE_CRAWL_RUN), {"p1": job_type}).first()
+        if row is None:
+            return None
+        return models.CrawlRun(
+            id=row[0],
+            job_type=row[1],
+            status=row[2],
+            started_at=row[3],
+            finished_at=row[4],
+            discovered_count=row[5],
+            ingested_count=row[6],
+            failed_count=row[7],
+            error_message=row[8],
+        )
 
-    def finish_crawl_run(self, arg: FinishCrawlRunParams) -> None:
-        self._conn.execute(sqlalchemy.text(FINISH_CRAWL_RUN), {
+    def finish_crawl_run(self, arg: FinishCrawlRunParams) -> Optional[models.CrawlRun]:
+        row = self._conn.execute(sqlalchemy.text(FINISH_CRAWL_RUN), {
             "p1": arg.status,
             "p2": arg.discovered_count,
             "p3": arg.ingested_count,
             "p4": arg.failed_count,
             "p5": arg.error_message,
             "p6": arg.id,
-        })
+        }).first()
+        if row is None:
+            return None
+        return models.CrawlRun(
+            id=row[0],
+            job_type=row[1],
+            status=row[2],
+            started_at=row[3],
+            finished_at=row[4],
+            discovered_count=row[5],
+            ingested_count=row[6],
+            failed_count=row[7],
+            error_message=row[8],
+        )
 
     def get_crawl_run(self, *, id: int) -> Optional[models.CrawlRun]:
         row = self._conn.execute(sqlalchemy.text(GET_CRAWL_RUN), {"p1": id}).first()
@@ -116,18 +142,44 @@ class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
-    async def create_crawl_run(self, *, job_type: models.CrawlJobType) -> None:
-        await self._conn.execute(sqlalchemy.text(CREATE_CRAWL_RUN), {"p1": job_type})
+    async def create_crawl_run(self, *, job_type: models.CrawlJobType) -> Optional[models.CrawlRun]:
+        row = (await self._conn.execute(sqlalchemy.text(CREATE_CRAWL_RUN), {"p1": job_type})).first()
+        if row is None:
+            return None
+        return models.CrawlRun(
+            id=row[0],
+            job_type=row[1],
+            status=row[2],
+            started_at=row[3],
+            finished_at=row[4],
+            discovered_count=row[5],
+            ingested_count=row[6],
+            failed_count=row[7],
+            error_message=row[8],
+        )
 
-    async def finish_crawl_run(self, arg: FinishCrawlRunParams) -> None:
-        await self._conn.execute(sqlalchemy.text(FINISH_CRAWL_RUN), {
+    async def finish_crawl_run(self, arg: FinishCrawlRunParams) -> Optional[models.CrawlRun]:
+        row = (await self._conn.execute(sqlalchemy.text(FINISH_CRAWL_RUN), {
             "p1": arg.status,
             "p2": arg.discovered_count,
             "p3": arg.ingested_count,
             "p4": arg.failed_count,
             "p5": arg.error_message,
             "p6": arg.id,
-        })
+        })).first()
+        if row is None:
+            return None
+        return models.CrawlRun(
+            id=row[0],
+            job_type=row[1],
+            status=row[2],
+            started_at=row[3],
+            finished_at=row[4],
+            discovered_count=row[5],
+            ingested_count=row[6],
+            failed_count=row[7],
+            error_message=row[8],
+        )
 
     async def get_crawl_run(self, *, id: int) -> Optional[models.CrawlRun]:
         row = (await self._conn.execute(sqlalchemy.text(GET_CRAWL_RUN), {"p1": id})).first()

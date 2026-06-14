@@ -5,7 +5,7 @@ WHERE status = @status
 ORDER BY started_at DESC
 LIMIT @row_limit;
 
--- name: CreateCrawlRun :exec
+-- name: CreateCrawlRun :one
 INSERT INTO crawl_runs (
     job_type,
     status,
@@ -18,7 +18,7 @@ VALUES (
 )
 RETURNING *;
 
--- name: FinishCrawlRun :exec
+-- name: FinishCrawlRun :one
 UPDATE crawl_runs
 SET
     status = @status,
