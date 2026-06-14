@@ -40,7 +40,7 @@ ON CONFLICT (pkey)
 DO UPDATE SET
     last_seen_run_id = EXCLUDED.last_seen_run_id,
     discovered_year = EXCLUDED.discovered_year,
-    source_page = EXCLUDED.discovered_year,
+    source_page = EXCLUDED.source_page,
     last_discovered_at = now(),
     updated_at = now()
 RETURNING *;

@@ -88,7 +88,7 @@ ON CONFLICT (pkey)
 DO UPDATE SET
     last_seen_run_id = EXCLUDED.last_seen_run_id,
     discovered_year = EXCLUDED.discovered_year,
-    source_page = EXCLUDED.discovered_year,
+    source_page = EXCLUDED.source_page,
     last_discovered_at = now(),
     updated_at = now()
 RETURNING pkey, last_seen_run_id, status, attempts, last_error, discovered_year, source_page, first_discovered_at, last_discovered_at, last_ingested_at, created_at, updated_at
