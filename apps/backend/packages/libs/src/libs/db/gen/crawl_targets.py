@@ -2,7 +2,7 @@
 # versions:
 #   sqlc v1.30.0
 # source: crawl_targets.sql
-from typing import AsyncIterator, Iterator
+from typing import AsyncIterator, Iterator, Optional
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
@@ -10,8 +10,90 @@ import sqlalchemy.ext.asyncio
 from libs.infrastructure.db.gen import models
 
 
-LIST_CRAWL_TARGETS = """-- name: list_crawl_targets \\:many
-SELECT pkey, last_seen_run_id, status, attempts, last_error, discovered_year, source_page, first_discovered_at, last_discovered_at, last_ingested_at, created_at, updated_at FROM crawl_targets
+LIST_INGEST_TARGETS = """-- name: list_ingest_targets \\:many
+SELECT pkey, last_seen_run_id, status, attempts, last_error, discovered_year, source_page, first_discovered_at, last_discovered_at, last_ingested_at, created_at, updated_at 
+FROM crawl_targets
+WHERE
+    status = 'pending'
+    OR (status = 'failed' AND attempts < :p1)
+    OR (
+        status = 'running'
+        AND updated_at < now() - make_interval(secs => :p2)
+    )
+ORDER BY
+    last_ingested_at NULLS FIRST,
+    updated_at ASC
+LIMIT :p3
+FOR UPDATE SKIP LOCKED
+"""
+
+
+MARK_CRAWL_TARGET_FAILED = """-- name: mark_crawl_target_failed \\:one
+UPDATE crawl_targets
+SET
+    status = 'failed',
+    last_error = :p1,
+    updated_at = now()
+WHERE pkey = :p2
+RETURNING pkey, last_seen_run_id, status, attempts, last_error, discovered_year, source_page, first_discovered_at, last_discovered_at, last_ingested_at, created_at, updated_at
+"""
+
+
+MARK_CRAWL_TARGET_RUNNING = """-- name: mark_crawl_target_running \\:one
+UPDATE crawl_targets
+SET
+    status = 'running',
+    attempts = attempts + 1,
+    last_error = NULL,
+    updated_at = now()
+WHERE pkey = :p1
+RETURNING pkey, last_seen_run_id, status, attempts, last_error, discovered_year, source_page, first_discovered_at, last_discovered_at, last_ingested_at, created_at, updated_at
+"""
+
+
+MARK_CRAWL_TARGET_SUCCEEDED = """-- name: mark_crawl_target_succeeded \\:one
+UPDATE crawl_targets
+SET
+    status = 'succeeded',
+    last_error = NULL,
+    last_ingested_at = now(),
+    updated_at = now()
+WHERE pkey = :p1
+RETURNING pkey, last_seen_run_id, status, attempts, last_error, discovered_year, source_page, first_discovered_at, last_discovered_at, last_ingested_at, created_at, updated_at
+"""
+
+
+UPSERT_CRAWL_TARGET = """-- name: upsert_crawl_target \\:one
+INSERT INTO crawl_targets (
+    pkey,
+    last_seen_run_id,
+    status,
+    discovered_year,
+    source_page,
+    first_discovered_at,
+    last_discovered_at,
+    created_at,
+    updated_at
+)
+VALUES (
+    :p1,
+    :p2,
+    'pending',
+    :p3,
+    :p4,
+    now(),
+    now(),
+    now(),
+    now()
+)
+ON CONFLICT (pkey)
+DO UPDATE SET
+    last_seen_run_id = EXCLUDED.last_seen_run_id,
+    discovered_year = EXCLUDED.discovered_year,
+    source_page = EXCLUDED.source_page,
+    last_discovered_at = now(),
+    updated_at = now()
+RETURNING pkey, last_seen_run_id, status, attempts, last_error, discovered_year, source_page, first_discovered_at, last_discovered_at, last_ingested_at, created_at, updated_at
 """
 
 
@@ -19,8 +101,8 @@ class Querier:
     def __init__(self, conn: sqlalchemy.engine.Connection):
         self._conn = conn
 
-    def list_crawl_targets(self) -> Iterator[models.CrawlTarget]:
-        result = self._conn.execute(sqlalchemy.text(LIST_CRAWL_TARGETS))
+    def list_ingest_targets(self, *, max_attempts: int, lease_timeout_seconds: float, row_limit: int) -> Iterator[models.CrawlTarget]:
+        result = self._conn.execute(sqlalchemy.text(LIST_INGEST_TARGETS), {"p1": max_attempts, "p2": lease_timeout_seconds, "p3": row_limit})
         for row in result:
             yield models.CrawlTarget(
                 pkey=row[0],
@@ -37,13 +119,94 @@ class Querier:
                 updated_at=row[11],
             )
 
+    def mark_crawl_target_failed(self, *, last_error: Optional[str], pkey: str) -> Optional[models.CrawlTarget]:
+        row = self._conn.execute(sqlalchemy.text(MARK_CRAWL_TARGET_FAILED), {"p1": last_error, "p2": pkey}).first()
+        if row is None:
+            return None
+        return models.CrawlTarget(
+            pkey=row[0],
+            last_seen_run_id=row[1],
+            status=row[2],
+            attempts=row[3],
+            last_error=row[4],
+            discovered_year=row[5],
+            source_page=row[6],
+            first_discovered_at=row[7],
+            last_discovered_at=row[8],
+            last_ingested_at=row[9],
+            created_at=row[10],
+            updated_at=row[11],
+        )
+
+    def mark_crawl_target_running(self, *, pkey: str) -> Optional[models.CrawlTarget]:
+        row = self._conn.execute(sqlalchemy.text(MARK_CRAWL_TARGET_RUNNING), {"p1": pkey}).first()
+        if row is None:
+            return None
+        return models.CrawlTarget(
+            pkey=row[0],
+            last_seen_run_id=row[1],
+            status=row[2],
+            attempts=row[3],
+            last_error=row[4],
+            discovered_year=row[5],
+            source_page=row[6],
+            first_discovered_at=row[7],
+            last_discovered_at=row[8],
+            last_ingested_at=row[9],
+            created_at=row[10],
+            updated_at=row[11],
+        )
+
+    def mark_crawl_target_succeeded(self, *, pkey: str) -> Optional[models.CrawlTarget]:
+        row = self._conn.execute(sqlalchemy.text(MARK_CRAWL_TARGET_SUCCEEDED), {"p1": pkey}).first()
+        if row is None:
+            return None
+        return models.CrawlTarget(
+            pkey=row[0],
+            last_seen_run_id=row[1],
+            status=row[2],
+            attempts=row[3],
+            last_error=row[4],
+            discovered_year=row[5],
+            source_page=row[6],
+            first_discovered_at=row[7],
+            last_discovered_at=row[8],
+            last_ingested_at=row[9],
+            created_at=row[10],
+            updated_at=row[11],
+        )
+
+    def upsert_crawl_target(self, *, pkey: str, last_seen_run_id: Optional[int], discovered_year: int, source_page: int) -> Optional[models.CrawlTarget]:
+        row = self._conn.execute(sqlalchemy.text(UPSERT_CRAWL_TARGET), {
+            "p1": pkey,
+            "p2": last_seen_run_id,
+            "p3": discovered_year,
+            "p4": source_page,
+        }).first()
+        if row is None:
+            return None
+        return models.CrawlTarget(
+            pkey=row[0],
+            last_seen_run_id=row[1],
+            status=row[2],
+            attempts=row[3],
+            last_error=row[4],
+            discovered_year=row[5],
+            source_page=row[6],
+            first_discovered_at=row[7],
+            last_discovered_at=row[8],
+            last_ingested_at=row[9],
+            created_at=row[10],
+            updated_at=row[11],
+        )
+
 
 class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
-    async def list_crawl_targets(self) -> AsyncIterator[models.CrawlTarget]:
-        result = await self._conn.stream(sqlalchemy.text(LIST_CRAWL_TARGETS))
+    async def list_ingest_targets(self, *, max_attempts: int, lease_timeout_seconds: float, row_limit: int) -> AsyncIterator[models.CrawlTarget]:
+        result = await self._conn.stream(sqlalchemy.text(LIST_INGEST_TARGETS), {"p1": max_attempts, "p2": lease_timeout_seconds, "p3": row_limit})
         async for row in result:
             yield models.CrawlTarget(
                 pkey=row[0],
@@ -59,3 +222,84 @@ class AsyncQuerier:
                 created_at=row[10],
                 updated_at=row[11],
             )
+
+    async def mark_crawl_target_failed(self, *, last_error: Optional[str], pkey: str) -> Optional[models.CrawlTarget]:
+        row = (await self._conn.execute(sqlalchemy.text(MARK_CRAWL_TARGET_FAILED), {"p1": last_error, "p2": pkey})).first()
+        if row is None:
+            return None
+        return models.CrawlTarget(
+            pkey=row[0],
+            last_seen_run_id=row[1],
+            status=row[2],
+            attempts=row[3],
+            last_error=row[4],
+            discovered_year=row[5],
+            source_page=row[6],
+            first_discovered_at=row[7],
+            last_discovered_at=row[8],
+            last_ingested_at=row[9],
+            created_at=row[10],
+            updated_at=row[11],
+        )
+
+    async def mark_crawl_target_running(self, *, pkey: str) -> Optional[models.CrawlTarget]:
+        row = (await self._conn.execute(sqlalchemy.text(MARK_CRAWL_TARGET_RUNNING), {"p1": pkey})).first()
+        if row is None:
+            return None
+        return models.CrawlTarget(
+            pkey=row[0],
+            last_seen_run_id=row[1],
+            status=row[2],
+            attempts=row[3],
+            last_error=row[4],
+            discovered_year=row[5],
+            source_page=row[6],
+            first_discovered_at=row[7],
+            last_discovered_at=row[8],
+            last_ingested_at=row[9],
+            created_at=row[10],
+            updated_at=row[11],
+        )
+
+    async def mark_crawl_target_succeeded(self, *, pkey: str) -> Optional[models.CrawlTarget]:
+        row = (await self._conn.execute(sqlalchemy.text(MARK_CRAWL_TARGET_SUCCEEDED), {"p1": pkey})).first()
+        if row is None:
+            return None
+        return models.CrawlTarget(
+            pkey=row[0],
+            last_seen_run_id=row[1],
+            status=row[2],
+            attempts=row[3],
+            last_error=row[4],
+            discovered_year=row[5],
+            source_page=row[6],
+            first_discovered_at=row[7],
+            last_discovered_at=row[8],
+            last_ingested_at=row[9],
+            created_at=row[10],
+            updated_at=row[11],
+        )
+
+    async def upsert_crawl_target(self, *, pkey: str, last_seen_run_id: Optional[int], discovered_year: int, source_page: int) -> Optional[models.CrawlTarget]:
+        row = (await self._conn.execute(sqlalchemy.text(UPSERT_CRAWL_TARGET), {
+            "p1": pkey,
+            "p2": last_seen_run_id,
+            "p3": discovered_year,
+            "p4": source_page,
+        })).first()
+        if row is None:
+            return None
+        return models.CrawlTarget(
+            pkey=row[0],
+            last_seen_run_id=row[1],
+            status=row[2],
+            attempts=row[3],
+            last_error=row[4],
+            discovered_year=row[5],
+            source_page=row[6],
+            first_discovered_at=row[7],
+            last_discovered_at=row[8],
+            last_ingested_at=row[9],
+            created_at=row[10],
+            updated_at=row[11],
+        )
