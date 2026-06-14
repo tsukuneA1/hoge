@@ -55,6 +55,7 @@ UPDATE crawl_targets
 SET
     status = 'succeeded',
     last_error = NULL,
+    last_ingested_at = now(),
     updated_at = now()
 WHERE pkey = :p1
 RETURNING pkey, last_seen_run_id, status, attempts, last_error, discovered_year, source_page, first_discovered_at, last_discovered_at, last_ingested_at, created_at, updated_at

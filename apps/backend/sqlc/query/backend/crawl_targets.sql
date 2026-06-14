@@ -60,6 +60,7 @@ UPDATE crawl_targets
 SET
     status = 'succeeded',
     last_error = NULL,
+    last_ingested_at = now(),
     updated_at = now()
 WHERE pkey = @pkey
 RETURNING *;
