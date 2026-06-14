@@ -24,6 +24,7 @@ ORDER BY
     last_ingested_at NULLS FIRST,
     updated_at ASC
 LIMIT :p3
+FOR UPDATE SKIP LOCKED
 """
 
 

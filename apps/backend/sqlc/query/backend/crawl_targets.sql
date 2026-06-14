@@ -11,7 +11,8 @@ WHERE
 ORDER BY
     last_ingested_at NULLS FIRST,
     updated_at ASC
-LIMIT @row_limit;
+LIMIT @row_limit
+FOR UPDATE SKIP LOCKED;
 
 -- name: UpsertCrawlTarget :one
 INSERT INTO crawl_targets (
