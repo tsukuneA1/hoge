@@ -157,14 +157,18 @@ sequenceDiagram
     participant Job as discover job
     participant Runs as crawl_runs repository
     participant HTTP as httpx client
+    participant Parser as parser
     participant Targets as crawl_targets repository
 
-    Job->>Runs: CreateCrawlRun(job_type=discover, status=running)
-    Runs->>Job: run_id
+    Job->>Runs: 1. CreateCrawlRun(job_type=discover, status=running)
+    Runs->>Job: 2. run_id
 
     loop each page
         Job->>HTTP: fetch_search_page(year, page, page_size)
         HTTP-->>Job: run_id
+
+        Job->>Parser: parse_search_page(html)
+        Parser-->>Job: pkeys
 
         loop each pkey
             Job->>Targets: UpsertCrawlTarget(pkey, run_id, year, page)
