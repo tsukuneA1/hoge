@@ -1,3 +1,33 @@
+from typing import List
+from sqlalchemy import Connection
+
+from libs.db.gen import crawl_targets, models
+
+
 class CrawlTargetsRepository:
-    def __init__(self):
-        pass
+    def __init__(self, connection: Connection):
+        self.conn = connection
+        self.querier = crawl_targets.Querier(conn=connection)
+
+    def list(self, limit, max_attempts, lease_timeout) -> List[models.CrawlTarget]:
+        self.querier.list_ingest_targets(
+            max_attempts=max_attempts,
+            lease_timeout_seconds=lease_timeout,
+            row_limit=limit,
+        )
+
+    def success(self, pkey: str):
+        self.querier.mark_crawl_target_succeeded(pkey=pkey)
+
+    def fail(self, pkey: str):
+        self.querier.mark_crawl_target_failed(pkey=pkey)
+
+    def upsert(
+        self, pkey: str, last_seen_id: id | None, discoverd_year: int, source_page: int
+    ):
+        self.querier.upsert_crawl_target(
+            pkey=pkey,
+            last_seen_run_id=last_seen_id,
+            discovered_year=discoverd_year,
+            source_page=source_page,
+        )
