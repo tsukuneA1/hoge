@@ -152,6 +152,26 @@ flowchart TD
     IngestJob -->|実行履歴| Runs
 ```
 
+```mermaid
+sequenceDiagram
+    participant Job as discover job
+    participant Runs as crawl_runs repository
+    participant HTTP as httpx client
+    participant Targets as crawl_targets repository
+
+    Job->>Runs: CreateCrawlRun(job_type=discover, status=running)
+    Runs->>Job: run_id
+
+    loop each page
+        Job->>HTTP: fetch_search_page(year, page, page_size)
+        HTTP-->>Job: run_id
+
+        loop each pkey
+            Job->>Targets: UpsertCrawlTarget(pkey, run_id, year, page)
+        end
+    end
+```
+
 ### 影響範囲 (Impact) <!-- Optional -->
 
 <!--
