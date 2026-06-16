@@ -8,7 +8,7 @@ class CrawlTargetsRepository:
     def __init__(self, connection: Connection):
         self.querier = crawl_targets.Querier(connection)
 
-    def list(
+    def list_ingest_targets(
         self, limit: int, max_attempts: int, lease_timeout_seconds: float
     ) -> Iterator[models.CrawlTarget]:
         return self.querier.list_ingest_targets(
