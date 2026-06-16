@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import httpx
+
 from crawler.http.retry import retry_http_call
 
 BASE_URL = "https://www.wsl.waseda.jp/syllabus"
@@ -9,8 +10,10 @@ BASE_URL = "https://www.wsl.waseda.jp/syllabus"
 def as_multipart_fields(data: dict[str, str]) -> dict[str, tuple[None, str]]:
     """
     大学のAPIは一覧検索をPOST methodのbodyに入っているパラメータで判定している。
-    その内検索条件はquery paramater(params)やbody生データ(data)では受け取られずfileアップロードのみ対応している。
-    この関数ではmultipart/form-dataのContent Typeで送信できるようdictを受け取ってそれ用のdictに変換している。
+    その内検索条件はquery paramater(params)やbody生データ(data)では受け取らない。
+    fileアップロードのみ対応している。
+    この関数ではmultipart/form-dataのContent Typeで送信したい。
+    そのためdictを受け取ってそれ用のdictに変換している。
     """
 
     return {key: (None, value) for key, value in data.items()}

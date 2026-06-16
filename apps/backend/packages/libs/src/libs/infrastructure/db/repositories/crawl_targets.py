@@ -1,7 +1,7 @@
 from collections.abc import Iterator
-from sqlalchemy import Connection
 
 from libs.infrastructure.db.gen import crawl_targets, models
+from sqlalchemy import Connection
 
 
 class CrawlTargetsRepository:

@@ -1,6 +1,5 @@
-from sqlalchemy import Connection
-
 from libs.infrastructure.db.gen import crawl_runs, models
+from sqlalchemy import Connection
 
 
 class CrawlRunsRepository:

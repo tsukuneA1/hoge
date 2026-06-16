@@ -1,9 +1,10 @@
-from crawler.http.client import WasedaSyllabusClient
-from crawler.discover.parser import extract_pkeys
-from crawler.ingest.parser import parse_course_detail
+from logging import getLogger
+
 from libs.logging import configure_logging
 
-from logging import getLogger
+from crawler.discover.parser import extract_pkeys
+from crawler.http.client import WasedaSyllabusClient
+from crawler.ingest.parser import parse_course_detail
 
 logger = getLogger(__name__)
 
