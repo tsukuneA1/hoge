@@ -155,7 +155,7 @@ flowchart TD
 discover job
 ```mermaid
 sequenceDiagram
-    participant Job as discover orchestrator
+    participant Job as discover service
     participant Runs as crawl_runs repository
     participant HTTP as httpx client
     participant Parser as parser
@@ -166,7 +166,7 @@ sequenceDiagram
 
     loop each page
         Job->>HTTP: fetch_search_page(year, page, page_size)
-        HTTP-->>Job: run_id
+        HTTP-->>Job: HTML
 
         Job->>Parser: parse_search_page(html)
         Parser-->>Job: pkeys
@@ -182,7 +182,7 @@ sequenceDiagram
 ingest_job
 ```mermaid
 sequenceDiagram
-    participant Job as ingest orchestrator
+    participant Job as ingest service
     participant Runs as crawl_runs repository
     participant Targets as crawl_targets repository
     participant HTTP as httpx client
@@ -202,7 +202,7 @@ sequenceDiagram
         Parser-->>Job: ParsedCourse
 
         Job->>Courses: UpsertCourses(course)
-        Course-->>Job: inserted/updated/unchanged
+        Courses-->>Job: inserted/updated/unchanged
 
         Job->>Targets: MarkCrawlTargetSucceeded(pkey)
     end
