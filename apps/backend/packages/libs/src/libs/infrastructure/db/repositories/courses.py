@@ -1,3 +1,5 @@
+from collections.abc import Iterator
+
 from libs.infrastructure.db.gen import courses, models
 from sqlalchemy import Connection
 
@@ -7,7 +9,7 @@ class CoursesRepository:
         self.conn = connection
         self.querier = courses.Querier(connection)
 
-    def list(self) -> list[models.Course]:
+    def list(self) -> Iterator[models.Course]:
         return self.querier.list_courses()
 
     def upsert(self, course: courses.UpsertCoursesParams):

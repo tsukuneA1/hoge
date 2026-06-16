@@ -1,4 +1,3 @@
-from typing import Optional
 from collections.abc import Iterator
 from sqlalchemy import Connection
 
@@ -20,7 +19,7 @@ class CrawlTargetsRepository:
     def success(self, pkey: str):
         self.querier.mark_crawl_target_succeeded(pkey=pkey)
 
-    def fail(self, *, last_error: Optional[str], pkey: str):
+    def fail(self, *, last_error: str | None, pkey: str):
         self.querier.mark_crawl_target_failed(pkey=pkey, last_error=last_error)
 
     def upsert(
