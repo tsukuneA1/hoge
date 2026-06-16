@@ -17,19 +17,19 @@ class CrawlTargetsRepository:
             )
         )
 
-    def success(self, pkey: str) -> models.CrawlTarget:
+    def mark_succeeded(self, pkey: str) -> models.CrawlTarget:
         target = self.querier.mark_crawl_target_succeeded(pkey=pkey)
         if target is None:
             return ValueError("db returned None")
         return target
 
-    def fail(self, *, last_error: str | None, pkey: str) -> models.CrawlTarget:
+    def mark_failed(self, *, last_error: str | None, pkey: str) -> models.CrawlTarget:
         target = self.querier.mark_crawl_target_failed(pkey=pkey, last_error=last_error)
         if target is None:
             return ValueError("db returned None")
         return target
 
-    def running(self, pkey: str) -> models.CrawlTarget:
+    def mark_running(self, pkey: str) -> models.CrawlTarget:
         target = self.querier.mark_crawl_target_running(pkey=pkey)
         if target is None:
             return ValueError("db returned None")
