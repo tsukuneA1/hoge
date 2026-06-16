@@ -152,6 +152,63 @@ flowchart TD
     IngestJob -->|実行履歴| Runs
 ```
 
+discover job
+```mermaid
+sequenceDiagram
+    participant Job as discover service
+    participant Runs as crawl_runs repository
+    participant HTTP as httpx client
+    participant Parser as parser
+    participant Targets as crawl_targets repository
+
+    Job->>Runs: 1. CreateCrawlRun(job_type=discover, status=running)
+    Runs-->>Job: 2. run_id
+
+    loop each page
+        Job->>HTTP: fetch_search_page(year, page, page_size)
+        HTTP-->>Job: HTML
+
+        Job->>Parser: parse_search_page(html)
+        Parser-->>Job: pkeys
+
+        loop each pkey
+            Job->>Targets: UpsertCrawlTarget(pkey, run_id, year, page)
+        end
+    end
+
+    Job->>Runs: FinishCrawlRun(status=succeeded/partially_succeeded/failed, counts)
+```
+
+ingest_job
+```mermaid
+sequenceDiagram
+    participant Job as ingest service
+    participant Runs as crawl_runs repository
+    participant Targets as crawl_targets repository
+    participant HTTP as httpx client
+    participant Parser as parser
+    participant Courses as courses repository
+
+    Job->>Runs: CreateCrawlRun(job_type=ingest, status=running)
+    Runs-->>Job: run_id
+
+    Job->>Targets: ListIngestTargets(row_limit, max_attempts, lease_timeout)
+    Targets-->>Job: targets
+    loop each page
+        Job->>HTTP: fetch_detail_page(pkey)
+        HTTP-->>Job: detail HTML
+
+        Job->>Parser: parse_course_detail(html)
+        Parser-->>Job: ParsedCourse
+
+        Job->>Courses: UpsertCourses(course)
+        Courses-->>Job: inserted/updated/unchanged
+
+        Job->>Targets: MarkCrawlTargetSucceeded(pkey)
+    end
+    Job->>Runs: FinishCrawlRun(run_id)
+```
+
 ### 影響範囲 (Impact) <!-- Optional -->
 
 <!--

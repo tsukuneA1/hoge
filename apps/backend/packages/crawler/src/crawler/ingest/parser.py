@@ -1,11 +1,10 @@
 from dataclasses import dataclass
+from datetime import datetime
+from logging import getLogger
 
 from bs4 import BeautifulSoup
-from datetime import datetime
 
 from crawler.ingest.normalize import clean_text
-
-from logging import getLogger
 
 logger = getLogger(__name__)
 

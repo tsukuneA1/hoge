@@ -4,7 +4,6 @@ from pathlib import Path
 
 import httpx
 
-
 BASE_URL = "https://www.wsl.waseda.jp/syllabus"
 P_KEY = "2600001002012026260000100226"
 

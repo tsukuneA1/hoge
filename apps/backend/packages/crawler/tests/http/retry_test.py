@@ -1,6 +1,5 @@
 import httpx
 import pytest
-
 from crawler.http.retry import retry_http_call
 
 

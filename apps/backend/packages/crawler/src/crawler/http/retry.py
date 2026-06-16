@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import time
 from collections.abc import Callable
 
 import httpx
-import time
 
 RETRYABLE_STATUS_CODES = {429, 500, 502, 503, 504}
 
@@ -37,7 +37,8 @@ def retry_http_call(
             if attempt == max_attempts:
                 raise
 
-        # NOTE: discover jobは単一のbatch jobで動く想定の為jitterはなし。ingest jobは分散するとして2,3個なのでこちらもjitterを付ける必要なしと判断した
+        # NOTE: discover jobは単一のbatch jobで動く想定の為jitterはなし。
+        # ingest jobは分散するとして2,3個なのでこちらもjitterを付ける必要なしと判断した
         delay = min(max_delay_seconds, 2 ** (attempt - 1) * base_delay_seconds)
         time.sleep(delay)
 
