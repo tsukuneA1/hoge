@@ -25,12 +25,12 @@ class CrawlTargetsRepository:
         self,
         pkey: str,
         last_seen_run_id: int | None,
-        discoverd_year: int,
+        discovered_year: int,
         source_page: int,
     ):
         self.querier.upsert_crawl_target(
             pkey=pkey,
             last_seen_run_id=last_seen_run_id,
-            discovered_year=discoverd_year,
+            discovered_year=discovered_year,
             source_page=source_page,
         )
