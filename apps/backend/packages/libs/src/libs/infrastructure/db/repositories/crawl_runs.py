@@ -5,7 +5,6 @@ from libs.infrastructure.db.gen import crawl_runs, models
 
 class CrawlRunsRepository:
     def __init__(self, connection: Connection):
-        self.conn = connection
         self.querier = crawl_runs.Querier(connection)
 
     def start(self, job_type: models.CrawlJobType) -> models.CrawlRun | None:
