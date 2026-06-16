@@ -1,4 +1,3 @@
-from typing import List
 from sqlalchemy import Connection
 
 from libs.db.gen import crawl_targets, models
@@ -9,7 +8,7 @@ class CrawlTargetsRepository:
         self.conn = connection
         self.querier = crawl_targets.Querier(conn=connection)
 
-    def list(self, limit, max_attempts, lease_timeout) -> List[models.CrawlTarget]:
+    def list(self, limit, max_attempts, lease_timeout) -> list[models.CrawlTarget]:
         return self.querier.list_ingest_targets(
             max_attempts=max_attempts,
             lease_timeout_seconds=lease_timeout,
@@ -23,7 +22,11 @@ class CrawlTargetsRepository:
         self.querier.mark_crawl_target_failed(pkey=pkey)
 
     def upsert(
-        self, pkey: str, last_seen_run_id: int | None, discoverd_year: int, source_page: int
+        self,
+        pkey: str,
+        last_seen_run_id: int | None,
+        discoverd_year: int,
+        source_page: int,
     ):
         self.querier.upsert_crawl_target(
             pkey=pkey,

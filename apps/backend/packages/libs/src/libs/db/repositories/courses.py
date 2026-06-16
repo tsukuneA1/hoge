@@ -7,8 +7,8 @@ class CoursesRepository:
         self.conn = connection
         self.querier = courses.Querier(connection)
 
-    def list(self, year: int) -> list[models.Course]:
+    def list(self) -> list[models.Course]:
         return self.querier.list_courses()
 
-    def upsert(self, course: models.Course):
-        self.querier.upsert_course()
+    def upsert(self, course: courses.UpsertCoursesParams):
+        self.querier.upsert_courses(course)
