@@ -1,4 +1,4 @@
-from libs.db.gen import courses, models
+from libs.infrastructure.db.gen import courses, models
 from sqlalchemy import Connection
 
 

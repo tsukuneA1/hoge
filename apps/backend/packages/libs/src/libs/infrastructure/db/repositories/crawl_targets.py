@@ -1,6 +1,6 @@
 from sqlalchemy import Connection
 
-from libs.db.gen import crawl_targets, models
+from libs.infrastructure.db.gen import crawl_targets, models
 
 
 class CrawlTargetsRepository:
