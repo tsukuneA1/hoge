@@ -9,11 +9,11 @@ class CrawlTargetsRepository:
         self.querier = crawl_targets.Querier(connection)
 
     def list(
-        self, limit: int, max_attempts: int, lease_timeout: float
+        self, limit: int, max_attempts: int, lease_timeout_seconds: float
     ) -> Iterator[models.CrawlTarget]:
         return self.querier.list_ingest_targets(
             max_attempts=max_attempts,
-            lease_timeout_seconds=lease_timeout,
+            lease_timeout_seconds=lease_timeout_seconds,
             row_limit=limit,
         )
 
@@ -22,6 +22,9 @@ class CrawlTargetsRepository:
 
     def fail(self, *, last_error: str | None, pkey: str) -> models.CrawlTarget | None:
         return self.querier.mark_crawl_target_failed(pkey=pkey, last_error=last_error)
+
+    def running(self, pkey: str) -> models.CrawlTarget | None:
+        return self.querier.mark_crawl_target_running(pkey=pkey)
 
     def upsert(
         self,
