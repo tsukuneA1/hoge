@@ -6,7 +6,7 @@ from sqlalchemy import Connection
 
 class CrawlTargetsRepository:
     def __init__(self, connection: Connection):
-        self.querier = crawl_targets.Querier(conn=connection)
+        self.querier = crawl_targets.Querier(connection)
 
     def list(
         self, limit: int, max_attempts: int, lease_timeout: float
