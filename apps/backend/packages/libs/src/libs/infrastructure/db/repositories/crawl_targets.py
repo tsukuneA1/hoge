@@ -1,3 +1,5 @@
+from typing import Optional
+from collections.abc import Iterator
 from sqlalchemy import Connection
 
 from libs.infrastructure.db.gen import crawl_targets, models
@@ -8,7 +10,7 @@ class CrawlTargetsRepository:
         self.conn = connection
         self.querier = crawl_targets.Querier(conn=connection)
 
-    def list(self, limit, max_attempts, lease_timeout) -> list[models.CrawlTarget]:
+    def list(self, limit: int, max_attempts: int, lease_timeout: float) -> Iterator[models.CrawlTarget]:
         return self.querier.list_ingest_targets(
             max_attempts=max_attempts,
             lease_timeout_seconds=lease_timeout,
@@ -18,8 +20,8 @@ class CrawlTargetsRepository:
     def success(self, pkey: str):
         self.querier.mark_crawl_target_succeeded(pkey=pkey)
 
-    def fail(self, pkey: str):
-        self.querier.mark_crawl_target_failed(pkey=pkey)
+    def fail(self, *, last_error: Optional[str], pkey: str):
+        self.querier.mark_crawl_target_failed(pkey=pkey, last_error=last_error)
 
     def upsert(
         self,
