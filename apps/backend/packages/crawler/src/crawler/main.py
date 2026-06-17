@@ -38,7 +38,7 @@ def main() -> None:
     if args.command == "discover":
         engine = _get_engine()
 
-        with engine.begin() as conn:
+        with engine.connect() as conn:
             crawl_runs_repository = crawl_runs.CrawlRunsRepository(connection=conn)
             crawl_targets_repository = crawl_targets.CrawlTargetsRepository(
                 connection=conn
@@ -46,6 +46,7 @@ def main() -> None:
 
             with WasedaSyllabusClient() as client:
                 run_discover_job(
+                    connection=conn,
                     crawl_runs_repository=crawl_runs_repository,
                     crawl_targets_repository=crawl_targets_repository,
                     client=client,

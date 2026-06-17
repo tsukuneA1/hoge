@@ -12,7 +12,23 @@ class CrawlRunsRepository:
             raise ValueError("db returned None")
         return start_run
 
-    def finish(self, params: crawl_runs.FinishCrawlRunParams) -> models.CrawlRun:
+    def finish(
+        self,
+        id: int,
+        status: str,
+        discovered_count: int,
+        ingested_count: int,
+        failed_count: int,
+        error_message: str | None = None,
+    ) -> models.CrawlRun:
+        params = crawl_runs.FinishCrawlRunParams(
+            id=id,
+            status=models.CrawlRunStatus(status),
+            discovered_count=discovered_count,
+            ingested_count=ingested_count,
+            failed_count=failed_count,
+            error_message=error_message,
+        )
         finish_run = self.querier.finish_crawl_run(params)
         if finish_run is None:
             raise ValueError("db returned None")
