@@ -1,12 +1,19 @@
 import argparse
 from logging import getLogger
 
+import sqlalchemy
+from libs.config import DatabaseSettings
 from libs.logging import configure_logging
 
 from crawler.discover.service import run_discover_job
 from crawler.http.client import WasedaSyllabusClient
 
 logger = getLogger(__name__)
+
+
+def _get_engine() -> sqlalchemy.Engine:
+    settings = DatabaseSettings()
+    return sqlalchemy.createEngine(settings.sqlalchemy_database_url)
 
 
 def main() -> None:
