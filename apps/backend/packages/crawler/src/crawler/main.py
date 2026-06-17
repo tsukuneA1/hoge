@@ -3,6 +3,7 @@ from logging import getLogger
 
 import sqlalchemy
 from libs.config import DatabaseSettings
+from libs.infrastructure.db.repositories import crawl_runs, crawl_targets
 from libs.logging import configure_logging
 
 from crawler.discover.service import run_discover_job
@@ -13,7 +14,7 @@ logger = getLogger(__name__)
 
 def _get_engine() -> sqlalchemy.Engine:
     settings = DatabaseSettings()
-    return sqlalchemy.createEngine(settings.sqlalchemy_database_url)
+    return sqlalchemy.create_engine(settings.sqlalchemy_database_url)
 
 
 def main() -> None:
@@ -25,7 +26,7 @@ def main() -> None:
 
     discover_parser = subparsers.add_parser("discover")
     discover_parser.add_argument("--year", type=int, required=True)
-    discover_parser.add_argument("--page-size", type=int, default=2000)
+    discover_parser.add_argument("--page-size", type=int, default=1000)
 
     ingest_parser = subparsers.add_parser("ingest")
     ingest_parser.add_argument("--limit", type=int, default=10)
@@ -35,19 +36,26 @@ def main() -> None:
 
     # Composition Root
     if args.command == "discover":
-        with WasedaSyllabusClient() as client:
-            run_discover_job(client=client, year=args.year, page_size=args.page_size)
-    elif args.command == "ingest":
-        print("ingest", args.limit, args.max_attempts)
+        engine = _get_engine()
 
-    # with WasedaSyllabusClient() as client:
-    #     r = client.fetch_search_page(year=2026, page=1, page_size=100)
-    #     pkeys = extract_pkeys(r)
-    #     logger.info(pkeys)
-    #     for key in pkeys:
-    #         r = client.fetch_detail_page(pKey=key)
-    #         course = parse_course_detail(r)
-    #         logger.info(course)
+        with engine.begin() as conn:
+            crawl_runs_repository = crawl_runs.CrawlRunsRepository(connection=conn)
+            crawl_targets_repository = crawl_targets.CrawlTargetsRepository(
+                connection=conn
+            )
+
+            with WasedaSyllabusClient() as client:
+                run_discover_job(
+                    crawl_runs_repository=crawl_runs_repository,
+                    crawl_targets_repository=crawl_targets_repository,
+                    client=client,
+                    year=args.year,
+                    page_size=args.page_size,
+                )
+    elif args.command == "ingest":
+        engine = _get_engine()
+
+        print("ingest", args.limit, args.max_attempts)
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ class DatabaseSettings(BaseSettings):
 
     DB_HOST: str = Field(default="localhost", alias="PGHOST")
     DB_PORT: int = Field(default=5432, alias="PGPORT")
-    DB_DATABASE: str = Field(default="jvs_db", alias="PGDATABASE")
+    DB_DATABASE: str = Field(default="hoge_db", alias="PGDATABASE")
     DB_USER: str = Field(default="postgres", alias="PGUSER")
     DB_PASSWORD: str = Field(default="", alias="PGPASSWORD")
     DB_SCHEMA: str = Field(default="", alias="PGSCHEMA")
