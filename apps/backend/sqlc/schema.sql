@@ -59,7 +59,7 @@ CREATE INDEX idx_crawl_targets_status ON crawl_targets (status);
 CREATE TABLE courses (
     pkey TEXT PRIMARY KEY,
     -- 開講年度
-    academic_year TEXT NOT NULL,
+    academic_year INT NOT NULL,
     -- 開講箇所(学部)
     faculty TEXT NOT NULL,
     -- 科目名
@@ -121,7 +121,7 @@ CREATE TABLE courses (
     -- 備考・関連URL
     remarks TEXT,
     -- シラバス最終更新日
-    syllabus_updated_at TEXT,
+    syllabus_updated_at TIMESTAMPTZ,
 
     source_url TEXT NOT NULL,
     -- 一旦カラムだけ置く。データ量がボトルネックになるならNULLで入れる
