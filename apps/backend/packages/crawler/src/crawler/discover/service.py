@@ -20,9 +20,10 @@ def run_discover_job(
     with connection.begin():
         run = crawl_runs_repository.start(job_type="discover")
 
+    total_count = 0
     ingested_count = 0
     failed_count = 0
-    errors = ""
+    errors: list[str] = []
     try:
         html = client.fetch_search_page(year=year, page_size=page_size, page=1)
 
@@ -57,6 +58,11 @@ def run_discover_job(
         else:
             status = "partially_succeeded"
 
+        if errors == []:
+            error_message = None
+        else:
+            error_message = "\n".join(errors)
+
         with connection.begin():
             crawl_runs_repository.finish(
                 id=run.id,
@@ -64,7 +70,7 @@ def run_discover_job(
                 discovered_count=total_count,
                 ingested_count=ingested_count,
                 failed_count=failed_count,
-                error_message=errors,
+                error_message=error_message,
             )
     except Exception as exc:
         with connection.begin():
