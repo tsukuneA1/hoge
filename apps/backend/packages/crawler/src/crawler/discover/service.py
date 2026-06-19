@@ -19,8 +19,9 @@ def run_discover_job(
     with connection.begin():
         run = crawl_runs_repository.start(job_type="discover")
 
-    discovered_count = 0
+    ingested_count = 0
     failed_count = 0
+    errors = ""
     try:
         html = client.fetch_search_page(year=year, page_size=page_size, page=1)
 
@@ -33,31 +34,44 @@ def run_discover_job(
             pages.append((page, html))
 
         for page, html in pages:
-            pkeys = extract_pkeys(html)
-            with connection.begin():
-                for pkey in pkeys:
-                    crawl_targets_repository.upsert(
-                        pkey=pkey,
-                        last_seen_run_id=run.id,
-                        discovered_year=year,
-                        source_page=page,
-                    )
-            discovered_count += len(pkeys)
+            try:
+                pkeys = extract_pkeys(html)
+                with connection.begin():
+                    for pkey in pkeys:
+                        crawl_targets_repository.upsert(
+                            pkey=pkey,
+                            last_seen_run_id=run.id,
+                            discovered_year=year,
+                            source_page=page,
+                        )
+                ingested_count += len(pkeys)
+            except Exception as exc:
+                failed_count += 1
+                errors.append(str(exc))
+
+        if failed_count == 0:
+            status = "succeeded"
+        elif ingested_count == 0 and total_count > 0:
+            status = "failed"
+        else:
+            status = "partially_succeeded"
+
         with connection.begin():
             crawl_runs_repository.finish(
                 id=run.id,
-                status="succeeded",
-                discovered_count=discovered_count,
-                ingested_count=discovered_count,
-                failed_count=0,
+                status=status,
+                discovered_count=total_count,
+                ingested_count=ingested_count,
+                failed_count=failed_count,
+                error_message=errors,
             )
     except Exception as exc:
         with connection.begin():
             crawl_runs_repository.finish(
                 id=run.id,
                 status="failed",
-                discovered_count=discovered_count,
-                ingested_count=discovered_count - failed_count,
+                discovered_count=total_count,
+                ingested_count=ingested_count,
                 failed_count=failed_count,
                 error_message=str(exc),
             )
