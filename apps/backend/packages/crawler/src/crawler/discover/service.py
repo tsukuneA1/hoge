@@ -29,14 +29,12 @@ def run_discover_job(
 
         total_count = extract_total_count(html)
 
-        pages = [(1, html)]
-
-        for page in range(2, (total_count + page_size - 1) // page_size + 1):
-            html = client.fetch_search_page(year=year, page_size=page_size, page=page)
-            pages.append((page, html))
-
-        for page, html in pages:
+        for page in range(1, (total_count + page_size - 1) // page_size + 1):
             try:
+                if page != 1:
+                    html = client.fetch_search_page(
+                        year=year, page_size=page_size, page=page
+                    )
                 pkeys = extract_pkeys(html)
                 with connection.begin():
                     for pkey in pkeys:
