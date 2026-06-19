@@ -2,6 +2,7 @@
 # versions:
 #   sqlc v1.30.0
 # source: courses.sql
+import datetime
 import pydantic
 from typing import AsyncIterator, Iterator, Optional
 
@@ -98,7 +99,7 @@ updated_at = NOW()
 
 class UpsertCoursesParams(pydantic.BaseModel):
     pkey: str
-    academic_year: str
+    academic_year: int
     faculty: str
     title: str
     instructor: str
@@ -127,7 +128,7 @@ class UpsertCoursesParams(pydantic.BaseModel):
     reference_text: Optional[str]
     grading_policy: Optional[str]
     remarks: Optional[str]
-    syllabus_updated_at: Optional[str]
+    syllabus_updated_at: Optional[datetime.datetime]
     source_url: str
     raw_html: Optional[str]
 

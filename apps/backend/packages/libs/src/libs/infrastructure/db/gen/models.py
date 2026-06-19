@@ -28,7 +28,7 @@ class CrawlTargetStatus(str, enum.Enum):
 
 class Course(pydantic.BaseModel):
     pkey: str
-    academic_year: str
+    academic_year: int
     faculty: str
     title: str
     instructor: str
@@ -57,7 +57,7 @@ class Course(pydantic.BaseModel):
     reference_text: Optional[str]
     grading_policy: Optional[str]
     remarks: Optional[str]
-    syllabus_updated_at: Optional[str]
+    syllabus_updated_at: Optional[datetime.datetime]
     source_url: str
     raw_html: Optional[str]
     created_at: datetime.datetime
