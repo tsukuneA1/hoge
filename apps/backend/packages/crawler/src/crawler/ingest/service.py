@@ -22,34 +22,55 @@ def run_ingest_job(
             limit=limit, max_attempts=max_attempts, lease_timeout_seconds=5.0
         )
 
+        for target in targets:
+            crawl_targets_repository.mark_running(pkey=target.pkey)
+
     discovered_count = len(targets)
     ingested_count = 0
+    failed_count = 0
 
     try:
         for target in targets:
-            html = client.fetch_detail_page(pKey=target.pkey)
-            parsed_course = parse_course_detail(html)
+            try:
+                html = client.fetch_detail_page(pKey=target.pkey)
+                parsed_course = parse_course_detail(html)
 
-            with connection.begin():
-                crawl_targets_repository.mark_succeeded(pkey=target.pkey)
-                courses_repository.upsert(*parsed_course)
-            ingested_count += 1
+                with connection.begin():
+                    courses_repository.upsert(parsed_course)
+                    crawl_targets_repository.mark_succeeded(pkey=target.pkey)
+
+                ingested_count += 1
+
+            except Exception as exc:
+                failed_count += 1
+                with connection.begin():
+                    crawl_targets_repository.mark_failed(
+                        pkey=target.pkey, last_error=str(exc)
+                    )
+        if failed_count == 0:
+            status = "succeeded"
+        elif ingested_count == 0 and discovered_count > 0:
+            status = "failed"
+        else:
+            status = "partial_succeeded"
+
         with connection.begin():
             crawl_runs_repository.finish(
                 id=run.id,
-                status='succeeded',
+                status=status,
                 discovered_count=discovered_count,
                 ingested_count=ingested_count,
-                failed_count=0,
+                failed_count=failed_count,
             )
 
     except Exception as exc:
         with connection.begin():
             crawl_runs_repository.finish(
                 id=run.id,
-                status='failed',
+                status="failed",
                 discovered_count=discovered_count,
                 ingested_count=ingested_count,
-                failed_count=discovered_count-ingested_count,
-                error_message=str(exc)
+                failed_count=discovered_count - ingested_count,
+                error_message=str(exc),
             )
+        raise
