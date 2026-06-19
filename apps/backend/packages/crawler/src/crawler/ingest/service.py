@@ -22,7 +22,8 @@ def run_ingest_job(
 
     with connection.begin():
         targets = crawl_targets_repository.list_ingest_targets(
-            limit=limit, max_attempts=max_attempts, lease_timeout_seconds=5.0
+            # NOTE: detail fetch は最悪 timeout10s×retry3 ≒ 30s。安全係数2倍で60s。
+            limit=limit, max_attempts=max_attempts, lease_timeout_seconds=60.0
         )
 
         for target in targets:
