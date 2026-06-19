@@ -14,7 +14,6 @@ class DatabaseSettings(BaseSettings):
     DB_DATABASE: str = Field(default="hoge_db", alias="PGDATABASE")
     DB_USER: str = Field(default="postgres", alias="PGUSER")
     DB_PASSWORD: str = Field(default="", alias="PGPASSWORD")
-    DB_SCHEMA: str = Field(default="", alias="PGSCHEMA")
 
     @property
     def database_url_components(self) -> str:
