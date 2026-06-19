@@ -9,6 +9,7 @@ class SearchPageParseResult:
 
 
 PKEY_PATTERN = re.compile(r"post_submit\('JAA104DtlSubCon',\s*'(?P<pkey>[^']+)'\)")
+# NOTE: 実サイトでカンマなどは含まないことを確認済み
 TOTAL_COUNT_PATTERN = re.compile(r"全(?P<total>\d+)件中")
 
 
