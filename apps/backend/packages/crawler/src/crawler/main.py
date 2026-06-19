@@ -1,9 +1,11 @@
 import argparse
 from logging import getLogger
 
+from crawler.ingest.service import run_ingest_job
+
 import sqlalchemy
 from libs.config import DatabaseSettings
-from libs.infrastructure.db.repositories import crawl_runs, crawl_targets
+from libs.infrastructure.db.repositories import courses, crawl_runs, crawl_targets
 from libs.logging import configure_logging
 
 from crawler.discover.service import run_discover_job
@@ -56,8 +58,22 @@ def main() -> None:
     elif args.command == "ingest":
         engine = _get_engine()
 
-        print("ingest", args.limit, args.max_attempts)
+        with engine.connect() as conn:
+            crawl_runs_repository = crawl_runs.CrawlRunsRepository(connection=conn)
+            crawl_targets_repository = crawl_targets.CrawlTargetsRepository(
+                connection=conn
+            )
+            courses_repository = courses.CoursesRepository(connection=conn)
 
-
+            with WasedaSyllabusClient() as client:
+                run_ingest_job(
+                    connection=conn,
+                    crawl_runs_repository=crawl_runs_repository,
+                    crawl_targets_repository=crawl_targets_repository,
+                    courses_repository=courses_repository,
+                    client=client,
+                    limit=args.limit,
+                    max_attempts=args.max_attempts
+                )
 if __name__ == "__main__":
     main()

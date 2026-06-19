@@ -1,3 +1,5 @@
+from dataclasses import asdict
+
 from libs.infrastructure.db.repositories import courses, crawl_runs, crawl_targets
 
 from crawler.http.client import WasedaSyllabusClient
@@ -36,7 +38,7 @@ def run_ingest_job(
                 parsed_course = parse_course_detail(html)
 
                 with connection.begin():
-                    courses_repository.upsert(parsed_course)
+                    courses_repository.upsert(pkey=target.pkey, **asdict(parsed_course))
                     crawl_targets_repository.mark_succeeded(pkey=target.pkey)
 
                 ingested_count += 1
@@ -52,7 +54,7 @@ def run_ingest_job(
         elif ingested_count == 0 and discovered_count > 0:
             status = "failed"
         else:
-            status = "partial_succeeded"
+            status = "partially_succeeded"
 
         with connection.begin():
             crawl_runs_repository.finish(
