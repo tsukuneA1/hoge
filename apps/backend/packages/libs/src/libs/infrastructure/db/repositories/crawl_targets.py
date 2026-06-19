@@ -20,19 +20,19 @@ class CrawlTargetsRepository:
     def mark_succeeded(self, pkey: str) -> models.CrawlTarget:
         target = self.querier.mark_crawl_target_succeeded(pkey=pkey)
         if target is None:
-            return ValueError("db returned None")
+            raise ValueError("db returned None")
         return target
 
     def mark_failed(self, *, last_error: str | None, pkey: str) -> models.CrawlTarget:
         target = self.querier.mark_crawl_target_failed(pkey=pkey, last_error=last_error)
         if target is None:
-            return ValueError("db returned None")
+            raise ValueError("db returned None")
         return target
 
     def mark_running(self, pkey: str) -> models.CrawlTarget:
         target = self.querier.mark_crawl_target_running(pkey=pkey)
         if target is None:
-            return ValueError("db returned None")
+            raise ValueError("db returned None")
         return target
 
     def upsert(
@@ -49,5 +49,5 @@ class CrawlTargetsRepository:
             source_page=source_page,
         )
         if target is None:
-            return ValueError("db returned None")
+            raise ValueError("db returned None")
         return target
