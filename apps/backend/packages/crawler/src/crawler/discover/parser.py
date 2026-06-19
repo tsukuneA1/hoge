@@ -27,4 +27,6 @@ def extract_pkeys(html: str) -> list[str]:
 
 def extract_total_count(html: str) -> int:
     match = TOTAL_COUNT_PATTERN.search(html)
+    if match is None:
+        raise ValueError('total_count was not found')
     return int(match.group("total"))
