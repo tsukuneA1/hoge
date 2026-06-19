@@ -42,7 +42,12 @@ def run_ingest_job(
                 parsed_course = parse_course_detail(html)
 
                 with connection.begin():
-                    courses_repository.upsert(pkey=target.pkey, **asdict(parsed_course))
+                    courses_repository.upsert(
+                        pkey=target.pkey,
+                        **asdict(parsed_course),
+                        source_url=f"https://www.wsl.waseda.jp/syllabus/JAA104.php/{target.pkey}",
+                        raw_html=None,
+                    )
                     crawl_targets_repository.mark_succeeded(pkey=target.pkey)
 
                 ingested_count += 1

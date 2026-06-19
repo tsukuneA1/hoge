@@ -14,34 +14,38 @@ class ParsedCourse:
     academic_year: int
     faculty: str
     title: str
-    instructor: str
+    instructor: str | None
     term_day_period: str
-    category: str
+    # NOTE: 科目区分はnull許容
+    category: str | None
     eligible_year: str
     credits: int
-    classroom: str
+    # NOTE: 教室はnull許容
+    classroom: str | None
     campus: str
     course_key: str
-    class_code: str
+    class_code: str | None
     language: str
-    delivery_mode: str
-    course_code: str
+    # NOTE: 授業方法区分はnull許容
+    delivery_mode: str | None
+    course_code: str | None
     field_large: str
     field_middle: str
     field_small: str
     level: str
     class_format: str
-    # Note: 副題はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=2600001002012026260000100226&pLng=jp)
+    # NOTE: 副題はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=2600001002012026260000100226&pLng=jp)
     subtitle: str | None
-    overview: str
+    overview: str | None
     objectives: str
     before_after_study: str
-    lesson_plan: str
-    # Note: 教科書はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=1100001250012026110000125011&pLng=jp)
+    lesson_plan: str | None
+    # NOTE: 教科書はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=1100001250012026110000125011&pLng=jp)
     textbook: str | None
-    # Note: 参考文献はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=1100001270012026110000127011&pLng=jp)
+    # NOTE: 参考文献はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=1100001270012026110000127011&pLng=jp)
     reference_text: str | None
     grading_policy: str
+    # NOTE: 備考関連URLはnull許容
     remarks: str
     syllabus_updated_at: datetime
 
@@ -54,32 +58,32 @@ def parse_course_detail(html: str) -> ParsedCourse:
     )
     faculty = get_required_value_by_label(soup, "開講箇所")
     title = get_required_value_by_label(soup, "科目名")
-    instructor = get_required_value_by_label(soup, "担当教員")
+    instructor = get_optional_value_by_label(soup, "担当教員")
     term_day_period = get_required_value_by_label(soup, "学期曜日時限")
-    category = get_required_value_by_label(soup, "科目区分")
+    category = get_optional_value_by_label(soup, "科目区分")
     eligible_year = get_required_value_by_label(soup, "配当年次")
     credits = int(get_required_value_by_label(soup, "単位数"))
-    classroom = get_required_value_by_label(soup, "使用教室")
+    classroom = get_optional_value_by_label(soup, "使用教室")
     campus = get_required_value_by_label(soup, "キャンパス")
     course_key = get_required_value_by_label(soup, "科目キー")
-    class_code = get_required_value_by_label(soup, "科目クラスコード")
+    class_code = get_optional_value_by_label(soup, "科目クラスコード")
     language = get_required_value_by_label(soup, "授業で使用する言語")
-    delivery_mode = get_required_value_by_label(soup, "授業方法区分")
-    course_code = get_required_value_by_label(soup, "コース・コード")
+    delivery_mode = get_optional_value_by_label(soup, "授業方法区分")
+    course_code = get_optional_value_by_label(soup, "コース・コード")
     field_large = get_required_value_by_label(soup, "大分野名称")
     field_middle = get_required_value_by_label(soup, "中分野名称")
     field_small = get_required_value_by_label(soup, "小分野名称")
     level = get_required_value_by_label(soup, "レベル")
     class_format = get_required_value_by_label(soup, "授業形態")
     subtitle = get_optional_value_by_label(soup, "副題")
-    overview = get_required_value_by_label(soup, "授業概要")
+    overview = get_optional_value_by_label(soup, "授業概要")
     objectives = get_required_value_by_label(soup, "授業の到達目標")
     before_after_study = get_required_value_by_label(soup, "事前・事後学習の内容")
-    lesson_plan = get_required_value_by_label(soup, "授業計画")
+    lesson_plan = get_optional_value_by_label(soup, "授業計画")
     textbook = get_optional_value_by_label(soup, "教科書")
     reference_text = get_optional_value_by_label(soup, "参考文献")
     grading_policy = get_required_value_by_label(soup, "成績評価方法")
-    remarks = get_required_value_by_label(soup, "備考・関連URL")
+    remarks = get_optional_value_by_label(soup, "備考・関連URL")
     syllabus_updated_at = get_last_updated_at(soup)
 
     return ParsedCourse(

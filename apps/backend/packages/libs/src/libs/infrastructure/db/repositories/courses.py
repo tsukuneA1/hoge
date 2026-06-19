@@ -43,7 +43,9 @@ class CoursesRepository:
         reference_text: str | None,
         grading_policy: str,
         remarks: str,
+        source_url: str,
         syllabus_updated_at: datetime,
+        raw_html: str | None,
     ) -> None:
         params = courses.UpsertCoursesParams(
             pkey=pkey,
@@ -76,6 +78,8 @@ class CoursesRepository:
             reference_text=reference_text,
             grading_policy=grading_policy,
             remarks=remarks,
+            source_url=source_url,
             syllabus_updated_at=syllabus_updated_at,
+            raw_html=raw_html,
         )
         self.querier.upsert_courses(params)
