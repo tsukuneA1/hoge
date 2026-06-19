@@ -1,3 +1,4 @@
+import sqlalchemy
 from libs.infrastructure.db.repositories import crawl_runs, crawl_targets
 
 from crawler.discover.parser import (
@@ -9,7 +10,7 @@ from crawler.http.client import WasedaSyllabusClient
 
 def run_discover_job(
     *,
-    connection,
+    connection: sqlalchemy.Connection,
     crawl_runs_repository: crawl_runs.CrawlRunsRepository,
     crawl_targets_repository: crawl_targets.CrawlTargetsRepository,
     client: WasedaSyllabusClient,

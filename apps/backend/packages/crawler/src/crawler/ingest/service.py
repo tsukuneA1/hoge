@@ -1,5 +1,6 @@
 from dataclasses import asdict
 
+import sqlalchemy
 from libs.infrastructure.db.repositories import courses, crawl_runs, crawl_targets
 
 from crawler.http.client import WasedaSyllabusClient
@@ -8,7 +9,7 @@ from crawler.ingest.parser import parse_course_detail
 
 def run_ingest_job(
     *,
-    connection,
+    connection: sqlalchemy.Connection,
     crawl_runs_repository: crawl_runs.CrawlRunsRepository,
     crawl_targets_repository: crawl_targets.CrawlTargetsRepository,
     courses_repository: courses.CoursesRepository,
