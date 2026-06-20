@@ -24,4 +24,12 @@ class DatabaseSettings(BaseSettings):
 
     @property
     def sqlalchemy_database_url(self) -> str:
+        user = quote_plus(self.DB_USER)
+        password = quote_plus(self.DB_PASSWORD)
+        database = quote_plus(self.DB_DATABASE)
+
+        if self.DB_HOST.startswith("/cloudsql"):
+            host = quote_plus(self.DB_HOST)
+            return f"postgresql+psycopg://{user}:{password}@/{database}?host={host}"
+    
         return f"postgresql+psycopg://{self.database_url_components}"
