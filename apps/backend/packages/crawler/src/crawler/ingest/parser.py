@@ -22,7 +22,7 @@ class ParsedCourse:
     credits: int
     # NOTE: 教室はnull許容
     classroom: str | None
-    campus: str
+    campus: str | None
     course_key: str
     class_code: str | None
     language: str
@@ -33,18 +33,18 @@ class ParsedCourse:
     field_middle: str
     field_small: str
     level: str
-    class_format: str
+    class_format: str | None
     # NOTE: 副題はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=2600001002012026260000100226&pLng=jp)
     subtitle: str | None
     overview: str | None
-    objectives: str
-    before_after_study: str
+    objectives: str | None
+    before_after_study: str | None
     lesson_plan: str | None
     # NOTE: 教科書はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=1100001250012026110000125011&pLng=jp)
     textbook: str | None
     # NOTE: 参考文献はnull許容 (https://www.wsl.waseda.jp/syllabus/JAA104.php?pKey=1100001270012026110000127011&pLng=jp)
     reference_text: str | None
-    grading_policy: str
+    grading_policy: str | None
     # NOTE: 備考関連URLはnull許容
     remarks: str
     syllabus_updated_at: datetime
@@ -64,7 +64,7 @@ def parse_course_detail(html: str) -> ParsedCourse:
     eligible_year = get_required_value_by_label(soup, "配当年次")
     credits = int(get_required_value_by_label(soup, "単位数"))
     classroom = get_optional_value_by_label(soup, "使用教室")
-    campus = get_required_value_by_label(soup, "キャンパス")
+    campus = get_optional_value_by_label(soup, "キャンパス")
     course_key = get_required_value_by_label(soup, "科目キー")
     class_code = get_optional_value_by_label(soup, "科目クラスコード")
     language = get_required_value_by_label(soup, "授業で使用する言語")
@@ -74,15 +74,15 @@ def parse_course_detail(html: str) -> ParsedCourse:
     field_middle = get_required_value_by_label(soup, "中分野名称")
     field_small = get_required_value_by_label(soup, "小分野名称")
     level = get_required_value_by_label(soup, "レベル")
-    class_format = get_required_value_by_label(soup, "授業形態")
+    class_format = get_optional_value_by_label(soup, "授業形態")
     subtitle = get_optional_value_by_label(soup, "副題")
     overview = get_optional_value_by_label(soup, "授業概要")
-    objectives = get_required_value_by_label(soup, "授業の到達目標")
-    before_after_study = get_required_value_by_label(soup, "事前・事後学習の内容")
+    objectives = get_optional_value_by_label(soup, "授業の到達目標")
+    before_after_study = get_optional_value_by_label(soup, "事前・事後学習の内容")
     lesson_plan = get_optional_value_by_label(soup, "授業計画")
     textbook = get_optional_value_by_label(soup, "教科書")
     reference_text = get_optional_value_by_label(soup, "参考文献")
-    grading_policy = get_required_value_by_label(soup, "成績評価方法")
+    grading_policy = get_optional_value_by_label(soup, "成績評価方法")
     remarks = get_optional_value_by_label(soup, "備考・関連URL")
     syllabus_updated_at = get_last_updated_at(soup)
 
