@@ -18,6 +18,12 @@ FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 
 WORKDIR /app
 
+USER root
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN groupadd -g 1000 app && useradd -r -u 1000 -g app -m app && \
     chown app:app /app
 USER app
