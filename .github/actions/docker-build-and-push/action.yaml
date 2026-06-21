@@ -1,0 +1,56 @@
+name: "docker-build-and-push"
+description: "Build and push docker images"
+inputs:
+  build-context:
+    description: "Docker build context path."
+    default: ""
+    required: false
+  service-name:
+    description: "The name of service"
+    required: true
+  service-country:
+    description: "Country code of service"
+    required: true
+  dockerfile-dir:
+    description: "The directory of Dockerfile"
+    required: true
+  dockerfile-name:
+    description: "The name of Dockerfile"
+    required: true
+  container-name:
+    description: "Container name for docker tags"
+    required: true
+  workload-identity-provider:
+    description: "Workload Identity Provider for Google Cloud"
+    required: false
+  service-account-email:
+    description: "Service Account Email for Google Cloud"
+    required: false
+  additional-secret-files:
+    description: "Additional secret files for build and push"
+    default: ""
+    required: false
+  additional-build-args:
+    description: "Additional build args for build and push"
+    default: ""
+    required: false
+  build-only-option:
+    description: "Option to build only, not push to any registries"
+    default: ""
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Docker Buildx
+      uses: docker/
+
+    - name: Authenticate to Google Cloud
+
+
+    - name: Login to Artifact Registry
+
+
+    - name: Extract server metadata (tags, labels) for Docker
+
+
+    - name: Build and push
