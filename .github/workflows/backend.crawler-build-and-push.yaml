@@ -13,5 +13,43 @@ on:
       - "apps/backend/uv.lock"
       - ".github/workflows/backend.crawler-build-and-push.yaml"
       - ".github/actions/docker-build-and-push/**"
+  push:
+    branches:
+      - "release/**"
+    tags:
+      - "crawler/v*.*.*"
 
 jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apps/backend
+      timeout-minutes: 30
+      permissions:
+        id-token: write
+        contents: read
+      strategy:
+        matrix:
+          target:
+            - service-name: waseda-syllabus-project
+              container-name: crawler
+              dockerfile-dir: apps/backend/packages/crawler
+              dockerfile-name: Dockerfile
+          srvice-country: [jp]  
+    steps:
+      - uses: actions/checkout
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
+          persist-credentials: false
+      
+      - uses: ./.github/actions/docker-build-and-push
+        with:
+          build-context: ./apps/backend
+          service-name: ${{ matrix.target.service-name }}
+          service-country: ${{ matrix.service-country }}
+          dockerfile-dir: ${{ matrix.target.dockerfile-dir }}
+          dockerfile-name: ${{ matrix.target.dockerfile-name }}
+          container-name: ${{ matrix.target.container-name }}
+          workload-identity-provider: "projects/..."
+          service-account-email: ""
