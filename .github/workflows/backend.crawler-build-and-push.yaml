@@ -1,0 +1,17 @@
+name: "[crawler] build and push"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+    paths:
+      - "apps/backend/packages/crawler/**"
+      - "apps/backend/packages/libs/**"
+      - "apps/backend/pyproject.toml"
+      - "apps/backend/uv.lock"
+      - ".github/workflows/backend.crawler-build-and-push.yaml"
+      - ".github/actions/docker-build-and-push/**"
+
+jobs:
