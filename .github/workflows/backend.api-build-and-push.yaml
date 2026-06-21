@@ -1,0 +1,19 @@
+name: "[api] build and push"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+    paths:
+      - "apps/backend/packages/api/**"
+      - "apps/backend/packages/libs/**"
+      - "apps/backend/pyproject.toml"
+      - "apps/backend/uv.lock"
+      - "apps/backend/packages/api/Dockerfile"
+      - ".github/workflows/backend.api.build-and-push.yml"
+      - ".github/actions/docker-build-and-push/**"
+  push:
+    tags:
+      - "api/v*.*.*"
