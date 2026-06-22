@@ -1,7 +1,7 @@
 name: "[crawler] build and push"
 
 on:
-  workfloa_dispatch:
+  workflow_dispatch:
   push:
     branches:
       - main
