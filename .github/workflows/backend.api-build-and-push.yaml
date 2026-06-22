@@ -11,7 +11,7 @@ on:
       - "apps/backend/pyproject.toml"
       - "apps/backend/uv.lock"
       - "apps/backend/packages/api/Dockerfile"
-      - ".github/workflows/backend.api.build-and-push.yml"
+      - ".github/workflows/backend.api-build-and-push.yaml"
       - ".github/actions/docker-build-and-push/**"
     # TODO: 将来的にはタグ運用を行う。現状はややこしいので漢のlatest運用。
     # tags:
@@ -34,7 +34,7 @@ jobs:
             dockerfile-name: Dockerfile
             build-context: apps/backend
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - uses: ./.github/actions/docker-build-and-push
         with:
