@@ -71,21 +71,6 @@ runs:
         flavor: |
           latest=true
 
-    - name: Get version
-      id: version
-      shell: bash
-      # TODO: 直す。unknownになるらしい
-      run: |
-        VERSION="$(git describe --tags --dirty --match "${{ inputs.container-name }}/v*" 2>/dev/null | sed 's/.*\///')"
-
-        if [ -z "$VERSION" ]; then
-          VERSION="unknown-g$(git rev-parse --short=7 HEAD)"
-        fi
-
-        echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-        echo "Version: ${VERSION}"
-
-
     - name: Build and push
       uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
       with:
@@ -98,7 +83,6 @@ runs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
         build-args: |
-          VERSION=${{ steps.version.outputs.version }}
           SERVICE_NAME=${{ inputs.project-id }}
           ${{ inputs.additional-build-args }}
 
