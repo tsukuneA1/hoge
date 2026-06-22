@@ -1,0 +1,48 @@
+name: "[api] build and push"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/backend/packages/api/**"
+      - "apps/backend/packages/libs/**"
+      - "apps/backend/pyproject.toml"
+      - "apps/backend/uv.lock"
+      - "apps/backend/packages/api/Dockerfile"
+      - ".github/workflows/backend.api-build-and-push.yaml"
+      - ".github/actions/docker-build-and-push/**"
+    # TODO: 将来的にはタグ運用を行う。現状はややこしいので漢のlatest運用。
+    # tags:
+    #   - "api/v*.*.*"
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      id-token: write
+      contents: read
+    strategy:
+      # NOTE: やや冗長だが拡張性を持たせたい。
+      # NOTE: テンプレートとして異なるregion, service-name(stgとかprdとか)に対応できるものを今回は作りたかった.
+      matrix:
+        target:
+          - container-name: api
+            dockerfile-dir: apps/backend/packages/api
+            dockerfile-name: Dockerfile
+            build-context: apps/backend
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: ./.github/actions/docker-build-and-push
+        with:
+          build-context: ${{ matrix.target.build-context }}
+          dockerfile-dir: ${{ matrix.target.dockerfile-dir }}
+          dockerfile-name: ${{ matrix.target.dockerfile-name }}
+          container-name: ${{ matrix.target.container-name }}
+          project-id: waseda-syllabus-project
+          repository: syllabus
+          workload-identity-provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service-account-email: ${{ secrets.GCP_ARTIFACT_PUSHER_SERVICE_ACCOUNT }}
