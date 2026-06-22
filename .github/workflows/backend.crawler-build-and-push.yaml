@@ -1,9 +1,7 @@
 name: "[crawler] build and push"
 
 on:
-  workflow_dispatch:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
     paths:
@@ -11,45 +9,35 @@ on:
       - "apps/backend/packages/libs/**"
       - "apps/backend/pyproject.toml"
       - "apps/backend/uv.lock"
-      - ".github/workflows/backend.crawler-build-and-push.yaml"
+      - "apps/backend/packages/crawler/Dockerfile"
+      - ".github/workflows/backend.crawler.build-and-push.yml"
       - ".github/actions/docker-build-and-push/**"
-  push:
-    branches:
-      - "release/**"
     tags:
       - "crawler/v*.*.*"
 
 jobs:
   build-and-push:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./apps/backend
-      timeout-minutes: 30
-      permissions:
-        id-token: write
-        contents: read
-      strategy:
-        matrix:
-          target:
-            - service-name: waseda-syllabus-project
-              container-name: crawler
-              dockerfile-dir: apps/backend/packages/crawler
-              dockerfile-name: Dockerfile
-          srvice-country: [jp]  
+    timeout-minutes: 30
+    permissions:
+      id-token: write
+      contents: read
+    strategy:
+      matrix:
+        target:
+          - container-name: crawler
+            dockerfile-dir: apps/backend/packages/crawler
+            dockerfile-name: Dockerfile
     steps:
-      - uses: actions/checkout
-        with:
-          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
-          persist-credentials: false
-      
+      - uses: actions/checkout@v4
+
       - uses: ./.github/actions/docker-build-and-push
         with:
-          build-context: ./apps/backend
-          service-name: ${{ matrix.target.service-name }}
-          service-country: ${{ matrix.service-country }}
           dockerfile-dir: ${{ matrix.target.dockerfile-dir }}
           dockerfile-name: ${{ matrix.target.dockerfile-name }}
           container-name: ${{ matrix.target.container-name }}
-          workload-identity-provider: "projects/..."
-          service-account-email: ""
+          project-id: waseda-syllabus-project
+          repository: syllabus
+          workload-identity-provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service-account-email: ${{ secrets.GCP_ARTIFACT_PUSHER_SERVICE_ACCOUNT }}
