@@ -45,7 +45,7 @@ runs:
       uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed # v2
       with:
         token_format: access_token
-        project_id: ${{ inputs.project_id }}
+        project_id: ${{ inputs.project-id }}
         workload_identity_provider: ${{ inputs.workload-identity-provider }}
         service_account: ${{ inputs.service-account-email }}
 
@@ -62,7 +62,7 @@ runs:
       uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
       with:
         images: |
-          asia-northeast1-docker.pkg.dev/${{ inputs.project_id }}/${{ inputs.repository }}/${{ inputs.container-name }}
+          asia-northeast1-docker.pkg.dev/${{ inputs.project-id }}/${{ inputs.repository }}/${{ inputs.container-name }}
         tags: |
           type=ref,event=branch
           type=ref,event=pr
@@ -99,6 +99,6 @@ runs:
         cache-to: type=gha,mode=max
         build-args: |
           VERSION=${{ steps.version.outputs.version }}
-          SERVICE_NAME=${{ inputs.project_id }}
+          SERVICE_NAME=${{ inputs.project-id }}
           ${{ inputs.additional-build-args }}
 
