@@ -1,9 +1,7 @@
 name: "[api] build and push"
 
 on:
-  workflow_dispatch:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
     paths:
@@ -14,6 +12,32 @@ on:
       - "apps/backend/packages/api/Dockerfile"
       - ".github/workflows/backend.api.build-and-push.yml"
       - ".github/actions/docker-build-and-push/**"
-  push:
     tags:
       - "api/v*.*.*"
+
+jobs:
+  build-and-push:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      id-token: write
+      contents: read
+    strategy:
+      matrix:
+        target:
+          - container-name: api
+            dockerfile-dir: apps/backend/packages/api
+            dockerfile-name: Dockerfile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/docker-build-and-push
+        with:
+          dockerfile-dir: ${{ matrix.target.dockerfile-dir }}
+          dockerfile-name: ${{ matrix.target.dockerfile-name }}
+          container-name: ${{ matrix.target.container-name }}
+          project-id: waseda-syllabus-project
+          repository: syllabus
+          workload-identity-provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service-account-email: ${{ secrets.GCP_ARTIFACT_PUSHER_SERVICE_ACCOUNT }}
