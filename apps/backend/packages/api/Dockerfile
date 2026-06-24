@@ -28,4 +28,4 @@ ENV PATH="/app/.venv/bin:$PATH" \
     UVICORN_HOST=0.0.0.0 \
     UVICORN_PORT=8000 
 
-CMD ["uvicorn", "api.main:app"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8080"]
