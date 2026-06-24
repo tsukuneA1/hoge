@@ -3,12 +3,12 @@ variable "project_id" {
 }
 
 variable "region" {
-  type = string
+  type    = string
   default = "asia-northeast1"
 }
 
 variable "service_name" {
-  type = string
+  type    = string
   default = "api"
 }
 
@@ -33,6 +33,6 @@ variable "db_password_secret_name" {
 }
 
 variable "allow_public_invoker" {
-  type = bool
+  type    = bool
   default = true
 }

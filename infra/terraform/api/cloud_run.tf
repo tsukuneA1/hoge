@@ -1,5 +1,5 @@
 resource "google_cloud_run_v2_service" "api" {
-  name = var.service_name
+  name     = var.service_name
   location = var.region
 
   deletion_protection = false
@@ -28,26 +28,57 @@ resource "google_cloud_run_v2_service" "api" {
       }
 
       env {
-        name = "PGHOST"
+        name  = "PGHOST"
         value = local.db_host
       }
 
       env {
-        name = "PGPORT"
+        name  = "PGPORT"
         value = "5432"
       }
 
       env {
-        name = "PGDATABASE"
+        name  = "PGDATABASE"
         value = var.db_name
       }
 
       env {
-        name = "PGUSER"
+        name  = "PGUSER"
         value = var.db_user
       }
 
-      
+      env {
+        name = "PGPASSWORD"
+
+        value_source {
+          secret_key_ref {
+            secret  = var.db_password_secret_name
+            version = "latest"
+          }
+        }
+      }
+
+      volume_mounts {
+        name       = "cloudsql"
+        mount_path = "/cloudsql"
+      }
+
+      resources {
+        limits = {
+          cpu    = "1"
+          memory = "512Mi"
+        }
+      }
     }
   }
+
+  traffic {
+    percent = 100
+    type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+  }
+
+  depends_on = [
+    google_project_iam_member.api_cloudsql_client,
+    google_secret_manager_secret_iam_member.api_db_password_accessor,
+  ]
 }
