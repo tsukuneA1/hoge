@@ -31,5 +31,5 @@ class DatabaseSettings(BaseSettings):
         if self.DB_HOST.startswith("/cloudsql"):
             host = quote_plus(self.DB_HOST)
             return f"postgresql+psycopg://{user}:{password}@/{database}?host={host}"
-    
+
         return f"postgresql+psycopg://{self.database_url_components}"

@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from libs.logging import configure_logging
 
+from api.api import courses
+
 
 def create_app() -> FastAPI:
     configure_logging()
@@ -8,6 +10,8 @@ def create_app() -> FastAPI:
         title="Backend API",
         version="0.1.0",
     )
+
+    app.include_router(courses.router)
 
     @app.get("/healthz")
     def healthz() -> dict[str, str]:
