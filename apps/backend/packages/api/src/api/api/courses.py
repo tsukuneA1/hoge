@@ -26,7 +26,14 @@ def list_courses(
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> CourseListResponse:
     return service.list_courses(
-        academic_year=academic_year, q=q, limit=limit, offset=offset
+        academic_year=academic_year,
+        q=q,
+        faculty=faculty,
+        campus=campus,
+        language=language,
+        delivery_mode=delivery_mode,
+        limit=limit,
+        offset=offset,
     )
 
 
