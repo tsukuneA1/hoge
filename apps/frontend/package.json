@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "api:gen-types": "openapi-typescript http://localhost:8080/openapi.json -o app/utils/api/generated/schema.d.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
