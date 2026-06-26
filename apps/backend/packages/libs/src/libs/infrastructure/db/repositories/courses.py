@@ -8,8 +8,8 @@ class CoursesRepository:
     def __init__(self, connection: Connection):
         self.querier = courses.Querier(connection)
 
-    async def get_by_pkey(self, pkey: str) -> models.Course:
-        return await self.querier.get_course_by_pkey(pkey=pkey)
+    def get_by_pkey(self, pkey: str) -> models.Course:
+        return self.querier.get_course_by_pkey(pkey=pkey)
 
     def list(
         self,
