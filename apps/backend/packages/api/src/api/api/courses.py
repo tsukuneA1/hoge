@@ -18,7 +18,11 @@ def list_courses(
     service: Annotated[CourseService, Depends(get_course_service)],
     academic_year: Annotated[int, Query(description="開講年度")],
     q: Annotated[str | None, Query(description="検索キーワード")] = None,
-    limit: Annotated[int, Query(ge=1, le=10000)] = 20,
+    faculty: Annotated[str | None, Query(description="対象学部")] = None,
+    campus: Annotated[str | None, Query(description="対象キャンパス")] = None,
+    language: Annotated[str | None, Query(description="言語")] = None,
+    delivery_mode: Annotated[str | None, Query(description="授業方式")] = None,
+    limit: Annotated[int, Query(ge=1, le=200)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> CourseListResponse:
     return service.list_courses(

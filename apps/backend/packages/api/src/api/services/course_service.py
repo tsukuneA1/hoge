@@ -10,14 +10,29 @@ class CourseService:
 
     def get_course(self, pkey: str) -> models.Course:
         course = self.course_repo.get_by_pkey(pkey=pkey)
+        if course is None:
+            raise
         return course
 
     def list_courses(
-        self, *, academic_year: int, q: str | None, limit: int, offset: int
+        self,
+        *,
+        academic_year: int,
+        q: str | None,
+        faculty: str | None,
+        campus: str | None,
+        language: str | None,
+        delivery_mode: str | None,
+        limit: int,
+        offset: int,
     ) -> CourseListResponse:
         items = self.course_repo.list(
             academic_year=academic_year,
             q=_normalize_optional_query(q),
+            faculty=faculty,
+            campus=campus,
+            language=language,
+            delivery_mode=delivery_mode,
             limit_count=limit,
             offset_count=offset,
         )

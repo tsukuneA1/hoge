@@ -1,10 +1,10 @@
 from contextlib import contextmanager
 
-from api.infrastructure.db.database import close_engine, init_engine
 from fastapi import FastAPI
 from libs.logging import configure_logging
 
 from api.api import courses
+from api.infrastructure.db.database import close_engine, init_engine
 
 
 @contextmanager
@@ -25,11 +25,7 @@ def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     configure_logging()
-    app = FastAPI(
-        title="Backend API",
-        version="0.1.0",
-        lifespan=lifespan
-    )
+    app = FastAPI(title="Backend API", version="0.1.0", lifespan=lifespan)
 
     app.include_router(courses.router)
 
