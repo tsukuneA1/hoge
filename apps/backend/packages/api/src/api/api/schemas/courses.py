@@ -1,10 +1,12 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class CourseListItem(BaseModel):
     """Response model for course list (without values)."""
+
+    model_config = ConfigDict(from_attributes=True)
 
     pkey: str
     academic_year: int

@@ -21,7 +21,7 @@ class CoursesRepository:
         delivery_mode: str | None,
         offset_count: int,
         limit_count: int,
-    ) -> list[models.Course]:
+    ) -> list[courses.ListCoursesRow]:
         params = courses.ListCoursesParams(
             academic_year=academic_year,
             q=q,

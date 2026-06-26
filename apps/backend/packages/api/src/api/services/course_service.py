@@ -1,7 +1,7 @@
 from libs.infrastructure.db.gen import models
 from libs.infrastructure.db.repositories import courses
 
-from api.api.schemas.courses import CourseListResponse
+from api.api.schemas.courses import CourseListItem, CourseListResponse
 
 
 class CourseService:
@@ -26,7 +26,7 @@ class CourseService:
         limit: int,
         offset: int,
     ) -> CourseListResponse:
-        items = self.course_repo.list(
+        rows = self.course_repo.list(
             academic_year=academic_year,
             q=_normalize_optional_query(q),
             faculty=faculty,
@@ -36,6 +36,11 @@ class CourseService:
             limit_count=limit,
             offset_count=offset,
         )
+
+        items = []
+        for row in rows:
+            items.append(CourseListItem.model_validate(row))
+
         total = self.course_repo.count_courses(
             academic_year=academic_year, q=_normalize_optional_query(q)
         )
