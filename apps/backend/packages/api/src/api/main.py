@@ -1,4 +1,4 @@
-from contextlib import contextmanager
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from libs.logging import configure_logging
@@ -7,8 +7,8 @@ from api.api import courses
 from api.infrastructure.db.database import close_engine, init_engine
 
 
-@contextmanager
-def lifespan(app: FastAPI):
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     """Application lifespan manager"""
     # Startup
     try:
