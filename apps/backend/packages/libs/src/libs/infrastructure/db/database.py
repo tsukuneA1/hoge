@@ -6,7 +6,7 @@ import sqlalchemy
 
 logger = getLogger(__name__)
 
-_engine: sqlalchemy.SyncEngine | None = None
+_engine: sqlalchemy.Engine | None = None
 
 
 def init_engine(
