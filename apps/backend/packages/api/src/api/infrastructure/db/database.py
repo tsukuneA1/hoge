@@ -1,10 +1,10 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
+from libs.infrastructure.db import database as db
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine
 
 from api.config import settings
-from libs.infrastructure.db import database as db
 
 
 def init_engine() -> None:

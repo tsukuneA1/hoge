@@ -1,6 +1,5 @@
-from pydantic import Field
-
 from libs.config import DatabaseSettings
+from pydantic import Field
 
 
 class Settings(DatabaseSettings):

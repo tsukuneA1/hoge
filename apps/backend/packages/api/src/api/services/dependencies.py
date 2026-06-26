@@ -1,13 +1,12 @@
 from collections.abc import AsyncGenerator
 from typing import Annotated
 
-from api.services.course_service import CourseService
 from fastapi import Depends
 from libs.infrastructure.db.repositories.courses import CoursesRepository
-
 from sqlalchemy.ext.asyncio import AsyncConnection
 
 from api.infrastructure.db.database import get_connection
+from api.services.course_service import CourseService
 
 
 async def get_db_connection() -> AsyncGenerator[AsyncConnection]:

@@ -1,35 +1,35 @@
 from typing import Annotated
 
+from api.api.schemas.courses import (
+    CourseListResponse,
+    CourseResponse,
+    ErrorResponse,
+)
+from api.services.course_service import CourseService
 from api.services.dependencies import get_course_service
 from api.services.exceptions import CourseNotFoundError
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from api.api.schemas.courses import (
-    ErrorResponse,
-    CourseListItem,
-    CourseListResponse,
-    CourseResponse
-)
+router = APIRouter(prefix="/courses", tags=["courses"])
 
-from api.services.course_service import CourseService
-
-router = APIRouter(
-    prefix="/courses",
-    tags=["courses"]
-)
 
 @router.get("", response_model=CourseListResponse)
 async def list_courses(
-    "/{}"
+    service: Annotated[CourseService, Depends(get_course_service)],
+    academic_year: Annotated[int, Query(description="開講年度")],
+    q: Annotated[str | None, Query(description="検索キーワード")] = None,
+    limit: Annotated[int, Query(ge=1, le=10000)] = 20,
+    offset: Annotated[int, Query(ge=0)] = 0,
 ) -> CourseListResponse:
-    courses = await 
+    return service.list_courses(
+        academic_year=academic_year, q=q, limit=limit, offset=offset
+    )
+
 
 @router.get(
     "/{pkey}",
     response_model=CourseResponse,
-    responses={
-        404: {"model": ErrorResponse, "description": "Course not found"}
-    },
+    responses={404: {"model": ErrorResponse, "description": "Course not found"}},
 )
 async def get_course(
     pkey: str,
@@ -39,11 +39,7 @@ async def get_course(
         course = await course_service.get_course(pkey=pkey)
     except CourseNotFoundError:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Course {pkey} not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Course {pkey} not found"
         )
 
-    return CourseResponse(
-        
-    )
-
+    return course
