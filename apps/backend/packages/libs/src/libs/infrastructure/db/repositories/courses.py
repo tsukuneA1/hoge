@@ -8,8 +8,52 @@ class CoursesRepository:
     def __init__(self, connection: Connection):
         self.querier = courses.Querier(connection)
 
-    def list(self) -> list[models.Course]:
-        return list(self.querier.list_courses())
+    def get_by_pkey(self, pkey: str) -> models.Course | None:
+        return self.querier.get_course_by_pkey(pkey=pkey)
+
+    def list(
+        self,
+        academic_year: int,
+        q: str | None,
+        faculty: str | None,
+        campus: str | None,
+        language: str | None,
+        delivery_mode: str | None,
+        offset_count: int,
+        limit_count: int,
+    ) -> list[courses.ListCoursesRow]:
+        params = courses.ListCoursesParams(
+            academic_year=academic_year,
+            q=q,
+            faculty=faculty,
+            campus=campus,
+            language=language,
+            delivery_mode=delivery_mode,
+            offset_count=offset_count,
+            limit_count=limit_count,
+        )
+        return list(
+            self.querier.list_courses(params),
+        )
+
+    def count(
+        self,
+        academic_year: int,
+        q: str | None,
+        faculty: str | None,
+        campus: str | None,
+        language: str | None,
+        delivery_mode: str | None,
+    ) -> int:
+        params = courses.CountCoursesParams(
+            academic_year=academic_year,
+            q=q,
+            faculty=faculty,
+            campus=campus,
+            language=language,
+            delivery_mode=delivery_mode,
+        )
+        return self.querier.count_courses(params)
 
     def upsert(
         self,

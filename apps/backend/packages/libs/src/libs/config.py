@@ -15,6 +15,16 @@ class DatabaseSettings(BaseSettings):
     DB_USER: str = Field(default="postgres", alias="PGUSER")
     DB_PASSWORD: str = Field(default="", alias="PGPASSWORD")
 
+    DB_SQLALCHEMY_POOL_SIZE: int = Field(
+        default=5, description="Number of persistent connections in the SQLAlchemy pool"
+    )
+    DB_SQLALCHEMY_POOL_MAX_OVERFLOW: int = Field(
+        default=10, description="Max extra connections beyond pool_size under load"
+    )
+    DB_SQLALCHEMY_POOL_PRE_PING: bool = Field(
+        default=True, description="validate connections before reuse"
+    )
+
     @property
     def database_url_components(self) -> str:
         return (
@@ -31,5 +41,5 @@ class DatabaseSettings(BaseSettings):
         if self.DB_HOST.startswith("/cloudsql"):
             host = quote_plus(self.DB_HOST)
             return f"postgresql+psycopg://{user}:{password}@/{database}?host={host}"
-    
+
         return f"postgresql+psycopg://{self.database_url_components}"

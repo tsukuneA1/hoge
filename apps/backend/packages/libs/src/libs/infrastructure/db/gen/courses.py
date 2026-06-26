@@ -12,6 +12,45 @@ import sqlalchemy.ext.asyncio
 from libs.infrastructure.db.gen import models
 
 
+COUNT_COURSES = """-- name: count_courses \\:one
+SELECT COUNT(*) FROM courses
+WHERE
+    academic_year = :p1
+    AND (
+        :p2\\:\\:text IS NULL
+        OR title ILIKE '%' || :p2\\:\\:text || '%'
+        OR instructor ILIKE '%' || :p2\\:\\:text || '%'
+        OR course_key ILIKE '%' || :p2\\:\\:text || '%'
+        OR course_code ILIKE '%' || :p2\\:\\:text || '%'
+    )
+    AND (
+        :p3\\:\\:text IS NULL
+        OR faculty = :p3\\:\\:text
+    )
+    AND (
+        :p4\\:\\:text IS NULL
+        OR campus = :p4\\:\\:text
+    )
+    AND (
+        :p5\\:\\:text IS NULL
+        OR language = :p5\\:\\:text
+    )
+    AND (
+        :p6\\:\\:text IS NULL
+        OR delivery_mode = :p6\\:\\:text
+    )
+"""
+
+
+class CountCoursesParams(pydantic.BaseModel):
+    academic_year: int
+    q: Optional[str]
+    faculty: Optional[str]
+    campus: Optional[str]
+    language: Optional[str]
+    delivery_mode: Optional[str]
+
+
 GET_COURSE_BY_PKEY = """-- name: get_course_by_pkey \\:one
 SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, grading_policy, remarks, syllabus_updated_at, source_url, raw_html, created_at, updated_at FROM courses
 WHERE pkey = :p1
@@ -19,8 +58,91 @@ WHERE pkey = :p1
 
 
 LIST_COURSES = """-- name: list_courses \\:many
-SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, grading_policy, remarks, syllabus_updated_at, source_url, raw_html, created_at, updated_at FROM courses
+SELECT
+    pkey,
+    academic_year,
+    faculty,
+    title,
+    instructor,
+    term_day_period,
+    category,
+    eligible_year,
+    credits,
+    campus,
+    course_key,
+    class_code,
+    language,
+    delivery_mode,
+    field_large,
+    field_middle,
+    field_small,
+    level,
+    class_format
+FROM courses
+WHERE
+    academic_year = :p1
+    AND (
+        :p2\\:\\:text IS NULL
+        OR title ILIKE '%' || :p2\\:\\:text || '%'
+        OR instructor ILIKE '%' || :p2\\:\\:text || '%'
+        OR course_key ILIKE '%' || :p2\\:\\:text || '%'
+        OR course_code ILIKE '%' || :p2\\:\\:text || '%'
+    )
+    AND (
+        :p3\\:\\:text IS NULL
+        OR faculty = :p3\\:\\:text
+    )
+    AND (
+        :p4\\:\\:text IS NULL
+        OR campus = :p4\\:\\:text
+    )
+    AND (
+        :p5\\:\\:text IS NULL
+        OR language = :p5\\:\\:text
+    )
+    AND (
+        :p6\\:\\:text IS NULL
+        OR delivery_mode = :p6\\:\\:text
+    )
+ORDER BY
+    title ASC,
+    pkey ASC
+LIMIT :p8
+OFFSET :p7
 """
+
+
+class ListCoursesParams(pydantic.BaseModel):
+    academic_year: int
+    q: Optional[str]
+    faculty: Optional[str]
+    campus: Optional[str]
+    language: Optional[str]
+    delivery_mode: Optional[str]
+    offset_count: int
+    limit_count: int
+
+
+class ListCoursesRow(pydantic.BaseModel):
+    pkey: str
+    academic_year: int
+    faculty: str
+    title: str
+    instructor: str
+    term_day_period: str
+    category: Optional[str]
+    eligible_year: Optional[str]
+    credits: int
+    campus: Optional[str]
+    course_key: Optional[str]
+    class_code: Optional[str]
+    language: Optional[str]
+    delivery_mode: Optional[str]
+    field_large: Optional[str]
+    field_middle: Optional[str]
+    field_small: Optional[str]
+    level: Optional[str]
+    class_format: Optional[str]
 
 
 UPSERT_COURSES = """-- name: upsert_courses \\:exec
@@ -137,6 +259,19 @@ class Querier:
     def __init__(self, conn: sqlalchemy.engine.Connection):
         self._conn = conn
 
+    def count_courses(self, arg: CountCoursesParams) -> Optional[int]:
+        row = self._conn.execute(sqlalchemy.text(COUNT_COURSES), {
+            "p1": arg.academic_year,
+            "p2": arg.q,
+            "p3": arg.faculty,
+            "p4": arg.campus,
+            "p5": arg.language,
+            "p6": arg.delivery_mode,
+        }).first()
+        if row is None:
+            return None
+        return row[0]
+
     def get_course_by_pkey(self, *, pkey: str) -> Optional[models.Course]:
         row = self._conn.execute(sqlalchemy.text(GET_COURSE_BY_PKEY), {"p1": pkey}).first()
         if row is None:
@@ -179,10 +314,19 @@ class Querier:
             updated_at=row[34],
         )
 
-    def list_courses(self) -> Iterator[models.Course]:
-        result = self._conn.execute(sqlalchemy.text(LIST_COURSES))
+    def list_courses(self, arg: ListCoursesParams) -> Iterator[ListCoursesRow]:
+        result = self._conn.execute(sqlalchemy.text(LIST_COURSES), {
+            "p1": arg.academic_year,
+            "p2": arg.q,
+            "p3": arg.faculty,
+            "p4": arg.campus,
+            "p5": arg.language,
+            "p6": arg.delivery_mode,
+            "p7": arg.offset_count,
+            "p8": arg.limit_count,
+        })
         for row in result:
-            yield models.Course(
+            yield ListCoursesRow(
                 pkey=row[0],
                 academic_year=row[1],
                 faculty=row[2],
@@ -192,32 +336,16 @@ class Querier:
                 category=row[6],
                 eligible_year=row[7],
                 credits=row[8],
-                classroom=row[9],
-                campus=row[10],
-                course_key=row[11],
-                class_code=row[12],
-                language=row[13],
-                delivery_mode=row[14],
-                course_code=row[15],
-                field_large=row[16],
-                field_middle=row[17],
-                field_small=row[18],
-                level=row[19],
-                class_format=row[20],
-                subtitle=row[21],
-                overview=row[22],
-                objectives=row[23],
-                before_after_study=row[24],
-                lesson_plan=row[25],
-                textbook=row[26],
-                reference_text=row[27],
-                grading_policy=row[28],
-                remarks=row[29],
-                syllabus_updated_at=row[30],
-                source_url=row[31],
-                raw_html=row[32],
-                created_at=row[33],
-                updated_at=row[34],
+                campus=row[9],
+                course_key=row[10],
+                class_code=row[11],
+                language=row[12],
+                delivery_mode=row[13],
+                field_large=row[14],
+                field_middle=row[15],
+                field_small=row[16],
+                level=row[17],
+                class_format=row[18],
             )
 
     def upsert_courses(self, arg: UpsertCoursesParams) -> None:
@@ -262,6 +390,19 @@ class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
+    async def count_courses(self, arg: CountCoursesParams) -> Optional[int]:
+        row = (await self._conn.execute(sqlalchemy.text(COUNT_COURSES), {
+            "p1": arg.academic_year,
+            "p2": arg.q,
+            "p3": arg.faculty,
+            "p4": arg.campus,
+            "p5": arg.language,
+            "p6": arg.delivery_mode,
+        })).first()
+        if row is None:
+            return None
+        return row[0]
+
     async def get_course_by_pkey(self, *, pkey: str) -> Optional[models.Course]:
         row = (await self._conn.execute(sqlalchemy.text(GET_COURSE_BY_PKEY), {"p1": pkey})).first()
         if row is None:
@@ -304,10 +445,19 @@ class AsyncQuerier:
             updated_at=row[34],
         )
 
-    async def list_courses(self) -> AsyncIterator[models.Course]:
-        result = await self._conn.stream(sqlalchemy.text(LIST_COURSES))
+    async def list_courses(self, arg: ListCoursesParams) -> AsyncIterator[ListCoursesRow]:
+        result = await self._conn.stream(sqlalchemy.text(LIST_COURSES), {
+            "p1": arg.academic_year,
+            "p2": arg.q,
+            "p3": arg.faculty,
+            "p4": arg.campus,
+            "p5": arg.language,
+            "p6": arg.delivery_mode,
+            "p7": arg.offset_count,
+            "p8": arg.limit_count,
+        })
         async for row in result:
-            yield models.Course(
+            yield ListCoursesRow(
                 pkey=row[0],
                 academic_year=row[1],
                 faculty=row[2],
@@ -317,32 +467,16 @@ class AsyncQuerier:
                 category=row[6],
                 eligible_year=row[7],
                 credits=row[8],
-                classroom=row[9],
-                campus=row[10],
-                course_key=row[11],
-                class_code=row[12],
-                language=row[13],
-                delivery_mode=row[14],
-                course_code=row[15],
-                field_large=row[16],
-                field_middle=row[17],
-                field_small=row[18],
-                level=row[19],
-                class_format=row[20],
-                subtitle=row[21],
-                overview=row[22],
-                objectives=row[23],
-                before_after_study=row[24],
-                lesson_plan=row[25],
-                textbook=row[26],
-                reference_text=row[27],
-                grading_policy=row[28],
-                remarks=row[29],
-                syllabus_updated_at=row[30],
-                source_url=row[31],
-                raw_html=row[32],
-                created_at=row[33],
-                updated_at=row[34],
+                campus=row[9],
+                course_key=row[10],
+                class_code=row[11],
+                language=row[12],
+                delivery_mode=row[13],
+                field_large=row[14],
+                field_middle=row[15],
+                field_small=row[16],
+                level=row[17],
+                class_format=row[18],
             )
 
     async def upsert_courses(self, arg: UpsertCoursesParams) -> None:
