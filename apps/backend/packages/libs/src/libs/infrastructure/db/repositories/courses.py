@@ -8,7 +8,7 @@ class CoursesRepository:
     def __init__(self, connection: Connection):
         self.querier = courses.Querier(connection)
 
-    def get_by_pkey(self, pkey: str) -> models.Course:
+    def get_by_pkey(self, pkey: str) -> models.Course | None:
         return self.querier.get_course_by_pkey(pkey=pkey)
 
     def list(

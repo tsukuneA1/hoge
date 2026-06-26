@@ -53,7 +53,7 @@ def get_engine() -> sqlalchemy.Engine:
 def get_connection() -> Iterator[sqlalchemy.Connection]:
     """Get database connection context manager."""
     engine = get_engine()
-    with engine.begin() as conn:
+    with engine.connect() as conn:
         yield conn
 
 
