@@ -2,6 +2,7 @@ from libs.infrastructure.db.gen import models
 from libs.infrastructure.db.repositories import courses
 
 from api.api.schemas.courses import CourseListItem, CourseListResponse
+from api.services.exceptions import CourseNotFoundError
 
 
 class CourseService:
@@ -11,7 +12,7 @@ class CourseService:
     def get_course(self, pkey: str) -> models.Course:
         course = self.course_repo.get_by_pkey(pkey=pkey)
         if course is None:
-            raise
+            raise CourseNotFoundError(pkey=pkey)
         return course
 
     def list_courses(
