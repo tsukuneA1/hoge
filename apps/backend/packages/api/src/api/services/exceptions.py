@@ -7,4 +7,4 @@ class CourseNotFoundError(DomainError):
 
     def __init__(self, pkey: str):
         self.pkey = pkey
-        super().__init__(f"Thread not found: {pkey}")
+        super().__init__(f"Course not found: {pkey}")
