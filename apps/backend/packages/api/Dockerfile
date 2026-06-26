@@ -26,6 +26,6 @@ COPY --from=builder --chown=app:app /app/.venv /app/.venv
 
 ENV PATH="/app/.venv/bin:$PATH" \
     UVICORN_HOST=0.0.0.0 \
-    UVICORN_PORT=8000 
+    UVICORN_PORT=8080 
 
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8080"]
