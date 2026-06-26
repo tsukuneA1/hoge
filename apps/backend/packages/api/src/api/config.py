@@ -5,7 +5,7 @@ from pydantic import Field
 class Settings(DatabaseSettings):
     API_BASE_URL: str = Field(
         default="http://localhost:8080",
-        description="Extrenal base URL for the API (e.g., 'https://api.yourapp.com')",
+        description="External base URL for the API (e.g., 'https://api.yourapp.com')",
     )
 
 

@@ -18,7 +18,7 @@ class CoursesRepository:
         faculty: str | None,
         campus: str | None,
         language: str | None,
-        delviery_mode: str | None,
+        delivery_mode: str | None,
         offset_count: int,
         limit_count: int,
     ) -> list[models.Course]:
@@ -28,7 +28,7 @@ class CoursesRepository:
             faculty=faculty,
             campus=campus,
             language=language,
-            delivery_mode=delviery_mode,
+            delivery_mode=delivery_mode,
             offset_count=offset_count,
             limit_count=limit_count,
         )
