@@ -11,8 +11,30 @@ class CoursesRepository:
     async def get_by_pkey(self, pkey: str) -> models.Course:
         return await self.querier.get_course_by_pkey(pkey=pkey)
 
-    def list(self) -> list[models.Course]:
-        return list(self.querier.list_courses())
+    def list(
+        self,
+        academic_year: int,
+        q: str | None,
+        faculty: str | None,
+        campus: str | None,
+        language: str | None,
+        delviery_mode: str | None,
+        offset_count: int,
+        limit_count: int,
+    ) -> list[models.Course]:
+        params = courses.ListCoursesParams(
+            academic_year=academic_year,
+            q=q,
+            faculty=faculty,
+            campus=campus,
+            language=language,
+            delivery_mode=delviery_mode,
+            offset_count=offset_count,
+            limit_count=limit_count,
+        )
+        return list(
+            self.querier.list_courses(params),
+        )
 
     def upsert(
         self,

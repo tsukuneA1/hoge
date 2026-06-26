@@ -9,6 +9,8 @@ class CourseService:
     async def get_course(self, pkey: str) -> models.Course:
         course = await self.course_repo.get_by_pkey(pkey=pkey)
         return course
-    
+
     async def list_courses(self) -> list[models.Course]:
-        return await self.course_repo.list()
+        return await self.course_repo.list(
+            q=
+        )

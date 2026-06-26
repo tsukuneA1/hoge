@@ -1,6 +1,7 @@
 class DomainError(Exception):
     """Base exception for domain errors."""
 
+
 class CourseNotFoundError(DomainError):
     """Raised when a course is not found."""
 

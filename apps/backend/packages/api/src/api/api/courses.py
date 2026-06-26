@@ -20,7 +20,7 @@ router = APIRouter(
 
 @router.get("", response_model=CourseListResponse)
 async def list_courses(
-
+    "/{}"
 ) -> CourseListResponse:
     courses = await 
 
