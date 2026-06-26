@@ -36,6 +36,25 @@ class CoursesRepository:
             self.querier.list_courses(params),
         )
 
+    def count(
+        self,
+        academic_year: int,
+        q: str | None,
+        faculty: str | None,
+        campus: str | None,
+        language: str | None,
+        delivery_mode: str | None,
+    ) -> int:
+        params = courses.CountCoursesParams(
+            academic_year=academic_year,
+            q=q,
+            faculty=faculty,
+            campus=campus,
+            language=language,
+            delivery_mode=delivery_mode,
+        )
+        return self.querier.count_courses(params)
+
     def upsert(
         self,
         pkey: str,

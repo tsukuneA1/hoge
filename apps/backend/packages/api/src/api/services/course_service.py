@@ -42,8 +42,13 @@ class CourseService:
         for row in rows:
             items.append(CourseListItem.model_validate(row))
 
-        total = self.course_repo.count_courses(
-            academic_year=academic_year, q=_normalize_optional_query(q)
+        total = self.course_repo.count(
+            academic_year=academic_year,
+            q=_normalize_optional_query(q),
+            faculty=faculty,
+            campus=campus,
+            language=language,
+            delivery_mode=delivery_mode,
         )
 
         return CourseListResponse(items=items, total=total, limit=limit, offset=offset)

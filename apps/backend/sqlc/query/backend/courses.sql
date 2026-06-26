@@ -55,6 +55,34 @@ OFFSET @offset_count;
 SELECT * FROM courses
 WHERE pkey = $1;
 
+-- name: CountCourses :one
+SELECT COUNT(*) FROM courses
+WHERE
+    academic_year = @academic_year
+    AND (
+        sqlc.narg('q')::text IS NULL
+        OR title ILIKE '%' || sqlc.narg('q')::text || '%'
+        OR instructor ILIKE '%' || sqlc.narg('q')::text || '%'
+        OR course_key ILIKE '%' || sqlc.narg('q')::text || '%'
+        OR course_code ILIKE '%' || sqlc.narg('q')::text || '%'
+    )
+    AND (
+        sqlc.narg('faculty')::text IS NULL
+        OR faculty = sqlc.narg('faculty')::text
+    )
+    AND (
+        sqlc.narg('campus')::text IS NULL
+        OR campus = sqlc.narg('campus')::text
+    )
+    AND (
+        sqlc.narg('language')::text IS NULL
+        OR language = sqlc.narg('language')::text
+    )
+    AND (
+        sqlc.narg('delivery_mode')::text IS NULL
+        OR delivery_mode = sqlc.narg('delivery_mode')::text
+    );
+
 -- name: UpsertCourses :exec
 INSERT INTO courses
 (

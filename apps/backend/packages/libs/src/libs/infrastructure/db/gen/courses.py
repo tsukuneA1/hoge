@@ -12,6 +12,45 @@ import sqlalchemy.ext.asyncio
 from libs.infrastructure.db.gen import models
 
 
+COUNT_COURSES = """-- name: count_courses \\:one
+SELECT COUNT(*) FROM courses
+WHERE
+    academic_year = :p1
+    AND (
+        :p2\\:\\:text IS NULL
+        OR title ILIKE '%' || :p2\\:\\:text || '%'
+        OR instructor ILIKE '%' || :p2\\:\\:text || '%'
+        OR course_key ILIKE '%' || :p2\\:\\:text || '%'
+        OR course_code ILIKE '%' || :p2\\:\\:text || '%'
+    )
+    AND (
+        :p3\\:\\:text IS NULL
+        OR faculty = :p3\\:\\:text
+    )
+    AND (
+        :p4\\:\\:text IS NULL
+        OR campus = :p4\\:\\:text
+    )
+    AND (
+        :p5\\:\\:text IS NULL
+        OR language = :p5\\:\\:text
+    )
+    AND (
+        :p6\\:\\:text IS NULL
+        OR delivery_mode = :p6\\:\\:text
+    )
+"""
+
+
+class CountCoursesParams(pydantic.BaseModel):
+    academic_year: int
+    q: Optional[str]
+    faculty: Optional[str]
+    campus: Optional[str]
+    language: Optional[str]
+    delivery_mode: Optional[str]
+
+
 GET_COURSE_BY_PKEY = """-- name: get_course_by_pkey \\:one
 SELECT pkey, academic_year, faculty, title, instructor, term_day_period, category, eligible_year, credits, classroom, campus, course_key, class_code, language, delivery_mode, course_code, field_large, field_middle, field_small, level, class_format, subtitle, overview, objectives, before_after_study, lesson_plan, textbook, reference_text, grading_policy, remarks, syllabus_updated_at, source_url, raw_html, created_at, updated_at FROM courses
 WHERE pkey = :p1
@@ -220,6 +259,19 @@ class Querier:
     def __init__(self, conn: sqlalchemy.engine.Connection):
         self._conn = conn
 
+    def count_courses(self, arg: CountCoursesParams) -> Optional[int]:
+        row = self._conn.execute(sqlalchemy.text(COUNT_COURSES), {
+            "p1": arg.academic_year,
+            "p2": arg.q,
+            "p3": arg.faculty,
+            "p4": arg.campus,
+            "p5": arg.language,
+            "p6": arg.delivery_mode,
+        }).first()
+        if row is None:
+            return None
+        return row[0]
+
     def get_course_by_pkey(self, *, pkey: str) -> Optional[models.Course]:
         row = self._conn.execute(sqlalchemy.text(GET_COURSE_BY_PKEY), {"p1": pkey}).first()
         if row is None:
@@ -337,6 +389,19 @@ class Querier:
 class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
+
+    async def count_courses(self, arg: CountCoursesParams) -> Optional[int]:
+        row = (await self._conn.execute(sqlalchemy.text(COUNT_COURSES), {
+            "p1": arg.academic_year,
+            "p2": arg.q,
+            "p3": arg.faculty,
+            "p4": arg.campus,
+            "p5": arg.language,
+            "p6": arg.delivery_mode,
+        })).first()
+        if row is None:
+            return None
+        return row[0]
 
     async def get_course_by_pkey(self, *, pkey: str) -> Optional[models.Course]:
         row = (await self._conn.execute(sqlalchemy.text(GET_COURSE_BY_PKEY), {"p1": pkey})).first()
