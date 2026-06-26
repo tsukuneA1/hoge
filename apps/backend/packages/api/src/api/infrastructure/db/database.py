@@ -1,8 +1,8 @@
-from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
+from collections.abc import Iterator
+from contextlib import contextmanager
 
+import sqlalchemy
 from libs.infrastructure.db import database as db
-from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine
 
 from api.config import settings
 
@@ -13,15 +13,15 @@ def init_engine() -> None:
     )
 
 
-def get_engine() -> AsyncEngine:
+def get_engine() -> sqlalchemy.Engine:
     return db.get_engine()
 
 
-@asynccontextmanager
-async def get_connection() -> AsyncIterator[AsyncConnection]:
-    async with db.get_connection() as conn:
+@contextmanager
+def get_connection() -> Iterator[sqlalchemy.Connection]:
+    with db.get_connection() as conn:
         yield conn
 
 
-async def close_engine() -> None:
-    await db.close_engine()
+def close_engine() -> None:
+    db.close_engine()

@@ -8,11 +8,11 @@ class CourseService:
     def __init__(self, courses_repository: courses.CoursesRepository):
         self.course_repo = courses_repository
 
-    async def get_course(self, pkey: str) -> models.Course:
-        course = await self.course_repo.get_by_pkey(pkey=pkey)
+    def get_course(self, pkey: str) -> models.Course:
+        course = self.course_repo.get_by_pkey(pkey=pkey)
         return course
 
-    async def list_courses(
+    def list_courses(
         self, *, academic_year: int, q: str | None, limit: int, offset: int
     ) -> CourseListResponse:
         items = self.course_repo.list(

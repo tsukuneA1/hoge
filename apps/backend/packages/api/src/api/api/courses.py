@@ -14,7 +14,7 @@ router = APIRouter(prefix="/courses", tags=["courses"])
 
 
 @router.get("", response_model=CourseListResponse)
-async def list_courses(
+def list_courses(
     service: Annotated[CourseService, Depends(get_course_service)],
     academic_year: Annotated[int, Query(description="開講年度")],
     q: Annotated[str | None, Query(description="検索キーワード")] = None,
@@ -31,12 +31,12 @@ async def list_courses(
     response_model=CourseResponse,
     responses={404: {"model": ErrorResponse, "description": "Course not found"}},
 )
-async def get_course(
+def get_course(
     pkey: str,
     course_service: Annotated[CourseService, Depends(get_course_service)],
 ) -> CourseResponse:
     try:
-        course = await course_service.get_course(pkey=pkey)
+        course = course_service.get_course(pkey=pkey)
     except CourseNotFoundError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Course {pkey} not found"
