@@ -20,7 +20,7 @@ export const CourseSearch = () => {
       params.set("page", "1");
     }
 
-    router.push(`course?${params.toString()}`);
+    router.push(`courses?${params.toString()}`);
   };
 
   return (

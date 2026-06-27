@@ -104,7 +104,7 @@ export function CoursesTable({ data, pageNumber, maxPageNumber }: Props) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", String(nextPage));
 
-    router.push(`course?${params.toString()}`);
+    router.push(`courses?${params.toString()}`);
   };
 
   return (
