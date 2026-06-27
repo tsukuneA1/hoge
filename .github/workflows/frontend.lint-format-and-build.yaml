@@ -1,3 +1,5 @@
+name: "[Frontend] Lint, Format, and Build"
+
 on:
   pull_request:
     paths:
