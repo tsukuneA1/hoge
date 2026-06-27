@@ -4,13 +4,13 @@ on:
   pull_request:
     paths:
       - "apps/frontend**"
-      - ".github/workflows/frontend.lint-and-format.yaml"
+      - ".github/workflows/frontend.lint-format-and-build.yaml"
   push:
     branches:
       - main
     paths:
       - "apps/frontend/**"
-      - ".github/workflows/frontend.lint-and-check.yaml"
+      - ".github/workflows/frontend.lint-format-and-build.yaml"
 
 jobs:
   check:
@@ -41,10 +41,9 @@ jobs:
         run: pnpm check
 
       - name: Typecheck
-        run: pnpm check
+        run: pnpm typecheck
 
       - name: Build
         env:
           API_BASE_URL: http://localhost:8080
         run: pnpm build  
-        
