@@ -6,7 +6,7 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"includes": ["**", "!app/globals.css", "!utils/api/generated"],
+		"includes": ["**", "!app/globals.css", "!app/utils/api/generated"],
 		"ignoreUnknown": false
 	},
 	"formatter": {
