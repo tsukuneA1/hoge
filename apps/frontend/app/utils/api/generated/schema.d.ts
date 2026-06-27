@@ -4,338 +4,338 @@
  */
 
 export interface paths {
-    "/courses": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Courses */
-        get: operations["list_courses_courses_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/courses/{pkey}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Course */
-        get: operations["get_course_courses__pkey__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/healthz": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Healthz */
-        get: operations["healthz_healthz_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
+	"/courses": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/** List Courses */
+		get: operations["list_courses_courses_get"];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	"/courses/{pkey}": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/** Get Course */
+		get: operations["get_course_courses__pkey__get"];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	"/healthz": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/** Healthz */
+		get: operations["healthz_healthz_get"];
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        /**
-         * CourseListItem
-         * @description Response model for course list (without values).
-         */
-        CourseListItem: {
-            /** Pkey */
-            pkey: string;
-            /** Academic Year */
-            academic_year: number;
-            /** Faculty */
-            faculty: string;
-            /** Title */
-            title: string;
-            /** Instructor */
-            instructor: string;
-            /** Term Day Period */
-            term_day_period: string;
-            /** Category */
-            category: string | null;
-            /** Eligible Year */
-            eligible_year: string | null;
-            /** Credits */
-            credits: number;
-            /** Campus */
-            campus: string | null;
-            /** Course Key */
-            course_key: string | null;
-            /** Class Code */
-            class_code: string | null;
-            /** Language */
-            language: string | null;
-            /** Delivery Mode */
-            delivery_mode: string | null;
-            /** Field Large */
-            field_large: string | null;
-            /** Field Middle */
-            field_middle: string | null;
-            /** Field Small */
-            field_small: string | null;
-            /** Level */
-            level: string | null;
-            /** Class Format */
-            class_format: string | null;
-        };
-        /**
-         * CourseListResponse
-         * @description Response model for course list endpoint.
-         */
-        CourseListResponse: {
-            /** Items */
-            items: components["schemas"]["CourseListItem"][];
-            /** Total */
-            total: number;
-            /** Limit */
-            limit: number;
-            /** Offset */
-            offset: number;
-        };
-        /**
-         * CourseResponse
-         * @description Response model for course endpoint.
-         */
-        CourseResponse: {
-            /** Pkey */
-            pkey: string;
-            /** Academic Year */
-            academic_year: number;
-            /** Faculty */
-            faculty: string;
-            /** Title */
-            title: string;
-            /** Instructor */
-            instructor: string;
-            /** Term Day Period */
-            term_day_period: string;
-            /** Category */
-            category: string | null;
-            /** Eligible Year */
-            eligible_year: string | null;
-            /** Credits */
-            credits: number;
-            /** Campus */
-            campus: string | null;
-            /** Course Key */
-            course_key: string | null;
-            /** Class Code */
-            class_code: string | null;
-            /** Language */
-            language: string | null;
-            /** Delivery Mode */
-            delivery_mode: string | null;
-            /** Field Large */
-            field_large: string | null;
-            /** Field Middle */
-            field_middle: string | null;
-            /** Field Small */
-            field_small: string | null;
-            /** Level */
-            level: string | null;
-            /** Class Format */
-            class_format: string | null;
-            /** Classroom */
-            classroom: string | null;
-            /** Course Code */
-            course_code: string | null;
-            /** Subtitle */
-            subtitle: string | null;
-            /** Overview */
-            overview: string | null;
-            /** Objectives */
-            objectives: string | null;
-            /** Before After Study */
-            before_after_study: string | null;
-            /** Lesson Plan */
-            lesson_plan: string | null;
-            /** Textbook */
-            textbook: string | null;
-            /** Reference Text */
-            reference_text: string | null;
-            /** Grading Policy */
-            grading_policy: string | null;
-            /** Remarks */
-            remarks: string | null;
-            /** Syllabus Updated At */
-            syllabus_updated_at: string | null;
-            /** Source Url */
-            source_url: string;
-            /**
-             * Created At
-             * Format: date-time
-             */
-            created_at: string;
-            /**
-             * Updated At
-             * Format: date-time
-             */
-            updated_at: string;
-        };
-        /**
-         * ErrorResponse
-         * @description Error response model for course API errors.
-         */
-        ErrorResponse: {
-            /** Detail */
-            detail: string;
-        };
-        /** HTTPValidationError */
-        HTTPValidationError: {
-            /** Detail */
-            detail?: components["schemas"]["ValidationError"][];
-        };
-        /** ValidationError */
-        ValidationError: {
-            /** Location */
-            loc: (string | number)[];
-            /** Message */
-            msg: string;
-            /** Error Type */
-            type: string;
-            /** Input */
-            input?: unknown;
-            /** Context */
-            ctx?: Record<string, never>;
-        };
-    };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+	schemas: {
+		/**
+		 * CourseListItem
+		 * @description Response model for course list (without values).
+		 */
+		CourseListItem: {
+			/** Pkey */
+			pkey: string;
+			/** Academic Year */
+			academic_year: number;
+			/** Faculty */
+			faculty: string;
+			/** Title */
+			title: string;
+			/** Instructor */
+			instructor: string;
+			/** Term Day Period */
+			term_day_period: string;
+			/** Category */
+			category: string | null;
+			/** Eligible Year */
+			eligible_year: string | null;
+			/** Credits */
+			credits: number;
+			/** Campus */
+			campus: string | null;
+			/** Course Key */
+			course_key: string | null;
+			/** Class Code */
+			class_code: string | null;
+			/** Language */
+			language: string | null;
+			/** Delivery Mode */
+			delivery_mode: string | null;
+			/** Field Large */
+			field_large: string | null;
+			/** Field Middle */
+			field_middle: string | null;
+			/** Field Small */
+			field_small: string | null;
+			/** Level */
+			level: string | null;
+			/** Class Format */
+			class_format: string | null;
+		};
+		/**
+		 * CourseListResponse
+		 * @description Response model for course list endpoint.
+		 */
+		CourseListResponse: {
+			/** Items */
+			items: components["schemas"]["CourseListItem"][];
+			/** Total */
+			total: number;
+			/** Limit */
+			limit: number;
+			/** Offset */
+			offset: number;
+		};
+		/**
+		 * CourseResponse
+		 * @description Response model for course endpoint.
+		 */
+		CourseResponse: {
+			/** Pkey */
+			pkey: string;
+			/** Academic Year */
+			academic_year: number;
+			/** Faculty */
+			faculty: string;
+			/** Title */
+			title: string;
+			/** Instructor */
+			instructor: string;
+			/** Term Day Period */
+			term_day_period: string;
+			/** Category */
+			category: string | null;
+			/** Eligible Year */
+			eligible_year: string | null;
+			/** Credits */
+			credits: number;
+			/** Campus */
+			campus: string | null;
+			/** Course Key */
+			course_key: string | null;
+			/** Class Code */
+			class_code: string | null;
+			/** Language */
+			language: string | null;
+			/** Delivery Mode */
+			delivery_mode: string | null;
+			/** Field Large */
+			field_large: string | null;
+			/** Field Middle */
+			field_middle: string | null;
+			/** Field Small */
+			field_small: string | null;
+			/** Level */
+			level: string | null;
+			/** Class Format */
+			class_format: string | null;
+			/** Classroom */
+			classroom: string | null;
+			/** Course Code */
+			course_code: string | null;
+			/** Subtitle */
+			subtitle: string | null;
+			/** Overview */
+			overview: string | null;
+			/** Objectives */
+			objectives: string | null;
+			/** Before After Study */
+			before_after_study: string | null;
+			/** Lesson Plan */
+			lesson_plan: string | null;
+			/** Textbook */
+			textbook: string | null;
+			/** Reference Text */
+			reference_text: string | null;
+			/** Grading Policy */
+			grading_policy: string | null;
+			/** Remarks */
+			remarks: string | null;
+			/** Syllabus Updated At */
+			syllabus_updated_at: string | null;
+			/** Source Url */
+			source_url: string;
+			/**
+			 * Created At
+			 * Format: date-time
+			 */
+			created_at: string;
+			/**
+			 * Updated At
+			 * Format: date-time
+			 */
+			updated_at: string;
+		};
+		/**
+		 * ErrorResponse
+		 * @description Error response model for course API errors.
+		 */
+		ErrorResponse: {
+			/** Detail */
+			detail: string;
+		};
+		/** HTTPValidationError */
+		HTTPValidationError: {
+			/** Detail */
+			detail?: components["schemas"]["ValidationError"][];
+		};
+		/** ValidationError */
+		ValidationError: {
+			/** Location */
+			loc: (string | number)[];
+			/** Message */
+			msg: string;
+			/** Error Type */
+			type: string;
+			/** Input */
+			input?: unknown;
+			/** Context */
+			ctx?: Record<string, never>;
+		};
+	};
+	responses: never;
+	parameters: never;
+	requestBodies: never;
+	headers: never;
+	pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    list_courses_courses_get: {
-        parameters: {
-            query: {
-                /** @description 開講年度 */
-                academic_year: number;
-                /** @description 検索キーワード */
-                q?: string | null;
-                /** @description 対象学部 */
-                faculty?: string | null;
-                /** @description 対象キャンパス */
-                campus?: string | null;
-                /** @description 言語 */
-                language?: string | null;
-                /** @description 授業方式 */
-                delivery_mode?: string | null;
-                limit?: number;
-                offset?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CourseListResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_course_courses__pkey__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                pkey: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CourseResponse"];
-                };
-            };
-            /** @description Course not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    healthz_healthz_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: string;
-                    };
-                };
-            };
-        };
-    };
+	list_courses_courses_get: {
+		parameters: {
+			query: {
+				/** @description 開講年度 */
+				academic_year: number;
+				/** @description 検索キーワード */
+				q?: string | null;
+				/** @description 対象学部 */
+				faculty?: string | null;
+				/** @description 対象キャンパス */
+				campus?: string | null;
+				/** @description 言語 */
+				language?: string | null;
+				/** @description 授業方式 */
+				delivery_mode?: string | null;
+				limit?: number;
+				offset?: number;
+			};
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["CourseListResponse"];
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["HTTPValidationError"];
+				};
+			};
+		};
+	};
+	get_course_courses__pkey__get: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path: {
+				pkey: string;
+			};
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["CourseResponse"];
+				};
+			};
+			/** @description Course not found */
+			404: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ErrorResponse"];
+				};
+			};
+			/** @description Validation Error */
+			422: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["HTTPValidationError"];
+				};
+			};
+		};
+	};
+	healthz_healthz_get: {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description Successful Response */
+			200: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": {
+						[key: string]: string;
+					};
+				};
+			};
+		};
+	};
 }
