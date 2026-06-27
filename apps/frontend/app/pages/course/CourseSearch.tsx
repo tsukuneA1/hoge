@@ -13,11 +13,11 @@ export const CourseSearch = () => {
   const changeKeyword = (value: string) => {
     setKeyword(value);
     const params = new URLSearchParams(searchParams.toString());
-    if (keyword === "") {
+    if (value === "") {
       params.delete("q");
     } else {
       params.set("q", value);
-      params.set("offset", "0");
+      params.set("page", "1");
     }
 
     router.push(`course?${params.toString()}`);
