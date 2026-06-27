@@ -64,7 +64,7 @@ const columns: ColumnDef<CourseListItem>[] = [
         </div>
       );
     },
-    
+
     meta: {
       headerClass: "flex-1",
       class: "flex-1",
@@ -88,7 +88,7 @@ const columns: ColumnDef<CourseListItem>[] = [
         </div>
       );
     },
-    
+
     meta: {
       headerClass: "flex-1",
       class: "flex-1",

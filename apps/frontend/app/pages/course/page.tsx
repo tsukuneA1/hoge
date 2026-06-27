@@ -25,10 +25,10 @@ function parseIntParam(
 }
 
 function parseStringParam(
-    value: string | string[] | undefined,
-    defaultValue: string | undefined,
+  value: string | string[] | undefined,
+  defaultValue: string | undefined,
 ): string | undefined {
-    const raw = Array.isArray(value) ? value[0] : value;
+  const raw = Array.isArray(value) ? value[0] : value;
   if (raw == null) return defaultValue;
 
   return raw;
@@ -53,7 +53,7 @@ export default async function CoursePage({ searchParams }: PageProps) {
 
   return (
     <div className="p-10">
-        <CourseSearch />
+      <CourseSearch />
       <CoursesTable
         data={courses.items}
         pageNumber={page}
