@@ -47,9 +47,4 @@ jobs:
         env:
           API_BASE_URL: http://localhost:8080
         run: pnpm build  
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    permissions:
-
         
