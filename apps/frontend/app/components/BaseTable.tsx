@@ -1,0 +1,125 @@
+"use client";
+
+import { ArrowLeft } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import classNames from "classnames";
+
+type Props<T> = {
+  columns: ColumnDef<T>[];
+  data: T[];
+  pageNumber: number;
+  maxPageNumber: number;
+  onClickNextPage: () => void;
+  onClickPreviousPage: () => void;
+  emptyMessage: string;
+  emptyIcon: React.ReactNode;
+  onRowClick?: (row: T) => void;
+};
+
+export function BaseTable<T>(props: Props<T>) {
+  const table = useReactTable<T>({
+    data: props.data,
+    columns: props.columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  return (
+    <div className="flex flex-col gap-1 items-start self-stretch">
+      <div className="flex flex-col items-start self-stretch rounded-t-[16px] border-solid border border-secondary bg-surface-primary">
+        <div className="flex h-14 px-6 justify-end items-center self-stretch border-b-solid border-b border-secondary">
+          <div className="flex justify-center items-center gap-4">
+            <div className="text-caption-s text-primary">
+              {props.pageNumber}/{props.maxPageNumber} ページ
+            </div>
+            <div className="flex justify-center items-center gap-1">
+              <button
+                type="button"
+                className={classNames(
+                  props.pageNumber === 1
+                    ? "text-tertiary"
+                    : "text-primary cursor-pointer",
+                )}
+                onClick={props.onClickPreviousPage}
+                disabled={props.pageNumber === 1}
+              >
+                <ArrowLeft fill="currentColor" width={24} height={24} />
+              </button>
+              <button
+                type="button"
+                className={classNames(
+                  props.pageNumber === props.maxPageNumber
+                    ? "text-tertiary"
+                    : "text-primary cursor-pointer",
+                )}
+                onClick={props.onClickNextPage}
+                disabled={props.pageNumber === props.maxPageNumber}
+              >
+                <ArrowRight fill="currentColor" width={24} height={24} />
+              </button>
+            </div>
+          </div>
+        </div>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <div
+            key={headerGroup.id}
+            className="flex h-12 px-6 items-center gap-6 self-stretch text-primary"
+          >
+            {headerGroup.headers.map((header) => (
+              <div
+                key={header.id}
+                className={classNames(
+                  "text-left text-secondary text-sm font-normal leading-[1.4]",
+                  header.column.columnDef.meta?.headerClass,
+                )}
+              >
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      {props.data.length === 0 ? (
+        <div className="flex flex-col gap-3 items-center justify-center py-9 mx-auto body-m text-tertiary">
+          {props.emptyIcon}
+          {props.emptyMessage}
+        </div>
+      ) : (
+        <div className="flex flex-col items-start self-stretch rounded-b-[16px] border-solid border-1 border-secondary bg-surface-primary">
+          {table.getRowModel().rows.map((row, index) => (
+            <button
+              key={row.id}
+              type="button"
+              className={`flex flex-row px-6 gap-6 h-[80px] items-center self-stretch body-s text-primary w-full text-left ${
+                index > 0 ? "border-solid border-t border-secondary" : ""
+              } ${props.onRowClick ? "cursor-pointer" : ""}`}
+              onClick={() => props.onRowClick?.(row.original)}
+            >
+              {row.getVisibleCells().map((cell) => (
+                <div
+                  key={cell.id}
+                  className={classNames(
+                    "whitespace-nowrap text-ellipsis overflow-hidden text-body-s text-primary",
+                    cell.column.columnDef.meta?.class,
+                  )}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </div>
+              ))}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
