@@ -7,7 +7,7 @@ const LIMIT = 10;
 
 type PageProps = {
   searchParams: Promise<{
-    page?: string | string[];
+    offset?: string | string[];
     limit?: string | string[];
     q?: string | string[];
     faculty?: string | string[];
@@ -38,10 +38,9 @@ function parseStringParam(
 export default async function CoursePage({ searchParams }: PageProps) {
   const params = await searchParams;
 
-  const page = parseIntParam(params.page, 1);
   const limit = parseIntParam(params.limit, LIMIT);
   const q = parseStringParam(params.q, undefined);
-  const offset = (page - 1) * limit;
+  const offset = parseIntParam(params.offset, 0);
   const faculty = parseStringParam(params.faculty, undefined);
 
   const courses = await listCourses({
@@ -52,15 +51,14 @@ export default async function CoursePage({ searchParams }: PageProps) {
     faculty,
   });
 
-  const maxPageNumber = Math.ceil(courses.total / limit);
-
   return (
     <div className="p-10 flex flex-col gap-2">
       <CourseSearch />
       <CoursesTable
         data={courses.items}
-        pageNumber={page}
-        maxPageNumber={maxPageNumber}
+        limit={limit}
+        offset={offset}
+        total={courses.total}
       />
     </div>
   );

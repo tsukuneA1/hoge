@@ -29,8 +29,9 @@ type CourseListItem = {
 
 type Props = {
   data: CourseListItem[];
-  pageNumber: number;
-  maxPageNumber: number;
+  limit: number;
+  offset: number;
+  total: number;
 };
 
 const columns: ColumnDef<CourseListItem>[] = [
@@ -96,13 +97,13 @@ const columns: ColumnDef<CourseListItem>[] = [
   },
 ];
 
-export function CoursesTable({ data, pageNumber, maxPageNumber }: Props) {
+export function CoursesTable({ data, limit, offset, total }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const moveToPage = (nextPage: number) => {
+  const moveToPage = (nextOffset: number) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("page", String(nextPage));
+    params.set("offset", String(nextOffset));
 
     router.push(`courses?${params.toString()}`);
   };
@@ -111,10 +112,11 @@ export function CoursesTable({ data, pageNumber, maxPageNumber }: Props) {
     <BaseTable
       columns={columns}
       data={data}
-      pageNumber={pageNumber}
-      maxPageNumber={maxPageNumber}
-      onClickNextPage={() => moveToPage(pageNumber + 1)}
-      onClickPreviousPage={() => moveToPage(pageNumber - 1)}
+      limit={limit}
+      offset={offset}
+      total={total}
+      onClickNextPage={() => moveToPage(offset + limit)}
+      onClickPreviousPage={() => moveToPage(offset - limit)}
       onRowClick={(row) => {
         console.log(row);
       }}

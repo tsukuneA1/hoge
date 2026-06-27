@@ -7,13 +7,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type Props<T> = {
   columns: ColumnDef<T>[];
   data: T[];
-  pageNumber: number;
-  maxPageNumber: number;
+  limit: number;
+  offset: number;
+  total: number;
   onClickNextPage: () => void;
   onClickPreviousPage: () => void;
   emptyMessage: string;
@@ -28,42 +29,12 @@ export function BaseTable<T>(props: Props<T>) {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const previousDisabled = props.offset === 0;
+  const nextDisabled = props.offset + props.limit >= props.total;
+
   return (
     <div className="flex flex-col gap-1 items-start self-stretch">
       <div className="flex flex-col items-start self-stretch rounded-t-[16px] border-solid border border-input bg-surface-primary">
-        <div className="flex h-14 px-6 justify-end items-center self-stretch border-b-solid border-b border-input">
-          <div className="flex justify-center items-center gap-4">
-            <div className="text-caption-s text-primary">
-              {props.pageNumber}/{props.maxPageNumber} ページ
-            </div>
-            <div className="flex justify-center items-center gap-1">
-              <button
-                type="button"
-                className={classNames(
-                  props.pageNumber === 1
-                    ? "text-tertiary"
-                    : "text-primary cursor-pointer",
-                )}
-                onClick={props.onClickPreviousPage}
-                disabled={props.pageNumber === 1}
-              >
-                <ArrowLeft fill="currentColor" width={24} height={24} />
-              </button>
-              <button
-                type="button"
-                className={classNames(
-                  props.pageNumber === props.maxPageNumber
-                    ? "text-tertiary"
-                    : "text-primary cursor-pointer",
-                )}
-                onClick={props.onClickNextPage}
-                disabled={props.pageNumber === props.maxPageNumber}
-              >
-                <ArrowRight fill="currentColor" width={24} height={24} />
-              </button>
-            </div>
-          </div>
-        </div>
         {table.getHeaderGroups().map((headerGroup) => (
           <div
             key={headerGroup.id}
@@ -94,14 +65,13 @@ export function BaseTable<T>(props: Props<T>) {
           {props.emptyMessage}
         </div>
       ) : (
-        <div className="flex flex-col items-start self-stretch rounded-b-[16px] border-solid border-1 border-input bg-surface-primary">
+        <div className="flex flex-col items-start self-stretch rounded-b-[16px] border-solid border-1 border-border bg-surface-primary">
           {table.getRowModel().rows.map((row, index) => (
             <button
               key={row.id}
               type="button"
-              className={`flex flex-row px-6 py-4 gap-6 items-center self-stretch body-s text-primary w-full text-left ${
-                index > 0 ? "border-solid border-t border-input" : ""
-              } ${props.onRowClick ? "cursor-pointer" : ""}`}
+              className={`flex flex-row px-6 py-4 gap-6 items-center self-stretch body-s text-primary w-full text-left border-solid border-b border-border
+              ${props.onRowClick ? "cursor-pointer" : ""}`}
               onClick={() => props.onRowClick?.(row.original)}
             >
               {row.getVisibleCells().map((cell) => (
@@ -117,6 +87,55 @@ export function BaseTable<T>(props: Props<T>) {
               ))}
             </button>
           ))}
+          <div className="flex h-14 px-6 justify-end items-center self-stretch border-b-solid border-b border-input">
+            <div className="flex justify-center items-center gap-4">
+              <div className="text-caption-s text-primary">
+                {props.offset} - {props.offset + props.limit} of {props.total}
+              </div>
+              <div className="flex justify-center items-center gap-2">
+                <button
+                  type="button"
+                  className={classNames(
+                    previousDisabled
+                      ? "text-tertiary"
+                      : "text-primary cursor-pointer",
+                  )}
+                  onClick={props.onClickPreviousPage}
+                  disabled={previousDisabled}
+                >
+                  {previousDisabled ? (
+                    <div className="inline-flex items-center justify-center rounded-full bg-background p-2">
+                      <ChevronLeft className="h-5 w-5 text-chart-2" />
+                    </div>
+                  ) : (
+                    <div className="inline-flex items-center justify-center rounded-full bg-chart-1 p-2">
+                      <ChevronLeft className="h-5 w-5 text-primary" />
+                    </div>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className={classNames(
+                    props.offset + props.limit >= props.total
+                      ? "text-tertiary"
+                      : "text-primary cursor-pointer",
+                  )}
+                  onClick={props.onClickNextPage}
+                  disabled={props.offset + props.limit >= props.total}
+                >
+                  {nextDisabled ? (
+                    <div className="inline-flex items-center justify-center rounded-full bg-background p-2">
+                      <ChevronRight className="h-5 w-5 text-chart-2" />
+                    </div>
+                  ) : (
+                    <div className="inline-flex items-center justify-center rounded-full bg-chart-1 p-2">
+                      <ChevronRight className="h-5 w-5 text-primary" />
+                    </div>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

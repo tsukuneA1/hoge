@@ -44,7 +44,7 @@ export const CourseSearch = () => {
       params.delete("q");
     } else {
       params.set("q", value);
-      params.set("page", "1");
+      params.set("offset", "0");
     }
 
     router.push(`courses?${params.toString()}`);
@@ -57,7 +57,7 @@ export const CourseSearch = () => {
       params.delete("faculty");
     } else {
       params.set("faculty", value);
-      params.set("page", "1");
+      params.set("offset", "0");
     }
 
     router.push(`courses?${params.toString()}`);
