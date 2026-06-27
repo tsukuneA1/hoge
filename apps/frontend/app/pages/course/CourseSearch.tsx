@@ -1,8 +1,8 @@
 "use client";
 
-import InputField from "@/app/components/InputField";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import InputField from "@/app/components/InputField";
 
 export const CourseSearch = () => {
   const router = useRouter();

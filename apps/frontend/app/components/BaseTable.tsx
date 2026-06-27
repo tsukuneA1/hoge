@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import { ArrowRight } from "lucide-react";
 import {
   type ColumnDef,
   flexRender,
@@ -9,6 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Props<T> = {
   columns: ColumnDef<T>[];

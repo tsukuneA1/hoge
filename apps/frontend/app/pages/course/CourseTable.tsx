@@ -1,9 +1,9 @@
 // app/courses/CoursesTable.tsx
 "use client";
 
-import { BaseTable } from "@/app/components/BaseTable";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { useRouter, useSearchParams } from "next/navigation";
+import { BaseTable } from "@/app/components/BaseTable";
 
 type CourseListItem = {
   pkey: string;

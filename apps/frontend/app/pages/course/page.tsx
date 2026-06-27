@@ -1,7 +1,7 @@
 // app/courses/page.tsx
 import { listCourses } from "@/app/utils/api/courses";
-import { CoursesTable } from "./CourseTable";
 import { CourseSearch } from "./CourseSearch";
+import { CoursesTable } from "./CourseTable";
 
 const LIMIT = 10;
 
