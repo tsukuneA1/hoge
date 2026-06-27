@@ -30,8 +30,8 @@ export function BaseTable<T>(props: Props<T>) {
 
   return (
     <div className="flex flex-col gap-1 items-start self-stretch">
-      <div className="flex flex-col items-start self-stretch rounded-t-[16px] border-solid border border-secondary bg-surface-primary">
-        <div className="flex h-14 px-6 justify-end items-center self-stretch border-b-solid border-b border-secondary">
+      <div className="flex flex-col items-start self-stretch rounded-t-[16px] border-solid border border-input bg-surface-primary">
+        <div className="flex h-14 px-6 justify-end items-center self-stretch border-b-solid border-b border-input">
           <div className="flex justify-center items-center gap-4">
             <div className="text-caption-s text-primary">
               {props.pageNumber}/{props.maxPageNumber} ページ
@@ -73,7 +73,7 @@ export function BaseTable<T>(props: Props<T>) {
               <div
                 key={header.id}
                 className={classNames(
-                  "text-left text-secondary text-sm font-normal leading-[1.4]",
+                  "text-left text-sm font-normal leading-[1.4]",
                   header.column.columnDef.meta?.headerClass,
                 )}
               >
@@ -94,13 +94,13 @@ export function BaseTable<T>(props: Props<T>) {
           {props.emptyMessage}
         </div>
       ) : (
-        <div className="flex flex-col items-start self-stretch rounded-b-[16px] border-solid border-1 border-secondary bg-surface-primary">
+        <div className="flex flex-col items-start self-stretch rounded-b-[16px] border-solid border-1 border-input bg-surface-primary">
           {table.getRowModel().rows.map((row, index) => (
             <button
               key={row.id}
               type="button"
-              className={`flex flex-row px-6 gap-6 h-[80px] items-center self-stretch body-s text-primary w-full text-left ${
-                index > 0 ? "border-solid border-t border-secondary" : ""
+              className={`flex flex-row px-6 py-4 gap-6 items-center self-stretch body-s text-primary w-full text-left ${
+                index > 0 ? "border-solid border-t border-input" : ""
               } ${props.onRowClick ? "cursor-pointer" : ""}`}
               onClick={() => props.onRowClick?.(row.original)}
             >
@@ -108,7 +108,7 @@ export function BaseTable<T>(props: Props<T>) {
                 <div
                   key={cell.id}
                   className={classNames(
-                    "whitespace-nowrap text-ellipsis overflow-hidden text-body-s text-primary",
+                    "whitespace-nowrap text-ellipsis overflow-hidden text-sm text-primary",
                     cell.column.columnDef.meta?.class,
                   )}
                 >
