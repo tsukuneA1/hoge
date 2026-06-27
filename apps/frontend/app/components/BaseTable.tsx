@@ -45,7 +45,11 @@ export function BaseTable<T>(props: Props<T>) {
                 key={header.id}
                 className={classNames(
                   "text-left text-sm font-normal leading-[1.4]",
-                  header.column.columnDef.meta?.headerClass,
+                  (
+                    header.column.columnDef.meta as
+                      | { headerClass?: string }
+                      | undefined
+                  )?.headerClass,
                 )}
               >
                 {header.isPlaceholder
@@ -65,7 +69,7 @@ export function BaseTable<T>(props: Props<T>) {
           {props.emptyMessage}
         </div>
       ) : (
-        <div className="flex flex-col items-start self-stretch rounded-b-[16px] border-solid border-1 border-border bg-surface-primary">
+        <div className="px-5 flex flex-col items-start self-stretch rounded-b-[16px] border-solid border-1 border-border bg-surface-primary">
           {table.getRowModel().rows.map((row, index) => (
             <button
               key={row.id}
@@ -79,7 +83,11 @@ export function BaseTable<T>(props: Props<T>) {
                   key={cell.id}
                   className={classNames(
                     "whitespace-nowrap text-ellipsis overflow-hidden text-sm text-primary",
-                    cell.column.columnDef.meta?.class,
+                    (
+                      cell.column.columnDef.meta as
+                        | { class?: string }
+                        | undefined
+                    )?.class,
                   )}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

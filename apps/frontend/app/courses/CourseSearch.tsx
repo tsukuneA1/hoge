@@ -84,7 +84,7 @@ export const CourseSearch = () => {
           </SelectTrigger>
           <SelectContent>
             {faculties.map((faculty) => {
-              return <SelectItem value={faculty}>{faculty}</SelectItem>;
+              return <SelectItem key={faculty} value={faculty}>{faculty}</SelectItem>;
             })}
           </SelectContent>
         </Select>
