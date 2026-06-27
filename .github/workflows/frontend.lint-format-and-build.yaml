@@ -1,0 +1,49 @@
+name: "[Frontend] Lint, Format, and Build"
+
+on:
+  pull_request:
+    paths:
+      - "apps/frontend**"
+      - ".github/workflows/frontend.lint-format-and-build.yaml"
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/frontend/**"
+      - ".github/workflows/frontend.lint-format-and-build.yaml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: apps/frontend
+    
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+        with:
+          package_json_file: apps/frontend/package.json
+      
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: apps/frontend/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check
+        run: pnpm check
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        env:
+          API_BASE_URL: http://localhost:8080
+        run: pnpm build  
