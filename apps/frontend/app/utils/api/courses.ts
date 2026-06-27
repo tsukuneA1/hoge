@@ -7,6 +7,7 @@ export type ListCoursesParams = {
   q?: string;
   limit?: number;
   offset?: number;
+  faculty?: string;
 };
 
 export async function listCourses(params: ListCoursesParams) {
@@ -17,6 +18,7 @@ export async function listCourses(params: ListCoursesParams) {
         q: params.q || undefined,
         limit: params.limit ?? 20,
         offset: params.offset ?? 0,
+        faculty: params.faculty || undefined,
       },
     },
   });

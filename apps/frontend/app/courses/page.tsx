@@ -10,6 +10,7 @@ type PageProps = {
     page?: string | string[];
     limit?: string | string[];
     q?: string | string[];
+    faculty?: string | string[];
   }>;
 };
 
@@ -41,18 +42,20 @@ export default async function CoursePage({ searchParams }: PageProps) {
   const limit = parseIntParam(params.limit, LIMIT);
   const q = parseStringParam(params.q, undefined);
   const offset = (page - 1) * limit;
+  const faculty = parseStringParam(params.faculty, undefined);
 
   const courses = await listCourses({
     academicYear: 2026,
     limit,
     offset,
     q,
+    faculty,
   });
 
   const maxPageNumber = Math.ceil(courses.total / limit);
 
   return (
-    <div className="p-10">
+    <div className="p-10 flex flex-col gap-2">
       <CourseSearch />
       <CoursesTable
         data={courses.items}
