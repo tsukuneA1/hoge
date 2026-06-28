@@ -25,8 +25,6 @@ export default async function CoursePage({ searchParams }: PageProps) {
       <CourseSearch />
       <CoursesTable
         data={courses.items}
-        limit={limit}
-        offset={offset}
         total={courses.total}
       />
     </div>

@@ -2,16 +2,15 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { useRouter, useSearchParams } from "next/navigation";
 import { BaseTable } from "@/app/components/BaseTable";
 import type { components } from "../utils/api/generated/schema";
+import { useQueryStates } from "nuqs";
+import { courseSearchParams } from "./searchParams";
 
 type CourseListItem = components["schemas"]["CourseListItem"];
 
 type Props = {
   data: CourseListItem[];
-  limit: number;
-  offset: number;
   total: number;
 };
 
@@ -78,15 +77,19 @@ const columns: ColumnDef<CourseListItem>[] = [
   },
 ];
 
-export function CoursesTable({ data, limit, offset, total }: Props) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+export function CoursesTable({ data, total }: Props) {
+  const [{ limit, offset }, setParams] = useQueryStates(courseSearchParams);
 
   const moveToPage = (nextOffset: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("offset", String(nextOffset));
-
-    router.push(`courses?${params.toString()}`);
+    void setParams(
+      {
+        offset: nextOffset,
+      },
+      {
+        history: "replace",
+        shallow: false
+      }
+    )
   };
 
   return (
