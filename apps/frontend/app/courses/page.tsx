@@ -2,46 +2,15 @@
 import { listCourses } from "@/app/utils/api/courses";
 import { CourseSearch } from "./CourseSearch";
 import { CoursesTable } from "./CourseTable";
-
-const LIMIT = 10;
+import { courseSeachParamsCache } from "./searchParams";
 
 type PageProps = {
-  searchParams: Promise<{
-    offset?: string | string[];
-    limit?: string | string[];
-    q?: string | string[];
-    faculty?: string | string[];
-  }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-function parseIntParam(
-  value: string | string[] | undefined,
-  defaultValue: number,
-): number {
-  const raw = Array.isArray(value) ? value[0] : value;
-  if (raw == null) return defaultValue;
-
-  const parsed = Number(raw);
-  return Number.isInteger(parsed) ? parsed : defaultValue;
-}
-
-function parseStringParam(
-  value: string | string[] | undefined,
-  defaultValue: string | undefined,
-): string | undefined {
-  const raw = Array.isArray(value) ? value[0] : value;
-  if (raw == null) return defaultValue;
-
-  return raw;
-}
-
 export default async function CoursePage({ searchParams }: PageProps) {
-  const params = await searchParams;
-
-  const limit = parseIntParam(params.limit, LIMIT);
-  const q = parseStringParam(params.q, undefined);
-  const offset = parseIntParam(params.offset, 0);
-  const faculty = parseStringParam(params.faculty, undefined);
+  const { q, limit, offset, faculty } =
+    await courseSeachParamsCache.parse(searchParams);
 
   const courses = await listCourses({
     academicYear: 2026,

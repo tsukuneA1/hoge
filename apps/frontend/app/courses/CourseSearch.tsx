@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { debounce, parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -31,37 +30,41 @@ const faculties = [
   "政治経済学研究科",
 ];
 
-export const CourseSearch = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+const courseSearchParams = {
+  q: parseAsString.withDefault(""),
+  limit: parseAsInteger.withDefault(10),
+  offset: parseAsInteger.withDefault(0),
+  faculty: parseAsString.withDefault(""),
+};
 
-  const [keyword, setKeyword] = useState("");
-  const [faculty, setFaculty] = useState("");
+export const CourseSearch = () => {
+  const [{ q, faculty }, setParams] = useQueryStates(courseSearchParams);
 
   const changeKeyword = (value: string) => {
-    setKeyword(value);
-    const params = new URLSearchParams(searchParams.toString());
-    if (value === "") {
-      params.delete("q");
-    } else {
-      params.set("q", value);
-      params.set("offset", "0");
-    }
-
-    router.push(`courses?${params.toString()}`);
+    void setParams(
+      {
+        q: value === "" ? null : value,
+        offset: 0,
+      },
+      {
+        history: "replace",
+        shallow: false,
+        limitUrlUpdates: debounce(400),
+      },
+    );
   };
 
   const changeFaculty = (value: string) => {
-    setFaculty(value);
-    const params = new URLSearchParams(searchParams.toString());
-    if (value === faculties[0]) {
-      params.delete("faculty");
-    } else {
-      params.set("faculty", value);
-      params.set("offset", "0");
-    }
-
-    router.push(`courses?${params.toString()}`);
+    void setParams(
+      {
+        faculty: value === faculties[0] ? null : value,
+        offset: 0,
+      },
+      {
+        history: "replace",
+        shallow: false,
+      },
+    );
   };
 
   return (
@@ -71,30 +74,25 @@ export const CourseSearch = () => {
         <Input
           id="input-field-keyword"
           type="text"
-          value={keyword}
-          onChange={(e) => {
-            changeKeyword(e.target.value);
-          }}
+          value={q}
+          onChange={(e) => changeKeyword(e.target.value)}
         />
       </Field>
       <Field>
         <FieldLabel>対象学部</FieldLabel>
         <Select
-          value={faculty}
-          onValueChange={(value) => changeFaculty(value)}
-          defaultValue={faculties[0]}
+          value={faculty === "" ? faculties[0] : faculty}
+          onValueChange={changeFaculty}
         >
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {faculties.map((faculty) => {
-              return (
-                <SelectItem key={faculty} value={faculty}>
-                  {faculty}
-                </SelectItem>
-              );
-            })}
+            {faculties.map((faculty) => (
+              <SelectItem key={faculty} value={faculty}>
+                {faculty}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </Field>
