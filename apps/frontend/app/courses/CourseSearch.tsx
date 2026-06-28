@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 
 const faculties = [
+  "指定なし",
   "政治経済学部",
   "法学部",
   "教育学部",
@@ -53,7 +54,7 @@ export const CourseSearch = () => {
   const changeFaculty = (value: string) => {
     setFaculty(value);
     const params = new URLSearchParams(searchParams.toString());
-    if (value === "") {
+    if (value === faculties[0]) {
       params.delete("faculty");
     } else {
       params.set("faculty", value);
@@ -78,7 +79,11 @@ export const CourseSearch = () => {
       </Field>
       <Field>
         <FieldLabel>対象学部</FieldLabel>
-        <Select value={faculty} onValueChange={(value) => changeFaculty(value)}>
+        <Select
+          value={faculty}
+          onValueChange={(value) => changeFaculty(value)}
+          defaultValue={faculties[0]}
+        >
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
