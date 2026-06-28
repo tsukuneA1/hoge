@@ -1,0 +1,29 @@
+// app/courses/page.tsx
+import { listCourses } from "@/app/utils/api/courses";
+import { CourseSearch } from "./CourseSearch";
+import { CoursesTable } from "./CourseTable";
+import { courseSearchParamsCache } from "./searchParams";
+
+type PageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function CoursePage({ searchParams }: PageProps) {
+  const { q, limit, offset, faculty } =
+    await courseSearchParamsCache.parse(searchParams);
+
+  const courses = await listCourses({
+    academicYear: 2026,
+    limit,
+    offset,
+    q,
+    faculty,
+  });
+
+  return (
+    <div className="p-10 flex flex-col gap-2">
+      <CourseSearch />
+      <CoursesTable data={courses.items} total={courses.total} />
+    </div>
+  );
+}
