@@ -16,7 +16,7 @@ export async function listCourses(params: ListCoursesParams) {
       query: {
         academic_year: params.academicYear,
         q: params.q || undefined,
-        limit: params.limit ?? 20,
+        limit: params.limit ?? 10,
         offset: params.offset ?? 0,
         faculty: params.faculty || undefined,
       },
