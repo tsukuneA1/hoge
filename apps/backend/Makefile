@@ -37,3 +37,4 @@ dry-migrate:
 .PHONY: migrate
 migrate:
 	cd $(SQLC_DIR) && PGPASSWORD=$(DB_PASSWORD) $(GO) tool psqldef -h $(DB_HOST) -U $(DB_USER) -p $(DB_PORT) $(DB_NAME) --enable-drop < schema.sql
+	
