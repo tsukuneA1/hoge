@@ -1,6 +1,6 @@
 "use client";
 
-import { debounce, parseAsInteger, parseAsString, useQueryStates } from "nuqs";
+import { debounce, useQueryStates } from "nuqs";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { courseSearchParams } from "./searchParams";
 
 const faculties = [
   "指定なし",
@@ -29,13 +30,6 @@ const faculties = [
   "先進理工学部",
   "政治経済学研究科",
 ];
-
-const courseSearchParams = {
-  q: parseAsString.withDefault(""),
-  limit: parseAsInteger.withDefault(10),
-  offset: parseAsInteger.withDefault(0),
-  faculty: parseAsString.withDefault(""),
-};
 
 export const CourseSearch = () => {
   const [{ q, faculty }, setParams] = useQueryStates(courseSearchParams);
