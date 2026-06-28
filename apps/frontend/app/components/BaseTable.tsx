@@ -4,6 +4,7 @@ import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
+  type RowData,
   useReactTable,
 } from "@tanstack/react-table";
 import classNames from "classnames";
@@ -21,6 +22,13 @@ type Props<T> = {
   emptyIcon: React.ReactNode;
   onRowClick?: (row: T) => void;
 };
+
+declare module "@tanstack/react-table" {
+  interface ColumnMeta<TData extends RowData, TValue> {
+    headerClass?: string;
+    class?: string;
+  }
+}
 
 export function BaseTable<T>(props: Props<T>) {
   const table = useReactTable<T>({
@@ -45,11 +53,8 @@ export function BaseTable<T>(props: Props<T>) {
                 key={header.id}
                 className={classNames(
                   "text-left text-sm font-normal leading-[1.4]",
-                  (
-                    header.column.columnDef.meta as
-                      | { headerClass?: string }
-                      | undefined
-                  )?.headerClass,
+
+                  header.column.columnDef.meta?.headerClass,
                 )}
               >
                 {header.isPlaceholder
@@ -83,11 +88,8 @@ export function BaseTable<T>(props: Props<T>) {
                   key={cell.id}
                   className={classNames(
                     "whitespace-nowrap text-ellipsis overflow-hidden text-sm text-primary",
-                    (
-                      cell.column.columnDef.meta as
-                        | { class?: string }
-                        | undefined
-                    )?.class,
+
+                    cell.column.columnDef.meta?.class,
                   )}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
