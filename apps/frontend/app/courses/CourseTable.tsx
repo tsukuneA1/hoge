@@ -4,28 +4,9 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BaseTable } from "@/app/components/BaseTable";
+import type { components } from "../utils/api/generated/schema";
 
-type CourseListItem = {
-  pkey: string;
-  academic_year: number;
-  faculty: string;
-  title: string;
-  instructor: string;
-  term_day_period: string;
-  category: string | null;
-  eligible_year: string | null;
-  credits: number;
-  campus: string | null;
-  course_key: string | null;
-  class_code: string | null;
-  language: string | null;
-  delivery_mode: string | null;
-  field_large: string | null;
-  field_middle: string | null;
-  field_small: string | null;
-  level: string | null;
-  class_format: string | null;
-};
+type CourseListItem = components["schemas"]["CourseListItem"];
 
 type Props = {
   data: CourseListItem[];
