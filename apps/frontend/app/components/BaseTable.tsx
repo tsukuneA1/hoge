@@ -124,12 +124,12 @@ export function BaseTable<T>(props: Props<T>) {
                 <button
                   type="button"
                   className={classNames(
-                    props.offset + props.limit >= props.total
+                    nextDisabled
                       ? "text-tertiary"
                       : "text-primary cursor-pointer",
                   )}
                   onClick={props.onClickNextPage}
-                  disabled={props.offset + props.limit >= props.total}
+                  disabled={nextDisabled}
                 >
                   {nextDisabled ? (
                     <div className="inline-flex items-center justify-center rounded-full bg-background p-2">
