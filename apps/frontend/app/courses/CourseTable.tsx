@@ -2,9 +2,9 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { useQueryStates } from "nuqs";
 import { BaseTable } from "@/app/components/BaseTable";
 import type { components } from "../utils/api/generated/schema";
-import { useQueryStates } from "nuqs";
 import { courseSearchParams } from "./searchParams";
 
 type CourseListItem = components["schemas"]["CourseListItem"];
@@ -87,9 +87,9 @@ export function CoursesTable({ data, total }: Props) {
       },
       {
         history: "replace",
-        shallow: false
-      }
-    )
+        shallow: false,
+      },
+    );
   };
 
   return (

@@ -100,7 +100,9 @@ export function BaseTable<T>(props: Props<T>) {
           <div className="flex h-14 px-6 justify-end items-center self-stretch border-b-solid border-b border-input">
             <div className="flex justify-center items-center gap-4">
               <div className="text-caption-s text-primary">
-                {props.offset} - {props.offset + props.limit} of {props.total}
+                {props.offset + 1} -{" "}
+                {Math.min(props.offset + props.limit, props.total)} of{" "}
+                {props.total}
               </div>
               <div className="flex justify-center items-center gap-2">
                 <button

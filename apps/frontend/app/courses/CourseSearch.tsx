@@ -73,12 +73,12 @@ export const CourseSearch = () => {
         />
       </Field>
       <Field>
-        <FieldLabel>対象学部</FieldLabel>
+        <FieldLabel htmlFor="select-field-faculty">対象学部</FieldLabel>
         <Select
           value={faculty === "" ? faculties[0] : faculty}
           onValueChange={changeFaculty}
         >
-          <SelectTrigger>
+          <SelectTrigger id="select-field-faculty">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
