@@ -34,8 +34,8 @@ export const CourseSearch = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [keyword, setKeyword] = useState<string>();
-  const [faculty, setFaculty] = useState<string>();
+  const [keyword, setKeyword] = useState("");
+  const [faculty, setFaculty] = useState("");
 
   const changeKeyword = (value: string) => {
     setKeyword(value);
