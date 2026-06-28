@@ -13,5 +13,5 @@ export const courseSearchParams = {
   faculty: parseAsString.withDefault(""),
 };
 
-export const courseSeachParamsCache =
+export const courseSearchParamsCache =
   createSearchParamsCache(courseSearchParams);
