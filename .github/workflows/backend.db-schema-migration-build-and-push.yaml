@@ -9,6 +9,9 @@ on:
       - "infra/tools/db-schema-migration/**"
       - ".github/workflows/backend.db-schema-migration-build-and-push.yaml"
       - ".github/actions/docker-build-and-push/**"
+      - "apps/backend/sqlc/schema.sql"
+      - "apps/backend/sqlc/go.mod"
+      - "apps/backend/sqlc/go.sum"
     # TODO: 将来的にはタグ運用を行う。現状はややこしいので漢のlatest運用。
     # tags:
     #   - "api/v*.*.*"
