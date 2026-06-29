@@ -40,7 +40,7 @@ resource "google_cloud_run_v2_job" "db_schema_migration" {
 
         env {
           name = "PGUSER"
-          value = var.db_name
+          value = var.db_user
         }
 
         env {
