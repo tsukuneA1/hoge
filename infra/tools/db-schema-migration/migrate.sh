@@ -11,12 +11,20 @@ COMMAND="${1:-diff}"
 
 SCHEMA_FILE="${SCHEMA_FILE:-/app/schema.sql}"
 
+common_args=(
+  "--host=${PGHOST}"
+  "--port=${PGPORT}"
+  "--user=${PGUSER}"
+  "${PGDATABASE}"
+  "--file=${SCHEMA_FILE}"
+)
+
 case "$COMMAND" in
   diff)
-    psqldef "$PGDATABASE" --file "$SCHEMA_FILE" --dry-run --enable-drop
+    psqldef "${common_args[@]}" --dry-run --enable-drop
     ;;
   apply)
-    psqldef "$PGDATABASE" --file "$SCHEMA_FILE" --enable-drop
+    psqldef "${common_args[@]}" --enable-drop
     ;;
   *)
     echo "usage: migrate.sh [diff|apply]" >&2
