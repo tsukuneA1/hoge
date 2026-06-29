@@ -7,7 +7,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # sqldef install
-# COPY sqldef or curl release binary
+ARG SQLDEF_VERSION = v3.10.0
+RUN wget https://github.com/sqldef/sqldef/releases/download/${SQLDEF_VERSION}/psqldef_linux_amd64.tar.gz \
+    && tar -zxvf psqldef_linux_amd64.tar.gz \
+    && mv psqldef /usr/local/bin \
+    && rm psqldef_linux_amd64.tar.gz
 
 WORKDIR /app
 
