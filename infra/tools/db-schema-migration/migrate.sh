@@ -11,10 +11,10 @@ COMMAND="${1:-diff}"
 
 case "$COMMAND" in
   diff)
-    # dry-run / diff
+    PGPASSWORD=$(DB_PASSWORD) psqldef -h $(DB_HOST) -U $(DB_USER) -p $(DB_PORT) $(DB_NAME) --dry-run --enable-drop < schema.sql
     ;;
   apply)
-    # apply
+    PGPASSWORD=$(DB_PASSWORD) psqldef -h $(DB_HOST) -U $(DB_USER) -p $(DB_PORT) $(DB_NAME) --enable-drop < schema.sql
     ;;
   *)
     echo "usage: migrate.sh [diff|apply]" >&2
