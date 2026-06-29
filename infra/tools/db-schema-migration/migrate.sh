@@ -9,12 +9,14 @@ COMMAND="${1:-diff}"
 : "${PGUSER:?PGUSER is required}"
 : "${PGPASSWORD:?PGPASSWORD is required}"
 
+SCHEMA_FILE="${SCHEMA_FILE:-/app/schema.sql}"
+
 case "$COMMAND" in
   diff)
-    PGPASSWORD=$(DB_PASSWORD) psqldef -h $(DB_HOST) -U $(DB_USER) -p $(DB_PORT) $(DB_NAME) --dry-run --enable-drop < schema.sql
+    psqldef "$PGDATABASE" --file "$SCHEMA_FILE" --dry-run --enable-drop
     ;;
   apply)
-    PGPASSWORD=$(DB_PASSWORD) psqldef -h $(DB_HOST) -U $(DB_USER) -p $(DB_PORT) $(DB_NAME) --enable-drop < schema.sql
+    psqldef "$PGDATABASE" --file "$SCHEMA_FILE" --enable-drop
     ;;
   *)
     echo "usage: migrate.sh [diff|apply]" >&2

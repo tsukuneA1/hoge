@@ -4,13 +4,12 @@ WORKDIR /src
 
 COPY apps/backend/sqlc/go.mod apps/backend/sqlc/go.sum ./
 
-RUN go install github.com/sqldef/sqldef/cmd/psqldef
+RUN go install tool
 
 FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
-    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
