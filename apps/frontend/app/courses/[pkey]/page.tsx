@@ -1,9 +1,9 @@
 import { ExternalLink } from "lucide-react";
+import { notFound } from "next/navigation";
 import { getCourse } from "@/app/utils/api/courses";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TypographyH1, TypographyH2 } from "@/components/ui/typography";
-import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{
