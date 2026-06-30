@@ -21,7 +21,7 @@ export default async function CoursePage({ searchParams }: PageProps) {
   });
 
   return (
-    <div className="p-10 flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
       <CourseSearch />
       <CoursesTable data={courses.items} total={courses.total} />
     </div>

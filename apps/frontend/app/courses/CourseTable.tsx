@@ -2,6 +2,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 import { useQueryStates } from "nuqs";
 import { BaseTable } from "@/app/components/BaseTable";
 import type { components } from "../utils/api/generated/schema";
@@ -78,6 +79,7 @@ const columns: ColumnDef<CourseListItem>[] = [
 ];
 
 export function CoursesTable({ data, total }: Props) {
+  const router = useRouter();
   const [{ limit, offset }, setParams] = useQueryStates(courseSearchParams);
 
   const moveToPage = (nextOffset: number) => {
@@ -102,7 +104,7 @@ export function CoursesTable({ data, total }: Props) {
       onClickNextPage={() => moveToPage(offset + limit)}
       onClickPreviousPage={() => moveToPage(offset - limit)}
       onRowClick={(row) => {
-        console.log(row);
+        router.push(`courses/${row.pkey}`);
       }}
       emptyMessage="hogehoge"
       emptyIcon
