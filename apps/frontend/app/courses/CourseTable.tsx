@@ -104,7 +104,7 @@ export function CoursesTable({ data, total }: Props) {
       onClickNextPage={() => moveToPage(offset + limit)}
       onClickPreviousPage={() => moveToPage(offset - limit)}
       onRowClick={(row) => {
-        router.push(`courses/${row.pkey}`);
+        router.push(`/courses/${row.pkey}`);
       }}
       emptyMessage="hogehoge"
       emptyIcon
