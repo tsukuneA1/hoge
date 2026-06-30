@@ -3,6 +3,7 @@ import { getCourse } from "@/app/utils/api/courses";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TypographyH1, TypographyH2 } from "@/components/ui/typography";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{
@@ -14,6 +15,8 @@ const CourseDetailPage = async ({ params }: Props) => {
   const { pkey } = await params;
 
   const course = await getCourse(pkey);
+
+  if (!course) notFound();
 
   return (
     <div className="flex flex-col gap-4">
