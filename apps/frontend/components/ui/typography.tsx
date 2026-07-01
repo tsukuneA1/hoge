@@ -12,7 +12,7 @@ export const TypographyH1 = ({
   return (
     <h1
       className={cn(
-        'font-medium font-tektur text-2xl text-primary leading-[107%] tracking-[10%]',
+        'font-medium text-2xl text-primary leading-[107%] tracking-[10%]',
         className,
       )}
       {...props}
@@ -32,7 +32,7 @@ export const TypographyH2 = ({
   return (
     <h2
       className={cn(
-        'font-medium font-tektur text-2xl text-primary leading-[107%] tracking-[10%]',
+        'font-medium text-xl text-primary leading-[107%] tracking-[10%]',
         className,
       )}
       {...props}
@@ -52,7 +52,7 @@ export const TypographyH3 = ({
   return (
     <h3
       className={cn(
-        'font-[500] font-tektur text-primary tracking-wider xl:text-xl',
+        'font-[500] text-primary tracking-wider xl:text-xl',
         className,
       )}
       {...props}
