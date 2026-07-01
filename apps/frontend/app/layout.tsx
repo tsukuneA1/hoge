@@ -49,7 +49,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <NuqsAdapter>
           <Header />
-          <main className="p-10">{children}</main>
+          <main className="p-4 md:p-10">{children}</main>
         </NuqsAdapter>
       </body>
     </html>
