@@ -69,6 +69,7 @@ SELECT
     eligible_year,
     credits,
     campus,
+    classroom,
     course_key,
     class_code,
     language,
@@ -134,6 +135,7 @@ class ListCoursesRow(pydantic.BaseModel):
     eligible_year: Optional[str]
     credits: int
     campus: Optional[str]
+    classroom: Optional[str]
     course_key: Optional[str]
     class_code: Optional[str]
     language: Optional[str]
@@ -337,15 +339,16 @@ class Querier:
                 eligible_year=row[7],
                 credits=row[8],
                 campus=row[9],
-                course_key=row[10],
-                class_code=row[11],
-                language=row[12],
-                delivery_mode=row[13],
-                field_large=row[14],
-                field_middle=row[15],
-                field_small=row[16],
-                level=row[17],
-                class_format=row[18],
+                classroom=row[10],
+                course_key=row[11],
+                class_code=row[12],
+                language=row[13],
+                delivery_mode=row[14],
+                field_large=row[15],
+                field_middle=row[16],
+                field_small=row[17],
+                level=row[18],
+                class_format=row[19],
             )
 
     def upsert_courses(self, arg: UpsertCoursesParams) -> None:
@@ -468,15 +471,16 @@ class AsyncQuerier:
                 eligible_year=row[7],
                 credits=row[8],
                 campus=row[9],
-                course_key=row[10],
-                class_code=row[11],
-                language=row[12],
-                delivery_mode=row[13],
-                field_large=row[14],
-                field_middle=row[15],
-                field_small=row[16],
-                level=row[17],
-                class_format=row[18],
+                classroom=row[10],
+                course_key=row[11],
+                class_code=row[12],
+                language=row[13],
+                delivery_mode=row[14],
+                field_large=row[15],
+                field_middle=row[16],
+                field_small=row[17],
+                level=row[18],
+                class_format=row[19],
             )
 
     async def upsert_courses(self, arg: UpsertCoursesParams) -> None:
