@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { cn } from "@/lib/utils";
+import { Header } from "./components/Header";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -45,8 +46,11 @@ export default function RootLayout({
         jetbrainsMono.variable,
       )}
     >
-      <body className="min-h-full flex flex-col p-10">
-        <NuqsAdapter>{children}</NuqsAdapter>
+      <body className="min-h-full flex flex-col">
+        <NuqsAdapter>
+          <Header />
+          <main className="p-10">{children}</main>
+        </NuqsAdapter>
       </body>
     </html>
   );
