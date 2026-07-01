@@ -1,5 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import { notFound } from "next/navigation";
+import { Label } from "radix-ui";
 import { getCourse } from "@/app/utils/api/courses";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,21 +14,26 @@ type Props = {
   }>;
 };
 
-const CourseInfoItem = (label: string, content: string) => {
+type InfoItemProps = {
+  label: string;
+  content: string;
+};
+
+const CourseInfoItem = ({ label, content }: InfoItemProps) => {
   return (
-    <div className="flex flex-col gap-2" key={content}>
+    <div className="flex flex-col gap-2">
       <dt className="font-bold">{label}</dt>
       <dd>{content}</dd>
     </div>
   );
 };
 
-const SyllabusInfoItem = (label: string, content: string) => {
+const SyllabusInfoItem = ({ label, content }: InfoItemProps) => {
   return (
-    <div key={content}>
+    <>
       <dt className="font-bold">{label}</dt>
       <dd className="whitespace-pre-wrap">{content}</dd>
-    </div>
+    </>
   );
 };
 
@@ -43,7 +49,7 @@ const CourseDetailPage = async ({ params }: Props) => {
     { label: "科目区分", content: course.category },
     {
       label: "使用教室",
-      content: `${course?.campus} ${course?.classroom}`,
+      content: `${course?.campus} ${course.classroom}`,
     },
     {
       label: "授業方法区分",
@@ -65,10 +71,10 @@ const CourseDetailPage = async ({ params }: Props) => {
     <div className="flex justify-center">
       <div className="flex flex-col gap-4 max-w-5xl">
         <div className="flex gap-2 items-center">
-          <TypographyH1>{course?.title}</TypographyH1>
-          <span>{course?.instructor}</span>
-          <Badge variant="default">{course?.faculty}</Badge>
-          <Badge variant="secondary">{course?.credits}単位</Badge>
+          <TypographyH1>{course.title}</TypographyH1>
+          <span>{course.instructor}</span>
+          <Badge variant="default">{course.faculty}</Badge>
+          <Badge variant="secondary">{course.credits}単位</Badge>
           <Button asChild>
             <a
               href={`${EXTERNAL_BASE_URL}?pKey=${course.pkey}&pLng=jp`}
@@ -85,7 +91,13 @@ const CourseDetailPage = async ({ params }: Props) => {
         <dl className="flex gap-4">
           {courseInfo.map((info) => {
             if (!info.content) return null;
-            return CourseInfoItem(info.label, info.content);
+            return (
+              <CourseInfoItem
+                label={info.label}
+                content={info.content}
+                key={info.label}
+              />
+            );
           })}
         </dl>
 
@@ -94,7 +106,13 @@ const CourseDetailPage = async ({ params }: Props) => {
         <dl className="flex flex-col gap-2">
           {syllabusInfo.map((info) => {
             if (!info.content) return null;
-            return SyllabusInfoItem(info.label, info.content);
+            return (
+              <SyllabusInfoItem
+                label={info.label}
+                content={info.content}
+                key={info.label}
+              />
+            );
           })}
         </dl>
       </div>
