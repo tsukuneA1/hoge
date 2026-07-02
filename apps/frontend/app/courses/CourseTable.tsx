@@ -19,26 +19,26 @@ type Props = {
   total: number;
 };
 
-export type CourseCompletion = {
+export type RegisteredCourse = {
   pkey: string;
   title: string;
   classroom: string | null;
   termDayPeriod: string | null;
 };
 
-export const COURSE_COMPLETIONS_KEY = "course_completions";
+export const REGISTERED_COURSES__KEY = "course_completions";
 
 export function CoursesTable({ data, total }: Props) {
   const router = useRouter();
   const [{ limit, offset }, setParams] = useQueryStates(courseSearchParams);
 
-  const [courseCompletions, setCourseCompletions] = useState<
-    CourseCompletion[]
+  const [registeredCourses, setRegisteredCourses] = useState<
+    RegisteredCourse[]
   >([]);
 
   useEffect(() => {
-    setCourseCompletions(
-      storage.get<CourseCompletion[]>(COURSE_COMPLETIONS_KEY, []),
+    setRegisteredCourses(
+      storage.get<RegisteredCourse[]>(REGISTERED_COURSES__KEY, []),
     );
   }, []);
 
@@ -110,8 +110,8 @@ export function CoursesTable({ data, total }: Props) {
           </div>
         ),
         cell: ({ row }) => {
-          const checked = courseCompletions.some(
-            (courseCompletion) => courseCompletion.pkey === row.original.pkey,
+          const checked = registeredCourses.some(
+            (registeredCourses) => registeredCourses.pkey === row.original.pkey,
           );
 
           const handleCheckboxChange = (
@@ -121,7 +121,7 @@ export function CoursesTable({ data, total }: Props) {
 
             const next = e.target.checked
               ? [
-                  ...courseCompletions,
+                  ...registeredCourses,
                   {
                     pkey: row.original.pkey,
                     title: row.original.title,
@@ -129,13 +129,13 @@ export function CoursesTable({ data, total }: Props) {
                     termDayPeriod: row.original.term_day_period,
                   },
                 ]
-              : courseCompletions.filter(
-                  (courseCompletion) =>
-                    courseCompletion.pkey !== row.original.pkey,
+              : registeredCourses.filter(
+                  (registeredCourse) =>
+                    registeredCourse.pkey !== row.original.pkey,
                 );
 
-            setCourseCompletions(next);
-            storage.set<CourseCompletion[]>(COURSE_COMPLETIONS_KEY, next);
+            setRegisteredCourses(next);
+            storage.set<RegisteredCourse[]>(REGISTERED_COURSES__KEY, next);
           };
 
           return (
@@ -149,7 +149,7 @@ export function CoursesTable({ data, total }: Props) {
         },
       },
     ],
-    [courseCompletions],
+    [registeredCourses],
   );
 
   const moveToPage = (nextOffset: number) => {
