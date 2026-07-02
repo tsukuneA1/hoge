@@ -10,6 +10,7 @@ SELECT
     eligible_year,
     credits,
     campus,
+    classroom,
     course_key,
     class_code,
     language,

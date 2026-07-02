@@ -18,6 +18,7 @@ class CourseListItem(BaseModel):
     eligible_year: str | None
     credits: int
     campus: str | None
+    classroom: str | None
     course_key: str | None
     class_code: str | None
     language: str | None
